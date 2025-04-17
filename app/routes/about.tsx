@@ -1,0 +1,32 @@
+import React from "react";
+import { Await } from "react-router";
+import type { Route } from "./+types/about";
+
+export async function loader() {
+  // note this is NOT awaited
+  let nonCriticalData = new Promise((res) =>
+    setTimeout(() => res("non-critical"), 5000)
+  );
+
+  let criticalData = await new Promise((res) =>
+    setTimeout(() => res("critical"), 300)
+  );
+
+  return { nonCriticalData, criticalData };
+}
+
+export default function About({ loaderData }: Route.ComponentProps) {
+  let { criticalData, nonCriticalData } = loaderData;
+  return (
+    <div>
+      <h1>Streaming example</h1>
+      <h2>Critical data value: {criticalData}</h2>
+
+      <React.Suspense fallback={<div>Loading...</div>}>
+        <Await resolve={nonCriticalData}>
+          {(value) => <h3>Non critical value: {value}</h3>}
+        </Await>
+      </React.Suspense>
+    </div>
+  );
+}

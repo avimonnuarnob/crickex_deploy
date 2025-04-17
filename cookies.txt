@@ -1,0 +1,6 @@
+# HTTrack Website Copier Cookie File
+# This file format is compatible with Netscape cookies
+11crickex.com	TRUE	/	FALSE	1999999999	__cflb	02DiuDUQeSHnXd35oyFQWLH49KTFQLe4r9yb5EYAS4ffi
+.11crickex.com	TRUE	/	FALSE	1999999999	_cfuvid	sr2xuofCUVmgCkTh4JG3.zitp0eIp7kbxM.3KbpXzY0-1744807501666-0.0.1.1-604800000
+11crickex.com	TRUE	/	FALSE	1999999999	SameSite	None
+

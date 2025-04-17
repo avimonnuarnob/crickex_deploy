@@ -1,0 +1,86 @@
+@import "tailwindcss";
+
+:root {
+  --background: #ffffff;
+  --foreground: #000000;
+
+  --custom-blue-1: #005dac;
+  --custom-blue-2: #004f92;
+  --custom-blue-3: #1a79d3;
+  --custom-blue-4: #96c6ef;
+  --custom-blue-5: #7aa8d0;
+  --custom-blue-6: #6a84cb;
+  --custom-blue-7: #004785;
+  --custom-blue-8: #004179;
+  --custom-blue-9: #0274d4;
+
+  --custom-green-1: #64cc2f;
+
+  --custom-red-1: #d12e2e;
+
+  --custom-dark-1: #313131;
+
+  --custom-gray-1: #f5f5f5;
+  --custom-gray-2: #eaeff8;
+  --custom-gray-3: #999999;
+  --custom-gray-4: #d9d9d9;
+  --custom-gray-5: #b2b2b2;
+  --custom-gray-6: #dcdcdc;
+  --custom-gray-7: #e0e0e0;
+  --custom-gray-8: #eeeeee;
+  --custom-gray-9: #767676;
+
+  --custom-yellow-1: #ffe800;
+  --custom-yellow-2: #e4b621;
+  --custom-yellow-3: #ffdf44;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+
+  --color-blue-1: var(--custom-blue-1);
+  --color-blue-2: var(--custom-blue-2);
+  --color-blue-3: var(--custom-blue-3);
+  --color-blue-4: var(--custom-blue-4);
+  --color-blue-5: var(--custom-blue-5);
+  --color-blue-6: var(--custom-blue-6);
+  --color-blue-7: var(--custom-blue-7);
+  --color-blue-8: var(--custom-blue-8);
+  --color-blue-9: var(--custom-blue-9);
+
+  --color-green-1: var(--custom-green-1);
+
+  --color-red-1: var(--custom-red-1);
+
+  --color-dark-1: var(--custom-dark-1);
+
+  --color-gray-1: var(--custom-gray-1);
+  --color-gray-2: var(--custom-gray-2);
+  --color-gray-3: var(--custom-gray-3);
+  --color-gray-4: var(--custom-gray-4);
+  --color-gray-5: var(--custom-gray-5);
+  --color-gray-6: var(--custom-gray-6);
+  --color-gray-7: var(--custom-gray-7);
+  --color-gray-8: var(--custom-gray-8);
+  --color-gray-9: var(--custom-gray-9);
+
+  --color-yellow-1: var(--custom-yellow-1);
+  --color-yellow-2: var(--custom-yellow-2);
+  --color-yellow-3: var(--custom-yellow-3);
+
+  --font-sans: var(--font-arimo);
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-arimo);
+}
+
+.swiper-pagination {
+  position: relative;
+  top: unset !important;
+  bottom: unset !important;
+  left: unset !important;
+}
