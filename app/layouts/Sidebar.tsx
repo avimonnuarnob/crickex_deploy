@@ -13,7 +13,7 @@ type SidebarProps = Readonly<{
 
 const Sidebar = ({ isFull, setIsFull }: SidebarProps) => {
   return (
-    <div className={classNames("bg-blue-1 relative z-1 h-full flex-none")}>
+    <div className={classNames("bg-blue-1 relative z-100 h-full flex-none")}>
       {isFull && (
         <button
           onClick={() => setIsFull((prev) => !prev)}

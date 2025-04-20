@@ -8,6 +8,8 @@ import {
 import type { Route } from "./+types/root";
 
 import appStylesHref from "./app.css?url";
+import normalizeStyles from "./normalize.css?url";
+import "swiper/css";
 
 export default function App() {
   return <Outlet />;
@@ -23,6 +25,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="stylesheet" href={appStylesHref} />
+        <link rel="stylesheet" href={normalizeStyles} />
       </head>
       <body>
         {children}

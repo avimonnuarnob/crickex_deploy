@@ -72,15 +72,9 @@
   --font-sans: var(--font-arimo);
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: var(--font-arimo);
-}
-
 .swiper-pagination {
-  position: relative;
-  top: unset !important;
-  bottom: unset !important;
-  left: unset !important;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding-top: 0.5rem;
 }

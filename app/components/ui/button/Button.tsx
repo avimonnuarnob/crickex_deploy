@@ -31,12 +31,12 @@ const Button = <T extends React.ElementType = "button">({
     red: "bg-red-1 text-white hover:bg-red-700 disabled:bg-red-400",
     yellow: "bg-yellow-1 text-black hover:bg-yellow-2 disabled:bg-yellow-400",
     link: "bg-transparent text-black",
-    white: "bg-white text-gray-9 hover:bg-gray-2 disabled:bg-gray-3 shadow-sm"
+    white: "bg-white text-gray-9 hover:bg-gray-2 disabled:bg-gray-3 shadow-sm",
   };
   const sizeClasses = {
     sm: "px-6 py-2 text-sm",
-    md: "px-6 py-2.5 text-sm",
-    lg: "px-7 py-3 text-xs"
+    md: "px-6 py-[10.5px] text-sm",
+    lg: "px-7 py-3 text-xs",
   };
 
   return (
@@ -46,7 +46,7 @@ const Button = <T extends React.ElementType = "button">({
         colorClasses[color],
         sizeClasses[size],
         {
-          "w-full": isBlock
+          "w-full": isBlock,
         },
         className
       )}
