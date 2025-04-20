@@ -1,4 +1,4 @@
-import { Await, Link, NavLink, Outlet } from "react-router";
+import { Await, Outlet } from "react-router";
 import type { Route } from "./+types/root-layout";
 import React, { useState } from "react";
 import classNames from "classnames";
