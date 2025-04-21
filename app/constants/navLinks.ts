@@ -16,7 +16,7 @@ export const navLinks = [
     children: [
       {
         icon: cricket,
-        href: ProtectedRoute.Cricket,
+        href: "/about",
         text: "Cricket",
       },
       {

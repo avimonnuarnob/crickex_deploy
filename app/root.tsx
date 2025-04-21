@@ -8,7 +8,6 @@ import type { Route } from "./+types/root";
 
 import appStylesHref from "./app.css?url";
 import normalizeStyles from "./normalize.css?url";
-import "swiper/css";
 
 export default function App() {
   return <Outlet />;

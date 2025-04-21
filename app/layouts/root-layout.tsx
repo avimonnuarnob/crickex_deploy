@@ -7,7 +7,7 @@ import Topbar from "./Topbar";
 
 let API_DATA: null | string = null;
 
-export async function loader({ params }: Route.LoaderArgs) {
+export async function clientLoader({ params }: Route.LoaderArgs) {
   console.log("hell0");
   let nonCriticalData = new Promise((res) =>
     setTimeout(() => res("non-critical"), 500)
@@ -26,7 +26,7 @@ export default function RootLayout({ loaderData }: Route.ComponentProps) {
         {() => (
           <div className="flex h-screen overscroll-y-contain">
             <Sidebar isFull={isFull} setIsFull={setIsFull} />
-            <main className="flex h-full flex-1 flex-col items-center overflow-auto relative">
+            <main className="flex h-full flex-1 flex-col items-center overflow-auto">
               <Topbar isFull={isFull} />
               <div className="w-full flex-1">
                 <div
