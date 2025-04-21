@@ -18,7 +18,7 @@ export default function HomeSlider() {
   } = usePrevNextButtons(emblaApi);
   return (
     <section className="embla flex items-center">
-      <PrevButton onClick={onPrevButtonClick} disabled={prevBtnDisabled} />
+      {/* <PrevButton onClick={onPrevButtonClick} disabled={prevBtnDisabled} /> */}
       <div className="embla__viewport flex-1" ref={emblaRef}>
         <div className="embla__container">
           {SLIDES.map((index) => (
@@ -30,7 +30,7 @@ export default function HomeSlider() {
           ))}
         </div>
       </div>
-      <NextButton onClick={onNextButtonClick} disabled={nextBtnDisabled} />
+      {/* <NextButton onClick={onNextButtonClick} disabled={nextBtnDisabled} /> */}
     </section>
   );
 }

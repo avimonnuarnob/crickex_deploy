@@ -1,6 +1,5 @@
 import casino from "@/assets/images/icon/casino.svg";
 import cricket from "@/assets/images/icon/cricket.svg";
-import exclusiveIcon from "@/assets/images/icon/exclusive.svg";
 import sportIcon from "@/assets/images/icon/sport.svg";
 import { GuestRoute, ProtectedRoute } from "./routes";
 

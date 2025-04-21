@@ -1,0 +1,102 @@
+import React, { Fragment } from "react";
+import { Tab, TabGroup, TabList, TabPanel, TabPanels } from "@headlessui/react";
+import { motion, AnimatePresence } from "motion/react";
+
+import casino from "@/assets/images/icon/casino.svg";
+import cricket from "@/assets/images/icon/cricket.svg";
+import sportIcon from "@/assets/images/icon/sport.svg";
+
+const tabs = [
+  { name: "SPORTS", icon: sportIcon },
+  { name: "CASINO", icon: sportIcon },
+  { name: "SLOTS", icon: sportIcon },
+  { name: "TABLE", icon: sportIcon },
+  { name: "CRASH", icon: sportIcon },
+  { name: "FISHING", icon: sportIcon },
+  { name: "ARCADE", icon: sportIcon },
+  { name: "LOTTERY", icon: sportIcon },
+];
+
+const panelItems = [
+  { label: "JILI" },
+  { label: "JDB" },
+  { label: "FC" },
+  { label: "KA" },
+  { label: "JOKER" },
+  { label: "CQ9" },
+  { label: "Lucky365" },
+  { label: "JILI" },
+  { label: "JDB" },
+  { label: "FC" },
+  { label: "KA" },
+  { label: "JOKER" },
+];
+
+export default function CategoryTab() {
+  return (
+    <div className="flex w-full justify-center mt-4">
+      <div className="w-full">
+        <TabGroup>
+          <TabList className="flex bg-[#004179] text-white rounded overflow-hidden">
+            {tabs.map((tab, idx) => (
+              <Tab key={tab.name} as={Fragment}>
+                {({ selected }) => (
+                  <button
+                    className={`data-[selected]:border-none flex flex-col data items-center justify-center px-5 py-1 font-extrabold transition relative ${
+                      selected && "bg-[#005dac]"
+                    }`}
+                  >
+                    <img src={tab.icon} className="pt-3" />
+                    <span className="text-sm mt-3">{tab.name}</span>
+                    {selected && (
+                      <span className="absolute bottom-[0px] left-1/2 -translate-x-1/2 w-0 h-0 border-l-8 border-r-8 border-b-8 border-transparent border-b-white" />
+                    )}
+                  </button>
+                )}
+              </Tab>
+            ))}
+          </TabList>
+          <TabPanels>
+            {tabs.map((tab, idx) => (
+              <TabPanel key={tab.name}>
+                <div className="flex my-2 gap-1 items-center">
+                  <div className="w-1 h-4 bg-[#005dac] rounded"></div>
+                  <span className="font-bold">{tab.name}</span>
+                </div>
+                <motion.div
+                  initial={{ opacity: 1, x: -400 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 1, x: 40 }}
+                  transition={{ duration: 0.3 }}
+                  className="grid md:grid-cols-8 gap-1"
+                >
+                  {panelItems.map((item, idx) => (
+                    <div
+                      key={idx}
+                      className="bg-white p-2 text-center text-sm font-light flex flex-col items-center"
+                    >
+                      <img
+                        src="https://img.c88rx.com/cx/h5/assets/images/brand/black/provider-awcmjili.png?v=1744705193129&source=mcdsrc"
+                        width="40"
+                        height="40"
+                      />
+                      {item.label}
+                    </div>
+                  ))}
+                  {Array.from({
+                    length: 8 - (panelItems.length % 8),
+                  }).map((el) => (
+                    <div
+                      key={"blank-" + idx}
+                      className="bg-white p-2 text-center text-sm font-semibold hidden md:block"
+                    ></div>
+                  ))}
+                </motion.div>
+              </TabPanel>
+            ))}
+          </TabPanels>
+        </TabGroup>
+      </div>
+    </div>
+  );
+}

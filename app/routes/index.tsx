@@ -1,6 +1,9 @@
+import CategoryTab from "@/components/home/category-tabs";
 import type { Route } from "./+types/about";
 
 import React, { Suspense, useEffect, useState } from "react";
+import FavouriteGames from "@/components/home/favourite-games";
+import FeaturedGames from "@/components/home/featured-games";
 
 const HomeSlider = React.lazy(() => import("@/components/home/home-slider"));
 
@@ -24,13 +27,18 @@ export default function Home({ loaderData }: Route.ComponentProps) {
   useEffect(() => setMounted(true), []);
 
   return (
-    <div className="min-h-[1000px]">
+    <div className="">
       <div className="mt-18 py-1">
         {mounted ? (
           <Suspense fallback={<div>Loading...</div>}>
             <HomeSlider />
           </Suspense>
         ) : null}
+        <CategoryTab />
+        <div className="py-5">
+          <FavouriteGames />
+        </div>
+        <FeaturedGames />
       </div>
     </div>
   );

@@ -2,7 +2,7 @@ import React from "react";
 import { Await } from "react-router";
 import type { Route } from "./+types/about";
 
-export async function clientLoader() {
+export async function loader() {
   // note this is NOT awaited
   let nonCriticalData = new Promise((res) =>
     setTimeout(() => res("non-critical"), 5000)

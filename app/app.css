@@ -1,7 +1,7 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
+  --background: #f5f5f5;
   --foreground: #000000;
 
   --custom-blue-1: #005dac;
@@ -70,6 +70,10 @@
   --color-yellow-3: var(--custom-yellow-3);
 
   --font-sans: var(--font-arimo);
+}
+
+body {
+  background-color: var(--background);
 }
 
 .embla__viewport {
