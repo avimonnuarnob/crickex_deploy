@@ -17,14 +17,17 @@ export default function HomeSlider() {
     onNextButtonClick,
   } = usePrevNextButtons(emblaApi);
   return (
-    <section className="embla flex items-center">
+    <section className="embla flex items-center rounded overflow-hidden">
       {/* <PrevButton onClick={onPrevButtonClick} disabled={prevBtnDisabled} /> */}
       <div className="embla__viewport flex-1" ref={emblaRef}>
         <div className="embla__container">
           {SLIDES.map((index) => (
-            <div className="embla__slide border-2" key={index}>
-              <div className="embla__slide__number">
-                <img src="https://img.c88rx.com/upload/announcement/image_218805.jpg" />
+            <div className="embla__slide md:h-[300px]" key={index}>
+              <div className="embla__slide__number h-full">
+                <img
+                  className="object-cover h-full w-full"
+                  src="https://img.c88rx.com/upload/announcement/image_218805.jpg"
+                />
               </div>
             </div>
           ))}
