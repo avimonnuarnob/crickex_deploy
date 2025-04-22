@@ -33,10 +33,18 @@ const NavItem = ({
   return href ? (
     <Link
       to={href}
-      className="flex items-center gap-6 transition hover:bg-blue-9"
-      style={{ padding: "13px 10px 13px 23px" }}
+      className="flex items-center transition cursor-pointer gap-4 hover:bg-blue-9"
+      style={{
+        padding: isFull ? "10px 10px 10px 23px" : "10px 0 10px 13.6px",
+      }}
     >
-      <img src={icon} alt="home" width={20} height={20} className="w-5" />
+      <img
+        src={
+          "https://img.c88rx.com/cx/h5/assets/images/icon-set/theme-icon/side-nav/icon-home.png?v=1744705193129"
+        }
+        alt="home"
+        className="w-7.5"
+      />
       <span
         className={classNames("text-base", {
           "font-bold text-white": !isChild,
@@ -47,10 +55,19 @@ const NavItem = ({
       </span>
     </Link>
   ) : (
-    <button className="hover:bg-blue-9 flex w-full cursor-pointer items-center gap-6 py-3 pr-3 pl-6 transition">
-      <img src={icon} alt="home" width={20} height={20} className="w-5" />
+    <button
+      className="hover:bg-blue-9 flex w-full cursor-pointer items-center gap-4 transition"
+      style={{
+        padding: isFull ? "10px 10px 10px 23px" : "10px 0 10px 13.6px",
+      }}
+    >
+      <img
+        src="https://img.c88rx.com/cx/h5/assets/images/icon-set/theme-icon/nav/icon-sport.png?v=1744705193129"
+        alt="home"
+        className="w-7.5"
+      />
       <span className="flex w-full items-center justify-between">
-        <span className="font-bold text-white">{children}</span>
+        <span className="text-base font-bold text-white">{children}</span>
         <HiChevronDown
           className={classNames("text-base text-white", {
             "rotate-180": isOpen,

@@ -1,7 +1,7 @@
 import { navLinks } from "@/constants/navLinks";
 import classNames from "classnames";
 import { type Dispatch, type SetStateAction } from "react";
-import { HiChevronLeft, HiChevronRight } from "react-icons/hi";
+import { FaChevronRight, FaChevronLeft } from "react-icons/fa6";
 import homeIcon from "@/assets/images/icon/home.svg";
 import NavItem from "./NavItem";
 import Submenu from "./Submenu";
@@ -13,61 +13,49 @@ type SidebarProps = Readonly<{
 
 const Sidebar = ({ isFull, setIsFull }: SidebarProps) => {
   return (
-    <div className={classNames("bg-blue-1 relative z-100 h-full flex-none")}>
-      {isFull && (
+    <div className={classNames("relative flex-none bg-blue-1 flex flex-col")}>
+      {isFull ? (
         <button
           onClick={() => setIsFull((prev) => !prev)}
-          className="bg-blue-8 absolute end-0 top-2 z-1 translate-x-1/2 cursor-pointer rounded-2xl px-2.5 py-1"
+          className="bg-blue-8 absolute z-10 end-0 top-2 translate-x-1/2 cursor-pointer rounded-2xl pl-3 pr-3.5 py-[7px]"
         >
-          <HiChevronLeft className="text-xl text-white" />
+          <FaChevronLeft className="text-sm text-white" />
         </button>
+      ) : (
+        <div className="bg-blue-2 flex h-15 w-full items-center justify-center">
+          <button
+            onClick={() => setIsFull((prev) => !prev)}
+            className="bg-blue-8 cursor-pointer rounded-2xl pl-3 pr-3.5 py-[7px]"
+          >
+            <FaChevronRight className="text-sm text-white" />
+          </button>
+        </div>
       )}
+
       <div
-        className={classNames("overflow-hidden transition-[width]", {
-          "w-16": !isFull,
-          "w-61": isFull,
-        })}
+        className={classNames(
+          "overflow-x-hidden overflow-y-scroll transition-[width] flex-1",
+          {
+            "w-15.75": !isFull,
+            "w-62.5": isFull,
+          }
+        )}
       >
-        <ul className="h-dvh">
-          {isFull ? (
-            <li className="relative">
-              <NavItem href="/" icon={homeIcon}>
-                Home
-              </NavItem>
-              <div className="border-blue-3 border-b" />
-            </li>
-          ) : (
-            <>
-              <li>
-                <div className="bg-blue-2 flex h-15 w-full items-center justify-center">
-                  <button
-                    onClick={() => setIsFull((prev) => !prev)}
-                    className="bg-blue-8 cursor-pointer rounded-2xl px-2.5 py-1"
-                  >
-                    <HiChevronRight className="text-xl text-white" />
-                  </button>
-                </div>
-              </li>
-              <li className={classNames("relative", { "-ml-1": !isFull })}>
-                <NavItem href="/" icon={homeIcon}>
-                  Home
-                </NavItem>
-                <div className="border-blue-3 border-b" />
-              </li>
-            </>
-          )}
+        <ul>
+          <li>
+            <NavItem href="/" icon={homeIcon} isFull={isFull}>
+              Home
+            </NavItem>
+            <div className="border-blue-3 border-b" />
+          </li>
 
           {navLinks.map((navLink, index) =>
             navLink.children ? (
-              <li
-                key={index}
-                onClick={() => setIsFull(true)}
-                className={classNames({ "-ml-1": !isFull })}
-              >
+              <li key={index} onClick={() => setIsFull(true)}>
                 <Submenu isFull={isFull} {...navLink} />
               </li>
             ) : (
-              <li key={index} className={classNames({ "-ml-1": !isFull })}>
+              <li key={index}>
                 <NavItem {...navLink}>{navLink.text}</NavItem>
               </li>
             )
