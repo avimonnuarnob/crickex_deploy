@@ -31,7 +31,7 @@ const Topbar = ({ isFull }: TopbarProps) => {
         <div
           className={classNames("mx-auto max-w-[1200px]", {
             "w-[calc(100%-(16px*2))]": !isFull,
-            "w-[calc(100%-(16px*4))]": isFull,
+            "w-[calc(100%-(16px*3.75))]": isFull,
           })}
         >
           <div className="flex h-15 items-center justify-between py-4">
