@@ -4,6 +4,7 @@ import type { Route } from "./+types/about";
 import React, { Suspense, useEffect, useState } from "react";
 import FavouriteGames from "@/components/home/favourite-games";
 import FeaturedGames from "@/components/home/featured-games";
+import HomeMarquee from "@/components/home/home-marquee";
 
 const HomeSlider = React.lazy(() => import("@/components/home/home-slider"));
 
@@ -34,6 +35,7 @@ export default function Home({ loaderData }: Route.ComponentProps) {
             <HomeSlider />
           </Suspense>
         ) : null}
+        <HomeMarquee />
         <CategoryTab />
         <div className="py-5">
           <FavouriteGames />

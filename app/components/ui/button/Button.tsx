@@ -5,7 +5,7 @@ import Spinner from "../spinner/Spinner";
 export type ButtonProps<T extends React.ElementType = "button"> = {
   color?: "blue" | "green" | "red" | "link" | "white" | "yellow";
   isBlock?: boolean;
-  size?: "sm" | "md";
+  size?: "sm" | "md" | "lg";
   isLoading?: boolean;
   isDisabled?: boolean;
   as?: T;
@@ -35,8 +35,8 @@ const Button = <T extends React.ElementType = "button">({
   };
   const sizeClasses = {
     sm: "px-6 py-2 text-sm",
-    md: "px-6 py-[10.5px] text-sm",
-    lg: "px-7 py-3 text-xs",
+    md: "px-[31.5px] py-[10.5px] text-sm",
+    lg: "px-7 py-3.5 text-sm",
   };
 
   return (

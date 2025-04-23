@@ -1,6 +1,9 @@
-"use client";
-
-import { useController, type Control, type FieldPath, type FieldValues } from "react-hook-form";
+import {
+  useController,
+  type Control,
+  type FieldPath,
+  type FieldValues,
+} from "react-hook-form";
 
 type WithControllerProps<
   InputProps extends object,
@@ -11,20 +14,28 @@ type WithControllerProps<
   name: TName;
 } & InputProps;
 
-export function withController<InputProps extends object>(Component: React.ComponentType<InputProps>) {
+export function withController<InputProps extends object>(
+  Component: React.ComponentType<InputProps>
+) {
   function WrappedComponent<
     TFieldValues extends FieldValues = FieldValues,
     TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>
-  >({ name, control, ...props }: WithControllerProps<InputProps, TFieldValues, TName>) {
+  >({
+    name,
+    control,
+    ...props
+  }: WithControllerProps<InputProps, TFieldValues, TName>) {
     const {
       field,
-      fieldState: { error }
+      fieldState: { error },
     } = useController({ name, control });
 
     return <Component {...field} {...(props as InputProps)} error={error} />;
   }
 
-  WrappedComponent.displayName = `withController(${(Component.displayName ?? Component.name) || "Component"})`;
+  WrappedComponent.displayName = `withController(${
+    (Component.displayName ?? Component.name) || "Component"
+  })`;
 
   return WrappedComponent;
 }

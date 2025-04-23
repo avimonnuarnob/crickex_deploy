@@ -1,5 +1,3 @@
-"use client";
-
 import classNames from "classnames";
 import React, { useState } from "react";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
@@ -19,25 +17,32 @@ type FormTextFieldProps = (
   error?: FieldError;
 } & React.InputHTMLAttributes<HTMLInputElement>;
 
-const TextField = ({ label, id, type = "text", error, className, ...props }: FormTextFieldProps) => {
+const TextField = ({
+  label,
+  id,
+  type = "text",
+  error,
+  className,
+  ...props
+}: FormTextFieldProps) => {
   const [showPassword, setShowPassword] = useState(false);
   const isPassword = type === "password";
 
   return (
-    <div className='w-full'>
+    <div className="w-full">
       {label && (
-        <label htmlFor={id} className='mb-1.5 block text-[#474747]'>
+        <label htmlFor={id} className="mb-3.5 block text-[#474747] text-sm">
           {label}
         </label>
       )}
-      <div className='relative mb-1'>
+      <div className="relative">
         <input
           id={id}
           type={isPassword && showPassword ? "text" : type}
           className={classNames(
             "border-gray-7 bg-gray-8 focus:ring-blue-1 w-full rounded-sm border px-3 py-3.5 text-xs transition-all focus:ring-1 focus:outline-none",
             {
-              "border-red-1 focus:ring-2 focus:ring-red-400": !!error
+              "border-red-1 focus:ring-2 focus:ring-red-400": !!error,
             },
             className
           )}
@@ -45,15 +50,19 @@ const TextField = ({ label, id, type = "text", error, className, ...props }: For
         />
         {isPassword && (
           <button
-            type='button'
+            type="button"
             onClick={() => setShowPassword(!showPassword)}
-            className='absolute top-1/2 right-3 -translate-y-1/2'
+            className="absolute top-1/2 right-3 -translate-y-1/2"
           >
-            {showPassword ? <FaEyeSlash className='text-gray-3 text-sm' /> : <FaEye className='text-gray-3 text-sm' />}
+            {showPassword ? (
+              <FaEyeSlash className="text-gray-3 text-sm" />
+            ) : (
+              <FaEye className="text-gray-3 text-sm" />
+            )}
           </button>
         )}
       </div>
-      {error && <p className='text-red-1 text-xs'>{error.message}</p>}
+      {error && <p className="text-red-1 text-xs">{error.message}</p>}
     </div>
   );
 };

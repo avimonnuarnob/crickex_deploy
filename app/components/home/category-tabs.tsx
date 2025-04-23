@@ -34,7 +34,7 @@ const panelItems = [
 
 export default function CategoryTab() {
   return (
-    <div className="flex w-full justify-center mt-4">
+    <div className="flex w-full justify-center">
       <div className="w-full">
         <TabGroup>
           <TabList className="flex bg-[#004179] text-white rounded overflow-hidden">
@@ -42,12 +42,12 @@ export default function CategoryTab() {
               <Tab key={tab.name} as={Fragment}>
                 {({ selected }) => (
                   <button
-                    className={`data-[selected]:border-none flex flex-col data items-center justify-center px-5 py-1 font-extrabold transition relative ${
+                    className={`data-[selected]:border-none flex flex-col data items-center justify-center px-5 py-1 font-semibold transition relative ${
                       selected && "bg-[#005dac]"
                     }`}
                   >
                     <img src={tab.icon} className="pt-3" />
-                    <span className="text-sm mt-3">{tab.name}</span>
+                    <span className="text-sm mt-2.5">{tab.name}</span>
                     {selected && (
                       <span className="absolute bottom-[0px] left-1/2 -translate-x-1/2 w-0 h-0 border-l-8 border-r-8 border-b-8 border-transparent border-b-white" />
                     )}
