@@ -24,7 +24,7 @@ const Button = <T extends React.ElementType = "button">({
 }: ButtonProps<T>) => {
   const Component: React.ElementType = as || "button";
   const baseClasses =
-    "flex items-center justify-center cursor-pointer rounded-sm transition-all disabled:cursor-not-allowed disabled:opacity-80";
+    "flex items-center justify-center cursor-pointer rounded transition-all disabled:cursor-not-allowed disabled:opacity-80";
   const colorClasses = {
     blue: "bg-blue-1 text-white hover:bg-blue-7 disabled:bg-gray-3",
     green: "bg-green-1 text-white hover:bg-green-600 disabled:bg-gray-3",
@@ -35,7 +35,7 @@ const Button = <T extends React.ElementType = "button">({
   };
   const sizeClasses = {
     sm: "px-6 py-2 text-sm",
-    md: "px-[31.5px] py-[10.5px] text-sm",
+    md: "px-[31.5px] py-[10.25px] text-sm",
     lg: "px-7 py-3.5 text-sm",
   };
 

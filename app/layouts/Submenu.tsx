@@ -1,4 +1,8 @@
-import { Disclosure, DisclosureButton, DisclosurePanel } from "@headlessui/react";
+import {
+  Disclosure,
+  DisclosureButton,
+  DisclosurePanel,
+} from "@headlessui/react";
 import { AnimatePresence, motion } from "motion/react";
 import NavItem from "./NavItem";
 
@@ -19,12 +23,12 @@ const Submenu = ({ isFull, ...navLink }: SubmenuProps) => {
     <Disclosure>
       {({ open }) => (
         <div>
-          <DisclosureButton as='div'>
+          <DisclosureButton as="div">
             <NavItem {...navLink} isOpen={open} isFull={isFull}>
               {navLink.text}
             </NavItem>
           </DisclosureButton>
-          <div className='overflow-hidden'>
+          <div className="overflow-hidden">
             <AnimatePresence>
               {open && (
                 <motion.div
@@ -32,15 +36,17 @@ const Submenu = ({ isFull, ...navLink }: SubmenuProps) => {
                   animate={{ height: "auto" }}
                   exit={{ height: 0 }}
                   transition={{ duration: 0.2, ease: "easeInOut" }}
-                  className='origin-top'
+                  className="origin-top"
                 >
-                  <DisclosurePanel static as='ul' className='bg-white'>
+                  <DisclosurePanel static as="ul" className="bg-white">
                     {navLink.children.map((child, index) => (
                       <li key={index + 1}>
-                        <NavItem {...child} isChild isFull={isFull}>
-                          {child.text}
-                        </NavItem>
-                        <div className='border-gray-4 border-b' />
+                        <div style={{ padding: "2px 2px 2px 13px" }}>
+                          <NavItem {...child} isChild isFull={isFull}>
+                            {child.text}
+                          </NavItem>
+                        </div>
+                        <div className="border-gray-4 border-b" />
                       </li>
                     ))}
                   </DisclosurePanel>

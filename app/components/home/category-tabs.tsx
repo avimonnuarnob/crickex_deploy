@@ -39,12 +39,12 @@ export default function CategoryTab() {
         <TabGroup>
           <TabList className="flex bg-[#004179] text-white rounded overflow-hidden">
             {tabs.map((tab, idx) => (
-              <Tab key={tab.name} as={Fragment}>
+              <Tab key={tab.name} className="data-selected:outline-none">
                 {({ selected }) => (
                   <button
-                    className={`data-[selected]:border-none flex flex-col data items-center justify-center px-5 py-1 font-semibold transition relative ${
+                    className={` flex flex-col data items-center justify-center px-5 py-1 font-semibold transition relative ${
                       selected && "bg-[#005dac]"
-                    }`}
+                    } `}
                   >
                     <img src={tab.icon} className="pt-3" />
                     <span className="text-sm mt-2.5">{tab.name}</span>
@@ -59,7 +59,7 @@ export default function CategoryTab() {
           <TabPanels>
             {tabs.map((tab, idx) => (
               <TabPanel key={tab.name}>
-                <div className="flex my-2 gap-1 items-center">
+                <div className="flex my-2.5 gap-1 items-center">
                   <div className="w-1 h-4 bg-[#005dac] rounded"></div>
                   <span className="font-bold">{tab.name}</span>
                 </div>

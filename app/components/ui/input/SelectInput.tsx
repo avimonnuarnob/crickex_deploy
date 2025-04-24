@@ -6,7 +6,7 @@ import {
   ListboxOption,
   ListboxOptions,
 } from "@headlessui/react";
-import { FaChevronDown, FaCheck } from "react-icons/fa";
+import { FaChevronDown, FaCheck, FaCaretDown } from "react-icons/fa";
 
 const people = [
   {
@@ -77,8 +77,8 @@ export default function SelectInput() {
   return (
     <Listbox value={selected} onChange={setSelected}>
       <Label className="block text-sm/6 text-[#474747]">Choose currency</Label>
-      <div className="relative mt-3">
-        <ListboxButton className="grid w-full cursor-default grid-cols-1 rounded-md bg-[#eeeeee] py-3.5 pr-2 pl-3 text-left font-light text-gray-900 focus:outline-none focus:border-none sm:text-sm/6">
+      <div className="relative mt-2.5">
+        <ListboxButton className="grid w-full cursor-default grid-cols-1 rounded-sm bg-[#eeeeee] py-3 pr-2 pl-2 text-left font-light text-gray-900 focus:outline-none focus:border-none sm:text-sm/6 border-1 border-[#e7e7e7]">
           <span className="col-start-1 row-start-1 flex items-center gap-2 pr-6">
             <img
               alt=""
@@ -87,9 +87,9 @@ export default function SelectInput() {
             />
             <span className="block truncate">{selected.name}</span>
           </span>
-          <FaChevronDown
+          <FaCaretDown
             aria-hidden="true"
-            className="col-start-1 row-start-1 size-5 self-center justify-self-end text-gray-500 sm:size-4"
+            className="col-start-1 row-start-1 size-3 self-center justify-self-end text-gray-500"
           />
         </ListboxButton>
 

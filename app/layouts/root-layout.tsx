@@ -219,7 +219,7 @@ const Footer = () => {
       </div>
 
       <div className="footer-bottom">
-        <div className="footer__nav border-t border-gray-4 pt-6 mt-16 text-sm text-[#005dac]">
+        <div className="footer__nav border-t border-gray-4 pt-6 mt-16 text-[#005dac]">
           <div className="flex flex-wrap gap-4">
             {[
               "About Us",
@@ -236,7 +236,7 @@ const Footer = () => {
             ))}
           </div>
 
-          <div className="my-12 text-gray-500 flex gap-4 items-center">
+          <div className="mt-12 text-gray-500 flex gap-4 items-center">
             <img
               src="https://img.c88rx.com/cx/h5/assets/images/logo-02.png?v=1744705193129"
               width={55}

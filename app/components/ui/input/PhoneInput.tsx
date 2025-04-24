@@ -31,11 +31,11 @@ const PhoneInput = ({
   return (
     <div className="w-full">
       {label && (
-        <label htmlFor={id} className="mb-3.5 block text-[#474747] text-sm">
+        <label htmlFor={id} className="mb-3 block text-[#474747] text-sm">
           {label}
         </label>
       )}
-      <div className="flex bg-[#eeeeee] items-center">
+      <div className="flex bg-[#eeeeee] items-center rounded border-1 border-[#e7e7e7]">
         <div className="w-[28%] flex gap-2 justify-center items-center bg-[#eeeeee]">
           <img
             src="https://img.c88rx.com/cx/h5/assets/images/flag/BD.png?v=1745315485946&source=mcdsrc"
@@ -49,7 +49,7 @@ const PhoneInput = ({
             id={id}
             type={isPassword && showPassword ? "text" : type}
             className={classNames(
-              "border-none bg-gray-8 focus:ring-blue-1 w-full border px-3 py-3.5 text-xs transition-all focus:ring-1 focus:outline-none",
+              "border-none bg-gray-8 focus:ring-blue-1 w-full border px-4 py-3.75 text-xs transition-all focus:ring-1 focus:outline-none font-light",
               {
                 "border-red-1 focus:ring-2 focus:ring-red-400": !!error,
               },

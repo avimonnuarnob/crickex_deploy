@@ -34,7 +34,7 @@ const Sidebar = ({ isFull, setIsFull }: SidebarProps) => {
 
       <div
         className={classNames(
-          "overflow-x-hidden overflow-y-scroll transition-[width] flex-1",
+          "overflow-x-hidden overflow-y-scroll transition-[width] flex-1 [&::-webkit-scrollbar]:hidden border-r-5 border-[#255c93]",
           {
             "w-15.75": !isFull,
             "w-62.5": isFull,
@@ -42,8 +42,18 @@ const Sidebar = ({ isFull, setIsFull }: SidebarProps) => {
         )}
       >
         <ul>
-          <li>
-            <NavItem href="/" icon={homeIcon} isFull={isFull}>
+          <li
+            className={classNames({
+              "-ml-[9.5px]": !isFull,
+            })}
+          >
+            <NavItem
+              href="/"
+              icon={
+                "https://img.c88rx.com/cx/h5/assets/images/icon-set/theme-icon/side-nav/icon-home.png?v=1744705193129"
+              }
+              isFull={isFull}
+            >
               Home
             </NavItem>
             <div className="border-blue-3 border-b" />
@@ -51,11 +61,22 @@ const Sidebar = ({ isFull, setIsFull }: SidebarProps) => {
 
           {navLinks.map((navLink, index) =>
             navLink.children ? (
-              <li key={index} onClick={() => setIsFull(true)}>
+              <li
+                className={classNames({
+                  "-ml-[9.5px]": !isFull,
+                })}
+                key={index}
+                onClick={() => setIsFull(true)}
+              >
                 <Submenu isFull={isFull} {...navLink} />
               </li>
             ) : (
-              <li key={index}>
+              <li
+                key={index}
+                className={classNames({
+                  "-ml-[9.5px]": !isFull,
+                })}
+              >
                 <NavItem {...navLink}>{navLink.text}</NavItem>
               </li>
             )

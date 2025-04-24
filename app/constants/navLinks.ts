@@ -1,6 +1,7 @@
 import casino from "@/assets/images/icon/casino.svg";
 import cricket from "@/assets/images/icon/cricket.svg";
 import sportIcon from "@/assets/images/icon/sport.svg";
+import promotionsIcon from "@/assets/images/icon/promotions.svg";
 import { GuestRoute, ProtectedRoute } from "./routes";
 
 export const navLinks = [
@@ -10,57 +11,45 @@ export const navLinks = [
   //   text: "Exclusive",
   // },
   {
-    icon: sportIcon,
-    text: "Sports",
+    href: "#",
+    icon: "https://img.c88rx.com/cx/h5/assets/images/icon-set/theme-icon/side-nav/icon-responsible-gaming.png?v=1745315485946",
+    text: "Responsible Gaming",
+  },
+  {
+    href: "#",
+    icon: "https://img.c88rx.com/cx/h5/assets/images/icon-set/theme-icon/side-nav/icon-affiliate.png?v=1745315485946",
+    text: "Affiliate",
+  },
+  {
+    icon: "https://img.c88rx.com/cx/h5/assets/images/icon-set/theme-icon/side-nav/icon-talk.png?v=1745315485946",
+    text: "Contact Us",
     children: [
       {
-        icon: cricket,
-        href: "/about",
-        text: "Cricket",
-      },
-      {
-        icon: cricket,
+        icon: "https://img.c88rx.com/cx/h5/assets/images/icon-set/theme-icon/member-center/icon-customer.png?v=1745315485946",
         href: ProtectedRoute.Cricket,
-        text: "Cricket",
+        text: "CS Link",
       },
+
       {
-        icon: cricket,
+        icon: "https://img.c88rx.com/cx/h5/assets/images/icon-set/theme-icon/member-center/icon-customer.png?v=1745315485946",
         href: ProtectedRoute.Cricket,
-        text: "Cricket",
+        text: "Telegram Link",
       },
     ],
   },
   {
-    icon: casino,
-    text: "Casino",
-    children: [
-      {
-        icon: cricket,
-        href: ProtectedRoute.Cricket,
-        text: "Slots",
-      },
-    ],
+    href: "#",
+    icon: "https://img.c88rx.com/cx/h5/assets/images/icon-set/theme-icon/side-nav/icon-crickex-blog.png?v=1745315485946",
+    text: "Crickex Blog",
   },
   {
-    icon: casino,
-    text: "Casino",
-    children: [
-      {
-        icon: cricket,
-        href: ProtectedRoute.Cricket,
-        text: "Slots",
-      },
-    ],
+    href: "#",
+    icon: "https://img.c88rx.com/cx/h5/assets/images/icon-set/theme-icon/side-nav/icon-about-us.png?v=1745315485946",
+    text: "About Us",
   },
   {
-    icon: casino,
-    text: "Casino",
-    children: [
-      {
-        icon: cricket,
-        href: ProtectedRoute.Cricket,
-        text: "Slots",
-      },
-    ],
+    href: "#",
+    icon: "https://img.c88rx.com/cx/h5/assets/images/icon-set/theme-icon/side-nav/icon-faq.png?v=1745315485946",
+    text: "FAQ",
   },
 ];

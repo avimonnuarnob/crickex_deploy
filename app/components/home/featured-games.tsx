@@ -65,7 +65,7 @@ export default function FeaturedGames() {
         <span className="font-bold">Featured Games</span>
       </div>
 
-      <div className="overflow-x-auto scrollbar-hide">
+      <div className="overflow-x-auto [&::-webkit-scrollbar]:h-1.5 [&::-webkit-scrollbar-thumb]:bg-gray-300 [&::-webkit-scrollbar-thumb]:rounded">
         <div className="flex space-x-2 min-w-max">
           {matches.map((m, i) => (
             <div

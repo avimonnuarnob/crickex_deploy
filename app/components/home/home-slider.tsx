@@ -41,7 +41,7 @@ export default function HomeSlider() {
         </div>
         {/* <NextButton onClick={onNextButtonClick} disabled={nextBtnDisabled} /> */}
       </div>
-      <div className="embla__dots flex gap-1.5 justify-center py-3.75">
+      <div className="embla__dots flex gap-1.5 justify-center pt-3.75 pb-2.75">
         {scrollSnaps.map((_, index) => (
           <DotButton
             key={index}

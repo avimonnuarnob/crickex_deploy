@@ -1,7 +1,8 @@
 import { useClose } from "@headlessui/react";
 import classNames from "classnames";
 import { useEffect } from "react";
-import { HiChevronDown } from "react-icons/hi";
+import { BsChevronDown } from "react-icons/bs";
+
 import { Link } from "react-router";
 
 type NavItemProps = Readonly<{
@@ -35,21 +36,16 @@ const NavItem = ({
       to={href}
       className="flex items-center transition cursor-pointer gap-4 hover:bg-blue-9"
       style={{
-        padding: isFull ? "10px 10px 10px 23px" : "10px 0 10px 13.6px",
+        padding: isFull ? "10px 23px 10px 23px" : "10px 10px 10px 23px",
       }}
     >
-      <img
-        src={
-          "https://img.c88rx.com/cx/h5/assets/images/icon-set/theme-icon/side-nav/icon-home.png?v=1744705193129"
-        }
-        alt="home"
-        className="w-7.5"
-      />
+      <img src={icon} alt="home" className="w-7.5" />
       <span
-        className={classNames("text-base", {
+        className={classNames("text-base truncate", {
           "font-bold text-white": !isChild,
           "text-dark-1": isChild,
         })}
+        style={{ width: "11ch" }}
       >
         {children}
       </span>
@@ -58,18 +54,14 @@ const NavItem = ({
     <button
       className="hover:bg-blue-9 flex w-full cursor-pointer items-center gap-4 transition"
       style={{
-        padding: isFull ? "10px 10px 10px 23px" : "10px 0 10px 13.6px",
+        padding: isFull ? "10px 23px 10px 23px" : "10px 10px 10px 23px",
       }}
     >
-      <img
-        src="https://img.c88rx.com/cx/h5/assets/images/icon-set/theme-icon/nav/icon-sport.png?v=1744705193129"
-        alt="home"
-        className="w-7.5"
-      />
+      <img src={icon} alt="home" className="w-7.5" />
       <span className="flex w-full items-center justify-between">
         <span className="text-base font-bold text-white">{children}</span>
-        <HiChevronDown
-          className={classNames("text-base text-white", {
+        <BsChevronDown
+          className={classNames("text-base font-light text-white", {
             "rotate-180": isOpen,
           })}
         />

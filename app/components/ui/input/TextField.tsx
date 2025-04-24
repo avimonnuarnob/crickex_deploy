@@ -31,7 +31,7 @@ const TextField = ({
   return (
     <div className="w-full">
       {label && (
-        <label htmlFor={id} className="mb-3.5 block text-[#474747] text-sm">
+        <label htmlFor={id} className="mb-3 block text-[#474747] text-sm">
           {label}
         </label>
       )}
@@ -40,7 +40,7 @@ const TextField = ({
           id={id}
           type={isPassword && showPassword ? "text" : type}
           className={classNames(
-            "border-gray-7 bg-gray-8 focus:ring-blue-1 w-full rounded-sm border px-3 py-3.5 text-xs transition-all focus:ring-1 focus:outline-none",
+            "border-gray-7 bg-gray-8 focus:ring-blue-1 w-full rounded-sm border px-4 py-3.75 text-xs transition-all focus:ring-1 focus:outline-non font-light",
             {
               "border-red-1 focus:ring-2 focus:ring-red-400": !!error,
             },

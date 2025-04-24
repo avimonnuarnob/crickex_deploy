@@ -20,7 +20,7 @@ const Modal = ({ isOpen, onClose, children, title }: ModalProps) => {
     <AnimatePresence>
       {isOpen && (
         <Dialog open={isOpen} onClose={onClose} className="relative z-50">
-          <DialogBackdrop className="fixed inset-0 bg-white/10 backdrop-blur-xs" />
+          <DialogBackdrop className="fixed inset-0 backdrop-blur-xs" />
 
           <div className="fixed inset-0 flex w-screen items-center justify-center p-4">
             <motion.div
@@ -28,7 +28,7 @@ const Modal = ({ isOpen, onClose, children, title }: ModalProps) => {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: 100 }}
               transition={{ duration: 0.2, ease: "easeInOut" }}
-              className="w-[375px] min-h-93/100 relative"
+              className="w-[375px] min-h-[93.75%] relative"
             >
               <DialogPanel className="space-y-4 rounded-[10px] bg-white absolute w-full h-full overflow-hidden flex flex-col">
                 <div className="bg-blue-1 relative mb-0 rounded-t-[10px] p-2.75">
@@ -39,7 +39,7 @@ const Modal = ({ isOpen, onClose, children, title }: ModalProps) => {
                     {title}
                   </DialogTitle>
                 </div>
-                <div className="bg-white rounded-b-[10px] overflow-y-auto">
+                <div className="bg-white rounded-b-[10px] overflow-y-auto [&::-webkit-scrollbar]:w-1.25 [&::-webkit-scrollbar-thumb]:bg-gray-300 [&::-webkit-scrollbar-thumb]:rounded">
                   {children}
                 </div>
               </DialogPanel>
