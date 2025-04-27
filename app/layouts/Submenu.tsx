@@ -38,10 +38,10 @@ const Submenu = ({ isFull, ...navLink }: SubmenuProps) => {
                   transition={{ duration: 0.2, ease: "easeInOut" }}
                   className="origin-top"
                 >
-                  <DisclosurePanel static as="ul" className="bg-white">
+                  <DisclosurePanel static as="ul">
                     {navLink.children.map((child, index) => (
                       <li key={index + 1}>
-                        <div style={{ padding: "2px 2px 2px 13px" }}>
+                        <div className="pl-3.25 bg-[#f5f5f5]">
                           <NavItem {...child} isChild isFull={isFull}>
                             {child.text}
                           </NavItem>

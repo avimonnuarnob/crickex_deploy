@@ -59,16 +59,16 @@ export default function CategoryTab() {
           <TabPanels>
             {tabs.map((tab, idx) => (
               <TabPanel key={tab.name}>
-                <div className="flex my-2.5 gap-1 items-center">
+                <div className="flex py-2.5 gap-1 items-center">
                   <div className="w-1 h-4 bg-[#005dac] rounded"></div>
-                  <span className="font-bold">{tab.name}</span>
+                  <span className="font-bold text-[15px]">{tab.name}</span>
                 </div>
                 <motion.div
                   initial={{ opacity: 1, x: -400 }}
                   animate={{ opacity: 1, x: 0 }}
                   exit={{ opacity: 1, x: 40 }}
                   transition={{ duration: 0.3 }}
-                  className="grid md:grid-cols-8 gap-1"
+                  className="grid md:grid-cols-8 gap-1 rounded overflow-hidden pb-2.75"
                 >
                   {panelItems.map((item, idx) => (
                     <div

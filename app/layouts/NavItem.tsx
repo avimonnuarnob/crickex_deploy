@@ -39,7 +39,7 @@ const NavItem = ({
         padding: isFull ? "10px 23px 10px 23px" : "10px 10px 10px 23px",
       }}
     >
-      <img src={icon} alt="home" className="w-7.5" />
+      <img src={icon} alt="home" className="w-7.5 h-7.5" />
       <span
         className={classNames("text-base truncate", {
           "font-bold text-white": !isChild,
@@ -52,16 +52,16 @@ const NavItem = ({
     </Link>
   ) : (
     <button
-      className="hover:bg-blue-9 flex w-full cursor-pointer items-center gap-4 transition"
+      className="hover:bg-blue-9 flex items-center w-full cursor-pointer gap-4 transition h-[50px]"
       style={{
         padding: isFull ? "10px 23px 10px 23px" : "10px 10px 10px 23px",
       }}
     >
-      <img src={icon} alt="home" className="w-7.5" />
+      <img src={icon} alt="home" className="w-7.5 h-7.5" />
       <span className="flex w-full items-center justify-between">
         <span className="text-base font-bold text-white">{children}</span>
         <BsChevronDown
-          className={classNames("text-base font-light text-white", {
+          className={classNames("font-light text-white", {
             "rotate-180": isOpen,
           })}
         />

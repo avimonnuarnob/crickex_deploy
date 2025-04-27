@@ -60,7 +60,7 @@ const matches = [
 export default function FeaturedGames() {
   return (
     <div className="w-full">
-      <div className="flex my-2 gap-1 items-center">
+      <div className="flex py-2 gap-1 items-center">
         <div className="w-1 h-4 bg-[#005dac] rounded"></div>
         <span className="font-bold">Featured Games</span>
       </div>
@@ -70,12 +70,12 @@ export default function FeaturedGames() {
           {matches.map((m, i) => (
             <div
               key={i}
-              className="max-w-[180px] rounded-md overflow-hidden bg-white"
+              className="w-[180px] rounded-md overflow-hidden bg-white"
             >
               <img
                 src="https://img.c88rx.com/upload/game/AWCMJILI/JILI-SLOT-027.png"
                 alt={`Match ${i + 1}`}
-                className="w-full h-auto object-cover"
+                className="w-full h-[120px] object-cover"
               />
               <h3 className="p-2">Super Ace</h3>
             </div>

@@ -36,6 +36,9 @@ export default function RootLayout({ loaderData }: Route.ComponentProps) {
                   })}
                 >
                   <Outlet />
+                </div>
+
+                <div className="mx-auto max-w-[1200px] px-2.5">
                   <Footer />
                 </div>
               </div>
@@ -49,11 +52,11 @@ export default function RootLayout({ loaderData }: Route.ComponentProps) {
 
 const Footer = () => {
   return (
-    <footer className="text-sm text-gray-500 py-8">
-      <div className="footer-top">
-        <div className="mb-5">
-          <h4 className="text-sm font-bold">Payment Methods</h4>
-          <div className="pt-2 flex gap-2">
+    <footer className="text-[#555555]">
+      <div className="footer-top" style={{ padding: "15px 0 10px" }}>
+        <div className="mb-5.25">
+          <h4 className="text-[13px] mb-3.5 font-bold">Payment Methods</h4>
+          <div className="flex gap-2">
             <img
               src="https://img.c88rx.com/cx/h5/assets/images/footer/color-black/pay16.png?v=1744705193129&source=mcdsrc"
               width={40}
@@ -67,9 +70,9 @@ const Footer = () => {
           </div>
         </div>
 
-        <div className="mb-5">
-          <h4 className="text-sm font-bold">Social Networks</h4>
-          <div className="pt-2 flex gap-2">
+        <div className="mb-5.25">
+          <h4 className="text-[13px] mb-3.5 font-bold">Social Networks</h4>
+          <div className="flex gap-2.75">
             <img
               src="https://img.c88rx.com/cx/h5/assets/images/footer/color-black/social/facebook.png?v=1744705193129&source=mcdsrc"
               width={24}
@@ -99,8 +102,8 @@ const Footer = () => {
         </div>
 
         <div className="mb-5">
-          <h4 className="text-sm font-bold">Sponsor</h4>
-          <div className="pt-2 flex gap-2">
+          <h4 className="text-[13px] mb-4.5 font-bold">Sponsor</h4>
+          <div className="flex gap-2">
             <div className="flex gap-2 items-center">
               <img
                 src="https://img.c88rx.com/cx/h5/assets/images/footer/sponsor1.png?v=1744705193129&source=mcdsrc"
@@ -153,52 +156,55 @@ const Footer = () => {
         </div>
 
         <div className="mb-5">
-          <h4 className="text-sm font-bold">Brand Ambassador</h4>
-          <div className="pt-2 flex gap-2">
+          <h4 className="text-[13px] mb-3.5 font-bold">Brand Ambassador</h4>
+          <div className="flex gap-2">
             <div className="">
               <img
+                className="mb-1.5"
                 src="https://img.c88rx.com/cx/h5/assets/images/footer/ambassadors1.png?v=1744705193129&source=mcdsrc"
                 width={64}
                 height={32}
               />
               <div className="text-black ">
                 <p className="text-xs font-bold leading-3">Robin Uthappa</p>
-                <p className="text-xs font-light italic leading-3">
+                <p className="text-[11px] font-light italic leading-2.75">
                   Indian Cricket Legend
                 </p>
-                <p className="text-xs font-light italic leading-3">
+                <p className="text-[11px] font-light italic leading-2.75">
                   2023 - 2024
                 </p>
               </div>
             </div>
             <div className="">
               <img
+                className="mb-1.5"
                 src="https://img.c88rx.com/cx/h5/assets/images/footer/ambassadors1.png?v=1744705193129&source=mcdsrc"
                 width={64}
                 height={32}
               />
               <div className="text-black ">
                 <p className="text-xs font-bold leading-3">Robin Uthappa</p>
-                <p className="text-xs font-light italic leading-3">
+                <p className="text-[11px] font-light italic leading-2.75">
                   Indian Cricket Legend
                 </p>
-                <p className="text-xs font-light italic leading-3">
+                <p className="text-[11px] font-light italic leading-2.75">
                   2023 - 2024
                 </p>
               </div>
             </div>
             <div className="">
               <img
+                className="mb-1.5"
                 src="https://img.c88rx.com/cx/h5/assets/images/footer/ambassadors1.png?v=1744705193129&source=mcdsrc"
                 width={64}
                 height={32}
               />
               <div className="text-black ">
                 <p className="text-xs font-bold leading-3">Robin Uthappa</p>
-                <p className="text-xs font-light italic leading-3">
+                <p className="text-[11px] font-light italic leading-2.75">
                   Indian Cricket Legend
                 </p>
-                <p className="text-xs font-light italic leading-3">
+                <p className="text-[11px] font-light italic leading-2.75">
                   2023 - 2024
                 </p>
               </div>
@@ -206,9 +212,9 @@ const Footer = () => {
           </div>
         </div>
 
-        <div className="mb-5">
-          <h4 className="text-sm font-bold">Ofiicial Partner</h4>
-          <div className="pt-2 flex gap-2">
+        <div className="mb-10.25">
+          <h4 className="text-[13px] mb-3.5 font-bold">Official Partner</h4>
+          <div className="flex gap-2">
             <img
               src="https://img.c88rx.com/cx/h5/assets/images/footer/color-black/official-partner-heyvip.png?v=1744705193129&source=mcdsrc"
               width={106}
@@ -219,8 +225,8 @@ const Footer = () => {
       </div>
 
       <div className="footer-bottom">
-        <div className="footer__nav border-t border-gray-4 pt-6 mt-16 text-[#005dac]">
-          <div className="flex flex-wrap gap-4">
+        <div className="footer__nav border-t border-gray-4 pt-6 text-[#005dac]">
+          <div className="flex flex-wrap gap-2">
             {[
               "About Us",
               "Contact Us",
@@ -230,13 +236,13 @@ const Footer = () => {
               "Sponsor",
               "Crickex Blog",
             ].map((link, i) => (
-              <a className="border-l-2 px-2" href="#" key={i}>
+              <a className="border-l-2 px-2 text-[13px]" href="#" key={i}>
                 {link}
               </a>
             ))}
           </div>
 
-          <div className="mt-12 text-gray-500 flex gap-4 items-center">
+          <div className="mt-11.5 mb-6.5 text-gray-500 flex gap-5 items-center">
             <img
               src="https://img.c88rx.com/cx/h5/assets/images/logo-02.png?v=1744705193129"
               width={55}
@@ -244,7 +250,9 @@ const Footer = () => {
               className="object-contain"
             />
             <div>
-              <p className="text-[#005dac] font-bold">Best Quality Platform</p>
+              <p className="text-[#005dac] text-[13px] font-bold leading-5">
+                Best Quality Platform
+              </p>
               <p className="text-xs">
                 © 2025 CRICKEX Copyrights. All Rights Reserved
               </p>

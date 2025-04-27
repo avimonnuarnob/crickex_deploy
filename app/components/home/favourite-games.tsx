@@ -44,17 +44,17 @@ const matches = [
 export default function FavouriteGames() {
   return (
     <div className="w-full">
-      <div className="flex my-2 gap-1 items-center">
+      <div className="flex py-2 gap-1 items-center">
         <div className="w-1 h-4 bg-[#005dac] rounded"></div>
         <span className="font-bold">Favourites</span>
       </div>
 
-      <div className="overflow-x-auto [&::-webkit-scrollbar]:h-1.5 [&::-webkit-scrollbar-thumb]:bg-gray-300 [&::-webkit-scrollbar-thumb]:rounded py-2">
+      <div className="overflow-x-auto [&::-webkit-scrollbar]:h-1.5 [&::-webkit-scrollbar-thumb]:bg-gray-300 [&::-webkit-scrollbar-thumb]:rounded py-1">
         <div className="flex space-x-2 min-w-max">
           {matches.map((m, i) => (
             <div
               key={i}
-              className="max-w-[300px] rounded-md overflow-hidden shadow-md bg-white shadow-gray-9"
+              className="max-w-[300px] rounded-md overflow-hidden shadow bg-white shadow-gray-9"
             >
               <img
                 src="https://img.c88rx.com/upload/announcement/image_224860.jpg"

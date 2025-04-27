@@ -75,16 +75,16 @@ const Topbar = ({ isFull }: TopbarProps) => {
                   'url("https://img.c88rx.com/cx/h5/assets/images/logo.png?v=1744705193129")',
               }}
             ></div>
-            <div className="flex items-center gap-[5px]">
+            <div className="flex items-center gap-[5px] justify-between">
               <Button
-                className="bg-blue-3 min-w-26 text-xs"
+                className="bg-blue-3 text-xs w-[105px] h-[34px]"
                 onClick={loginBtnHandler}
                 // href={UnProtectedRoute.Login}
               >
                 Login
               </Button>
               <Button
-                className="min-w-26 text-xs"
+                className="text-xs w-[105px] h-[34px]"
                 color="green"
                 onClick={signupBtnHandler}
                 // href={UnProtectedRoute.Signup}
@@ -92,7 +92,7 @@ const Topbar = ({ isFull }: TopbarProps) => {
                 Sign up
               </Button>
 
-              <div className="ml-3">
+              <div className="ml-3 grow-0">
                 <IconButton
                   color="link"
                   icon={

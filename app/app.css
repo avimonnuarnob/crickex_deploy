@@ -76,6 +76,24 @@ body {
   background-color: var(--background);
 }
 
+::-webkit-scrollbar {
+  width: 5px;
+  /* height: 5px; */
+}
+
+::-webkit-scrollbar-thumb {
+  background: #5555554d;
+  border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #5555554d;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
 .embla__viewport {
   overflow: hidden;
 }
@@ -96,7 +114,7 @@ body {
 .embla__buttons {
 }
 .embla__button {
-  -webkit-tap-highlight-color: rgba(var(--text-high-contrast-rgb-value), 0.5);
+  /* -webkit-tap-highlight-color: rgba(var(--text-high-contrast-rgb-value), 0.5);
   -webkit-appearance: none;
   appearance: none;
   background-color: transparent;
@@ -116,14 +134,12 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
+  cursor: pointer; */
 }
 .embla__button:disabled {
-  color: var(--detail-high-contrast);
+  /* color: var(--detail-high-contrast); */
 }
-.embla__button__svg {
-  width: 35%;
-  height: 35%;
-}
+
 .marquee--icon {
   -webkit-mask-repeat: no-repeat;
   -webkit-mask-position: 50% 50%;

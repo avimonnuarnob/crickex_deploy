@@ -35,7 +35,7 @@ const Button = <T extends React.ElementType = "button">({
   };
   const sizeClasses = {
     sm: "px-6 py-2 text-sm",
-    md: "px-[31.5px] py-[10.25px] text-sm",
+    md: "p-2.5 text-sm",
     lg: "px-7 py-3.5 text-sm",
   };
 

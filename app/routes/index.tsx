@@ -37,10 +37,12 @@ export default function Home({ loaderData }: Route.ComponentProps) {
         ) : null}
         <HomeMarquee />
         <CategoryTab />
-        <div className="py-5">
+        <div className="py-2.75">
           <FavouriteGames />
         </div>
-        <FeaturedGames />
+        <div className="py-2.5">
+          <FeaturedGames />
+        </div>
       </div>
     </div>
   );
