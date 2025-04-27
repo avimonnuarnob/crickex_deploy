@@ -12,6 +12,26 @@ export const navLinks = [
   // },
   {
     href: "#",
+    icon: "https://img.c88rx.com/cx/h5/assets/images/icon-set/theme-icon/side-nav/icon-promotion.png?v=1745315485946",
+    text: "Promotions",
+  },
+  {
+    href: "#",
+    icon: "https://img.c88rx.com/cx/h5/assets/images/icon-set/theme-icon/side-nav/icon-sponsorship.png?v=1745315485946",
+    text: "Sponsorship",
+  },
+  {
+    href: "#",
+    icon: "https://img.c88rx.com/cx/h5/assets/images/icon-set/theme-icon/side-nav/icon-leaderboard.png?v=1745315485946",
+    text: "Leaderboard",
+  },
+  {
+    href: "#",
+    icon: "https://img.c88rx.com/cx/h5/assets/images/icon-set/theme-icon/side-nav/icon-download.png?v=1745315485946",
+    text: "Download",
+  },
+  {
+    href: "#",
     icon: "https://img.c88rx.com/cx/h5/assets/images/icon-set/theme-icon/side-nav/icon-responsible-gaming.png?v=1745315485946",
     text: "Responsible Gaming",
   },

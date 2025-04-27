@@ -22,7 +22,7 @@ const Modal = ({ isOpen, onClose, children, title }: ModalProps) => {
         <Dialog open={isOpen} onClose={onClose} className="relative z-50">
           <DialogBackdrop className="fixed inset-0 backdrop-blur-xs" />
 
-          <div className="fixed inset-0 flex w-screen items-center justify-center p-4">
+          <div className="fixed inset-0 flex w-screen items-center justify-center p-4 ">
             <motion.div
               initial={{ opacity: 0, y: 100 }}
               animate={{ opacity: 1, y: 0 }}
@@ -30,10 +30,15 @@ const Modal = ({ isOpen, onClose, children, title }: ModalProps) => {
               transition={{ duration: 0.2, ease: "easeInOut" }}
               className="w-[375px] min-h-[93.75%] relative"
             >
-              <DialogPanel className="space-y-4 rounded-[10px] bg-white absolute w-full h-full overflow-hidden flex flex-col">
+              <DialogPanel
+                className="space-y-4 rounded-[10px] bg-white absolute w-full h-full overflow-hidden flex flex-col"
+                style={{
+                  boxShadow: "0 0 4px #0000001a, inset 0 1px 2px #0000001a",
+                }}
+              >
                 <div className="bg-blue-1 relative mb-0 rounded-t-[10px] p-2.75">
-                  <CloseButton className="absolute top-1/2 right-2 mb-0 -translate-y-1/2 cursor-pointer">
-                    <IoCloseSharp className="text-xl text-white" />
+                  <CloseButton className="absolute top-1/2 right-2.5 mb-0 -translate-y-1/2 cursor-pointer">
+                    <IoCloseSharp className="text-xl text-white font-bold" />
                   </CloseButton>
                   <DialogTitle className="mb-0 text-center text-lg text-white">
                     {title}
