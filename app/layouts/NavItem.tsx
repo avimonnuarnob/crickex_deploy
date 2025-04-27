@@ -34,7 +34,7 @@ const NavItem = ({
   return href ? (
     <Link
       to={href}
-      className="flex items-center transition cursor-pointer gap-4 hover:bg-blue-9"
+      className="flex items-center transition cursor-pointer gap-4 hover:!bg-blue-9"
       style={{
         padding: isFull ? "10px 23px 10px 23px" : "10px 10px 10px 23px",
       }}
@@ -54,7 +54,7 @@ const NavItem = ({
     <button
       className="hover:bg-blue-9 flex items-center w-full cursor-pointer gap-4 transition h-[50px]"
       style={{
-        padding: isFull ? "10px 23px 10px 23px" : "10px 10px 10px 23px",
+        padding: isFull ? "10px 18px 10px 23px" : "10px 10px 10px 23px",
       }}
     >
       <img src={icon} alt="home" className="w-7.5 h-7.5" />

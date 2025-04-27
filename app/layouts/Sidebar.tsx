@@ -17,9 +17,9 @@ const Sidebar = ({ isFull, setIsFull }: SidebarProps) => {
       {isFull ? (
         <button
           onClick={() => setIsFull((prev) => !prev)}
-          className="bg-blue-8 absolute z-10 end-0 top-2 translate-x-1/2 cursor-pointer rounded-2xl pl-3 pr-3.5 py-[7px]"
+          className="bg-blue-8 absolute z-10 end-0 top-2 translate-x-1/2 cursor-pointer rounded-2xl pl-3 pr-3 py-[7px]"
         >
-          <FaChevronLeft className="text-sm text-white" />
+          <FaChevronLeft className="text-sm text-white ml-0.5" />
         </button>
       ) : (
         <div className="bg-blue-2 flex h-15 w-full items-center justify-center">

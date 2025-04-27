@@ -11,6 +11,23 @@ export const navLinks = [
   //   text: "Exclusive",
   // },
   {
+    icon: "https://img.c88rx.com/cx/h5/assets/images/icon-set/theme-icon/side-nav/icon-talk.png?v=1745315485946",
+    text: "Contact Us",
+    children: [
+      {
+        icon: "https://img.c88rx.com/cx/h5/assets/images/icon-set/theme-icon/member-center/icon-customer.png?v=1745315485946",
+        href: ProtectedRoute.Cricket,
+        text: "CS Link",
+      },
+
+      {
+        icon: "https://img.c88rx.com/cx/h5/assets/images/icon-set/theme-icon/member-center/icon-customer.png?v=1745315485946",
+        href: ProtectedRoute.Cricket,
+        text: "Telegram Link",
+      },
+    ],
+  },
+  {
     href: "#",
     icon: "https://img.c88rx.com/cx/h5/assets/images/icon-set/theme-icon/side-nav/icon-promotion.png?v=1745315485946",
     text: "Promotions",
@@ -40,23 +57,7 @@ export const navLinks = [
     icon: "https://img.c88rx.com/cx/h5/assets/images/icon-set/theme-icon/side-nav/icon-affiliate.png?v=1745315485946",
     text: "Affiliate",
   },
-  {
-    icon: "https://img.c88rx.com/cx/h5/assets/images/icon-set/theme-icon/side-nav/icon-talk.png?v=1745315485946",
-    text: "Contact Us",
-    children: [
-      {
-        icon: "https://img.c88rx.com/cx/h5/assets/images/icon-set/theme-icon/member-center/icon-customer.png?v=1745315485946",
-        href: ProtectedRoute.Cricket,
-        text: "CS Link",
-      },
 
-      {
-        icon: "https://img.c88rx.com/cx/h5/assets/images/icon-set/theme-icon/member-center/icon-customer.png?v=1745315485946",
-        href: ProtectedRoute.Cricket,
-        text: "Telegram Link",
-      },
-    ],
-  },
   {
     href: "#",
     icon: "https://img.c88rx.com/cx/h5/assets/images/icon-set/theme-icon/side-nav/icon-crickex-blog.png?v=1745315485946",
