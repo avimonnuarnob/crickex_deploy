@@ -34,7 +34,12 @@ const NavItem = ({
   return href ? (
     <Link
       to={href}
-      className="flex items-center transition cursor-pointer gap-4 hover:!bg-blue-9"
+      className={classNames(
+        "flex items-center transition-colors cursor-pointer gap-4",
+        {
+          "hover:!bg-blue-9": !isChild,
+        }
+      )}
       style={{
         padding: isFull ? "10px 23px 10px 23px" : "10px 10px 10px 23px",
       }}

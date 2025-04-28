@@ -41,7 +41,7 @@ const Submenu = ({ isFull, ...navLink }: SubmenuProps) => {
                   <DisclosurePanel static as="ul">
                     {navLink.children.map((child, index) => (
                       <li key={index + 1}>
-                        <div className="pl-3.25 bg-[#f5f5f5]">
+                        <div className="pl-3.25 bg-[#f5f5f5] hover:bg-[#ddd]">
                           <NavItem {...child} isChild isFull={isFull}>
                             {child.text}
                           </NavItem>

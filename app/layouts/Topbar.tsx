@@ -7,7 +7,7 @@ import IconButton from "@/components/ui/button/IconButton";
 import { useState } from "react";
 import Modal from "@/components/ui/modal/Modal";
 import { FormTextField } from "@/components/ui/form-inputs";
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
 import { useForm } from "react-hook-form";
 import { loginSchema, type LoginInput } from "@/schema/authSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -19,31 +19,14 @@ type TopbarProps = Readonly<{
 }>;
 
 const Topbar = ({ isFull }: TopbarProps) => {
-  const [isOpen, setIsOpen] = useState(false);
-  const [isSignupModalOpen, setIsSignupModalOpen] = useState(false);
-
-  const {
-    control,
-    handleSubmit,
-    formState: { isDirty },
-  } = useForm<LoginInput>({
-    resolver: zodResolver(loginSchema),
-    defaultValues: {
-      username: "",
-      password: "",
-    },
-  });
+  const navigate = useNavigate();
 
   const loginBtnHandler = () => {
-    setIsOpen((isOpen) => !isOpen);
+    navigate("/account-login-quick");
   };
 
   const signupBtnHandler = () => {
-    setIsSignupModalOpen((isOpen) => !isOpen);
-  };
-
-  const onSubmit = (data: LoginInput) => {
-    console.log("login data:", data);
+    navigate("/new-register-entry/account");
   };
 
   return (
@@ -105,180 +88,6 @@ const Topbar = ({ isFull }: TopbarProps) => {
           </div>
         </div>
       </div>
-
-      <Modal
-        onClose={() => {
-          setIsOpen(false);
-        }}
-        isOpen={isOpen}
-        title="Login"
-      >
-        <>
-          {/* <br className="block" /> */}
-          <div
-            className="w-[200px] h-[35px] mx-auto my-7 bg-contain bg-no-repeat bg-center"
-            style={{
-              backgroundImage:
-                'url("https://img.c88rx.com/cx/h5/assets/images/member-logo.png?v=1745315485946")',
-            }}
-          ></div>
-
-          <div className="px-4 py-2.5">
-            <form
-              onSubmit={(e) => {
-                e.preventDefault();
-                handleSubmit(onSubmit)(e);
-              }}
-            >
-              <div className="mb-3.5">
-                <FormTextField
-                  control={control}
-                  label="Username"
-                  id="username"
-                  name="username"
-                  placeholder="4-15 char, allow numbers, no space"
-                  required
-                />
-              </div>
-              <div className="mb-1">
-                <FormTextField
-                  control={control}
-                  label="Password"
-                  id="password"
-                  name="password"
-                  type="password"
-                  placeholder="6-20 characters and Numbers"
-                  required
-                />
-              </div>
-              <div className="mb-6.25 text-right">
-                <Link to="/" className="text-blue-1 text-sm">
-                  Forgot password?
-                </Link>
-              </div>
-              <div className="mb-4.5">
-                <Button
-                  type="submit"
-                  color="green"
-                  size="lg"
-                  isBlock
-                  isDisabled={!isDirty}
-                >
-                  Login
-                </Button>
-              </div>
-
-              <p className="text-gray-3 text-center text-sm mb-1.5">
-                Do not have an account?{" "}
-                <Link to="/" className="text-blue-1">
-                  Sign Up
-                </Link>
-              </p>
-            </form>
-          </div>
-        </>
-      </Modal>
-
-      <Modal
-        onClose={() => {
-          setIsSignupModalOpen(false);
-        }}
-        isOpen={isSignupModalOpen}
-        title="Sign up"
-      >
-        <>
-          {/* <br className="block" /> */}
-          <div
-            className="w-[200px] h-[35px] my-3.75 mx-auto bg-contain bg-no-repeat bg-center"
-            style={{
-              backgroundImage:
-                'url("https://img.c88rx.com/cx/h5/assets/images/member-logo.png?v=1745315485946")',
-            }}
-          ></div>
-
-          <div className="w-full h-[120px] bg-gray-5"></div>
-          <div className="px-[15px] py-2.5">
-            <form
-              onSubmit={(e) => {
-                e.preventDefault();
-                handleSubmit(onSubmit)(e);
-              }}
-            >
-              <div className="mb-5.5">
-                <SelectInput />
-              </div>
-              <div className="mb-3.5">
-                <FormTextField
-                  control={control}
-                  label="Username"
-                  id="username"
-                  name="username"
-                  placeholder="4-15 char, allow numbers, no space"
-                  required
-                />
-              </div>
-              <div className="mb-4">
-                <FormTextField
-                  control={control}
-                  label="Password"
-                  id="password"
-                  name="password"
-                  type="password"
-                  placeholder="6-20 characters and Numbers"
-                  required
-                />
-              </div>
-              <div className="mb-13">
-                <PhoneInput
-                  label="Phone Number"
-                  id="username"
-                  name="username"
-                  placeholder="Phone Number"
-                  required
-                />
-              </div>
-              {/* <div className="mb-1">
-                <SelectInput />
-              </div>
-              <div className="mb-1">
-                <SelectInput />
-              </div>
-              <div className="mb-1">
-                <SelectInput />
-              </div>
-              <div className="mb-1">
-                <SelectInput />
-              </div> */}
-              <div className="mb-4.5">
-                <Button
-                  type="submit"
-                  color="green"
-                  size="lg"
-                  isBlock
-                  isDisabled={!isDirty}
-                >
-                  Submit
-                </Button>
-              </div>
-
-              <p className="text-gray-3 text-center text-sm mb-4.5">
-                Already a member ?{" "}
-                <Link to="/" className="text-blue-1">
-                  Log In
-                </Link>
-              </p>
-
-              <p className="text-gray-3 text-center text-sm mb-1.5">
-                Registering means you are over 18 years old, have read and agree
-                to the{" "}
-                <Link to="/" className="text-blue-1">
-                  Terms & Conditions.
-                </Link>
-              </p>
-            </form>
-          </div>
-        </>
-      </Modal>
     </>
   );
 };

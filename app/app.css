@@ -74,6 +74,7 @@
 
 body {
   background-color: var(--background);
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
 
 ::-webkit-scrollbar {

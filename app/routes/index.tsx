@@ -5,6 +5,7 @@ import React, { Suspense, useEffect, useState } from "react";
 import FavouriteGames from "@/components/home/favourite-games";
 import FeaturedGames from "@/components/home/featured-games";
 import HomeMarquee from "@/components/home/home-marquee";
+import { Outlet } from "react-router";
 
 const HomeSlider = React.lazy(() => import("@/components/home/home-slider"));
 
@@ -44,6 +45,7 @@ export default function Home({ loaderData }: Route.ComponentProps) {
           <FeaturedGames />
         </div>
       </div>
+      <Outlet />
     </div>
   );
 }

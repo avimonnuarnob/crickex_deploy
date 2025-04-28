@@ -1,4 +1,4 @@
-import React, { Fragment } from "react";
+import React, { Fragment, useState } from "react";
 import { Tab, TabGroup, TabList, TabPanel, TabPanels } from "@headlessui/react";
 import { motion, AnimatePresence } from "motion/react";
 
@@ -33,25 +33,32 @@ const panelItems = [
 ];
 
 export default function CategoryTab() {
+  const [selectedIndex, setSelectedIndex] = useState(0);
+  const [previousIndex, setPreviousIndex] = useState(0);
+
+  const handleTabChange = (index: number) => {
+    setPreviousIndex(selectedIndex);
+    setSelectedIndex(index);
+  };
   return (
     <div className="flex w-full justify-center">
       <div className="w-full">
-        <TabGroup>
+        <TabGroup selectedIndex={selectedIndex} onChange={handleTabChange}>
           <TabList className="flex bg-[#004179] text-white rounded overflow-hidden">
             {tabs.map((tab, idx) => (
               <Tab key={tab.name} className="data-selected:outline-none">
                 {({ selected }) => (
-                  <button
-                    className={` flex flex-col data items-center justify-center px-5 py-1 font-semibold transition relative ${
+                  <div
+                    className={` flex flex-col data items-center justify-center px-5 py-1.5 font-bold transition relative ${
                       selected && "bg-[#005dac]"
                     } `}
                   >
                     <img src={tab.icon} className="pt-3" />
-                    <span className="text-sm mt-2.5">{tab.name}</span>
+                    <span className="text-[13px] mt-2.75">{tab.name}</span>
                     {selected && (
                       <span className="absolute bottom-[0px] left-1/2 -translate-x-1/2 w-0 h-0 border-l-8 border-r-8 border-b-8 border-transparent border-b-white" />
                     )}
-                  </button>
+                  </div>
                 )}
               </Tab>
             ))}
@@ -64,9 +71,15 @@ export default function CategoryTab() {
                   <span className="font-bold text-[15px]">{tab.name}</span>
                 </div>
                 <motion.div
-                  initial={{ opacity: 1, x: -400 }}
+                  initial={{
+                    opacity: 1,
+                    x: selectedIndex < previousIndex ? 400 : -400,
+                  }}
                   animate={{ opacity: 1, x: 0 }}
-                  exit={{ opacity: 1, x: 40 }}
+                  exit={{
+                    opacity: 1,
+                    x: selectedIndex < previousIndex ? -40 : 40,
+                  }}
                   transition={{ duration: 0.3 }}
                   className="grid md:grid-cols-8 gap-1 rounded overflow-hidden pb-2.75"
                 >

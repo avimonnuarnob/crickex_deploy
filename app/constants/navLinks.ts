@@ -28,7 +28,7 @@ export const navLinks = [
     ],
   },
   {
-    href: "#",
+    href: "/about",
     icon: "https://img.c88rx.com/cx/h5/assets/images/icon-set/theme-icon/side-nav/icon-promotion.png?v=1745315485946",
     text: "Promotions",
   },

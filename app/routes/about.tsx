@@ -1,8 +1,8 @@
 import React from "react";
-import { Await } from "react-router";
+import { Await, Outlet } from "react-router";
 import type { Route } from "./+types/about";
 
-export async function loader() {
+export async function clientLoader() {
   // note this is NOT awaited
   let nonCriticalData = new Promise((res) =>
     setTimeout(() => res("non-critical"), 5000)
@@ -16,7 +16,7 @@ export async function loader() {
 }
 
 export default function About({ loaderData }: Route.ComponentProps) {
-  let { criticalData, nonCriticalData } = loaderData;
+  let { criticalData, nonCriticalData }: any = loaderData;
   return (
     <div>
       <h1>Streaming example</h1>
@@ -27,6 +27,8 @@ export default function About({ loaderData }: Route.ComponentProps) {
           {(value) => <h3>Non critical value: {value}</h3>}
         </Await>
       </React.Suspense>
+
+      <Outlet />
     </div>
   );
 }
