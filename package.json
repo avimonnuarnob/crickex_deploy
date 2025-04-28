@@ -6,6 +6,7 @@
     "build": "react-router build",
     "dev": "react-router dev",
     "start": "react-router-serve ./build/server/index.js",
+    "client": "serve -s build/client",
     "typecheck": "react-router typegen && tsc"
   },
   "dependencies": {
