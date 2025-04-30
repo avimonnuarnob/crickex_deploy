@@ -70,41 +70,44 @@ export default function CategoryTab() {
                   <div className="w-1 h-4 bg-[#005dac] rounded"></div>
                   <span className="font-bold text-[15px]">{tab.name}</span>
                 </div>
-                <motion.div
-                  initial={{
-                    opacity: 1,
-                    x: selectedIndex < previousIndex ? 400 : -400,
-                  }}
-                  animate={{ opacity: 1, x: 0 }}
-                  exit={{
-                    opacity: 1,
-                    x: selectedIndex < previousIndex ? -40 : 40,
-                  }}
-                  transition={{ duration: 0.3 }}
-                  className="grid md:grid-cols-8 gap-1 rounded overflow-hidden pb-2.75"
-                >
-                  {panelItems.map((item, idx) => (
-                    <div
-                      key={idx}
-                      className="bg-white p-2 text-center text-sm font-light flex flex-col items-center"
-                    >
-                      <img
-                        src="https://img.c88rx.com/cx/h5/assets/images/brand/black/provider-awcmjili.png?v=1744705193129&source=mcdsrc"
-                        width="40"
-                        height="40"
-                      />
-                      {item.label}
-                    </div>
-                  ))}
-                  {Array.from({
-                    length: 8 - (panelItems.length % 8),
-                  }).map((el) => (
-                    <div
-                      key={"blank-" + idx}
-                      className="bg-white p-2 text-center text-sm font-semibold hidden md:block"
-                    ></div>
-                  ))}
-                </motion.div>
+                <AnimatePresence>
+                  <motion.div
+                    key="div"
+                    initial={{
+                      opacity: 1,
+                      x: selectedIndex < previousIndex ? -200 : 200,
+                    }}
+                    animate={{ opacity: 1, x: 0 }}
+                    exit={{
+                      // y: -100,
+                      x: selectedIndex < previousIndex ? 500 : -500,
+                    }}
+                    transition={{ duration: 0.5 }}
+                    className="grid md:grid-cols-8 gap-1 rounded overflow-hidden pb-2.75"
+                  >
+                    {panelItems.map((item, idx) => (
+                      <div
+                        key={idx}
+                        className="bg-white p-2 text-center text-sm font-light flex flex-col items-center"
+                      >
+                        <img
+                          src="https://img.c88rx.com/cx/h5/assets/images/brand/black/provider-awcmjili.png?v=1744705193129&source=mcdsrc"
+                          width="40"
+                          height="40"
+                        />
+                        {item.label}
+                      </div>
+                    ))}
+                    {Array.from({
+                      length: 8 - (panelItems.length % 8),
+                    }).map((el, index) => (
+                      <div
+                        key={"blank-" + index}
+                        className="bg-white p-2 text-center text-sm font-semibold hidden md:block"
+                      ></div>
+                    ))}
+                  </motion.div>
+                </AnimatePresence>
               </TabPanel>
             ))}
           </TabPanels>

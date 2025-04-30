@@ -40,9 +40,9 @@ const TextField = ({
           id={id}
           type={isPassword && showPassword ? "text" : type}
           className={classNames(
-            "border-gray-7 bg-gray-8 focus:ring-blue-1 w-full rounded-sm border px-4 py-3.75 text-xs transition-all focus:ring-1 focus:outline-non font-light",
+            "border-gray-7 bg-gray-8 w-full rounded-sm border px-4 py-3.75 text-xs transition-all focus:ring-none focus:outline-none font-light",
             {
-              "border-red-1 focus:ring-2 focus:ring-red-400": !!error,
+              "border-red-1 focus:ring-red-400": !!error,
             },
             className
           )}
