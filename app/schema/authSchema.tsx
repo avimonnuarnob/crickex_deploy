@@ -33,13 +33,9 @@ export const signUpSchema = z
         "Username can only contain letters and numbers, no spaces"
       ),
     password: z
-      .string()
+      .number()
       .min(6, "Password must be at least 6 characters")
-      .max(20, "Password must be at most 20 characters")
-      .regex(
-        /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]+$/,
-        "Password must contain both letters and numbers"
-      ),
+      .max(20, "Password must be at most 20 characters"),
     email: z.string(),
     referral_code: z.string(),
     country: z.string(),
