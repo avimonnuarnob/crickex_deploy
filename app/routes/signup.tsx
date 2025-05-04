@@ -98,6 +98,7 @@ export default function SignupModal({ matches }: Route.ComponentProps) {
         }
       );
       const responseData = await response.json();
+
       setResponseData(responseData.data);
       setSecondSubmission(true);
     }
@@ -128,7 +129,7 @@ export default function SignupModal({ matches }: Route.ComponentProps) {
         {secondSubmission && (
           <p className="text-center text-[#acacac] py-4">
             Please enter the 6-digit code sent to{" "}
-            <span className="text-black">{responseData?.data.email}</span>
+            <span className="text-black">{responseData?.email}</span>
           </p>
         )}
 
