@@ -13,18 +13,22 @@ export async function clientLoader() {
   const countryListPromise = fetch("https://ai.cloud7hub.uk/country/list")
     .then((value) => value.json())
     .then((data) => data.data);
-  const currencyListPromise = fetch(
-    "https://ai.cloud7hub.uk/configuration/currency-list/all/"
+  const currencyListPromise = fetch("https://ai.cloud7hub.uk/mirror-links/")
+    .then((value) => value.json())
+    .then((data) => data.data.domain_currency);
+  const defaultReferralPromise = fetch(
+    "https://ai.cloud7hub.uk/referral/default/"
   )
     .then((value) => value.json())
     .then((data) => data.data);
 
-  const [countryList, currencyList] = await Promise.all([
+  const [countryList, currencyList, defaultReferral] = await Promise.all([
     countryListPromise,
     currencyListPromise,
+    defaultReferralPromise,
   ]);
 
-  return { countryList, currencyList } as {
+  return { countryList, currencyList, defaultReferral } as {
     countryList: {
       id: number;
       country_name: string;
@@ -41,6 +45,16 @@ export async function clientLoader() {
       created_at: string;
       updated_at: string;
     }[];
+    defaultReferral: {
+      id: number;
+      referral_code: string;
+      agent_referral_code: string;
+      created_at: string;
+      parent_user_id: number;
+      user_id: number;
+      local_agent_id: number;
+      url_id: number;
+    };
   };
 }
 

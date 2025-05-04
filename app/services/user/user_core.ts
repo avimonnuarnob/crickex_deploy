@@ -12,6 +12,7 @@ export async function checkUsername(username: string): Promise<checkapiData> {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
+      Origin: "https://crickex24.com",
     },
     body: JSON.stringify({ username }),
   });

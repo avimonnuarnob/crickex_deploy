@@ -1,8 +1,5 @@
 import Button from "@/components/ui/button/Button";
 import { FormTextField } from "@/components/ui/form-inputs";
-import FormSelect from "@/components/ui/form-inputs/FormSelect";
-import PhoneInput from "@/components/ui/input/PhoneInput";
-import SelectInput from "@/components/ui/input/SelectInput";
 import Modal from "@/components/ui/modal/Modal";
 import { signUpSchema, type SignupInput } from "@/schema/authSchema";
 import { checkEmail, checkUsername } from "@/services/user/user_core";
@@ -21,12 +18,12 @@ import type { Route } from "./+types/signup";
 
 export default function SignupModal({ matches }: Route.ComponentProps) {
   const navigate = useNavigate();
-  const { currencyList, countryList } = matches[0].data;
+  const { currencyList, countryList, defaultReferral } = matches[0].data;
   const {
     control,
     handleSubmit,
-    trigger,
     setError,
+    clearErrors,
     formState: { isDirty },
   } = useForm<SignupInput>({
     resolver: zodResolver(signUpSchema),
@@ -34,9 +31,9 @@ export default function SignupModal({ matches }: Route.ComponentProps) {
       currency: "",
       username: "",
       password: "",
-      country: null,
+      // country: null,
       email: "",
-      referral_code: "",
+      referral_code: defaultReferral.referral_code,
     },
   });
 
@@ -49,16 +46,15 @@ export default function SignupModal({ matches }: Route.ComponentProps) {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        username: data.username,
+        username: data.username.toLowerCase(),
         password: data.password,
-        email: data.email,
+        email: data.email.toLowerCase(),
         referral_code: data.referral_code,
         social_contact_id: 1,
         currency: data.currency,
       }),
     });
-
-    navigate(-1);
+    // navigate(-1);
   };
   return (
     <Modal
@@ -150,11 +146,13 @@ export default function SignupModal({ matches }: Route.ComponentProps) {
                 label="Username"
                 id="username"
                 name="username"
-                placeholder="4-15 char, allow numbers, no space"
+                placeholder="6-10 character, allow numbers, no space"
                 required
+                className="lowercase"
                 onBlur={async (e) => {
                   try {
                     await checkUsername(e.target.value);
+                    clearErrors("username");
                   } catch (error) {
                     if (error instanceof Error) {
                       setError("username", { message: error.message });
@@ -178,6 +176,7 @@ export default function SignupModal({ matches }: Route.ComponentProps) {
             <div className="mb-4">
               <Controller
                 control={control}
+                defaultValue={countryList[0]}
                 name="country"
                 render={({ field: { value, onChange } }) => (
                   <Listbox value={value} onChange={onChange}>
@@ -250,11 +249,12 @@ export default function SignupModal({ matches }: Route.ComponentProps) {
                 label="Email"
                 id="email"
                 name="email"
-                placeholder="Insert your mail address"
                 required
+                className="lowercase"
                 onBlur={async (e) => {
                   try {
                     await checkEmail(e.target.value);
+                    clearErrors("email");
                   } catch (error) {
                     if (error instanceof Error) {
                       setError("email", { message: error.message });
