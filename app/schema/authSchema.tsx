@@ -39,14 +39,13 @@ export const signUpSchema = z
       .regex(/^\d+$/, "Password must contain only numbers"),
     email: z.string(),
     referral_code: z.string(),
-    country: z.string(),
-    currency: z
+    country: z
       .object({
-        id: z.number(),
-        name: z.string(),
-        avatar: z.string(),
+        country_name: z.string(),
+        country_flag: z.string(),
       })
       .nullable(),
+    currency: z.string(),
   })
   .required();
 export type LoginInput = z.infer<typeof loginSchema>;

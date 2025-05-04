@@ -5,9 +5,10 @@ import React, { Suspense, useEffect, useState } from "react";
 import FavouriteGames from "@/components/home/favourite-games";
 import FeaturedGames from "@/components/home/featured-games";
 import HomeMarquee from "@/components/home/home-marquee";
-import { Outlet } from "react-router";
+import { Outlet, useRouteLoaderData } from "react-router";
 
-const HomeSlider = React.lazy(() => import("@/components/home/home-slider"));
+import HomeSlider from "@/components/home/home-slider";
+import type { RooteLoaderData } from "@/root";
 
 export async function clientLoader() {
   // note this is NOT awaited
@@ -23,19 +24,14 @@ export async function clientLoader() {
 }
 
 export default function Home({ loaderData }: Route.ComponentProps) {
-  let { criticalData, nonCriticalData } = loaderData;
-  const [mounted, setMounted] = useState(false);
+  const data = useRouteLoaderData<RooteLoaderData>("root");
 
-  useEffect(() => setMounted(true), []);
+  console.log(data);
 
   return (
     <div className="">
       <div className="mt-18 py-1">
-        {mounted ? (
-          <Suspense fallback={<div>Loading...</div>}>
-            <HomeSlider />
-          </Suspense>
-        ) : null}
+        <HomeSlider />
         <HomeMarquee />
         <CategoryTab />
         <div className="py-2.75">

@@ -5,7 +5,7 @@ import PhoneInput from "@/components/ui/input/PhoneInput";
 import SelectInput from "@/components/ui/input/SelectInput";
 import Modal from "@/components/ui/modal/Modal";
 import { signUpSchema, type SignupInput } from "@/schema/authSchema";
-import { checkUsername } from "@/services/user/user_core";
+import { checkEmail, checkUsername } from "@/services/user/user_core";
 import {
   Label,
   Listbox,
@@ -17,73 +17,11 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Controller, useForm } from "react-hook-form";
 import { FaCaretDown } from "react-icons/fa";
 import { Link, useNavigate } from "react-router";
+import type { Route } from "./+types/signup";
 
-const people = [
-  {
-    id: 1,
-    name: "Wade Cooper",
-    avatar:
-      "https://images.unsplash.com/photo-1491528323818-fdd1faba62cc?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
-  },
-  {
-    id: 2,
-    name: "Arlene Mccoy",
-    avatar:
-      "https://images.unsplash.com/photo-1550525811-e5869dd03032?ixlib=rb-1.2.1&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
-  },
-  {
-    id: 3,
-    name: "Devon Webb",
-    avatar:
-      "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2.25&w=256&h=256&q=80",
-  },
-  {
-    id: 4,
-    name: "Tom Cook",
-    avatar:
-      "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
-  },
-  {
-    id: 5,
-    name: "Tanya Fox",
-    avatar:
-      "https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
-  },
-  {
-    id: 6,
-    name: "Hellen Schmidt",
-    avatar:
-      "https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
-  },
-  {
-    id: 7,
-    name: "Caroline Schultz",
-    avatar:
-      "https://images.unsplash.com/photo-1568409938619-12e139227838?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
-  },
-  {
-    id: 8,
-    name: "Mason Heaney",
-    avatar:
-      "https://images.unsplash.com/photo-1531427186611-ecfd6d936c79?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
-  },
-  {
-    id: 9,
-    name: "Claudie Smitham",
-    avatar:
-      "https://images.unsplash.com/photo-1584486520270-19eca1efcce5?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
-  },
-  {
-    id: 10,
-    name: "Emil Schaefer",
-    avatar:
-      "https://images.unsplash.com/photo-1561505457-3bcad021f8ee?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
-  },
-];
-
-export default function SignupModal() {
+export default function SignupModal({ matches }: Route.ComponentProps) {
   const navigate = useNavigate();
-
+  const { currencyList, countryList } = matches[0].data;
   const {
     control,
     handleSubmit,
@@ -93,10 +31,10 @@ export default function SignupModal() {
   } = useForm<SignupInput>({
     resolver: zodResolver(signUpSchema),
     defaultValues: {
-      currency: null,
+      currency: "",
       username: "",
       password: "",
-      country: "",
+      country: null,
       email: "",
       referral_code: "",
     },
@@ -116,7 +54,7 @@ export default function SignupModal() {
         email: data.email,
         referral_code: data.referral_code,
         social_contact_id: 1,
-        currency: "BDT",
+        currency: data.currency,
       }),
     });
 
@@ -169,14 +107,7 @@ export default function SignupModal() {
                         <span className="col-start-1 row-start-1 flex items-center gap-2 pr-6">
                           {value ? (
                             <>
-                              <img
-                                alt=""
-                                src={value.avatar}
-                                className="w-5 h-5 shrink-0 rounded-full"
-                              />
-                              <span className="block truncate">
-                                {value.name}
-                              </span>
+                              <span className="block truncate">{value}</span>
                             </>
                           ) : (
                             <span className="block truncate">
@@ -194,20 +125,15 @@ export default function SignupModal() {
                         transition
                         className="absolute z-10 mt-1 max-h-56 w-full overflow-auto rounded-md bg-[#eeeeee] py-1 text-base shadow-lg ring-1 ring-black/5 focus:outline-hidden data-leave:transition data-leave:duration-100 data-leave:ease-in data-closed:data-leave:opacity-0 sm:text-sm"
                       >
-                        {people.map((person) => (
+                        {currencyList.map((currency) => (
                           <ListboxOption
-                            key={person.id}
-                            value={person}
+                            key={currency.id}
+                            value={currency.currency}
                             className="group relative cursor-default py-2 pr-9 pl-3 text-gray-900 select-none"
                           >
                             <div className="flex items-center">
-                              <img
-                                alt=""
-                                src={person.avatar}
-                                className="w-5 h-5 shrink-0 rounded-full"
-                              />
                               <span className="ml-2 block truncate font-normal">
-                                {person.name}
+                                {currency.currency}
                               </span>
                             </div>
                           </ListboxOption>
@@ -226,15 +152,15 @@ export default function SignupModal() {
                 name="username"
                 placeholder="4-15 char, allow numbers, no space"
                 required
-                // onBlur={async () => {
-                //   try {
-                //     await checkUsername();
-                //   } catch (error) {
-                //     if (error instanceof Error) {
-                //       setError("username", { message: error.message });
-                //     }
-                //   }
-                // }}
+                onBlur={async (e) => {
+                  try {
+                    await checkUsername(e.target.value);
+                  } catch (error) {
+                    if (error instanceof Error) {
+                      setError("username", { message: error.message });
+                    }
+                  }
+                }}
               />
             </div>
             <div className="mb-4">
@@ -250,13 +176,71 @@ export default function SignupModal() {
             </div>
 
             <div className="mb-4">
-              <FormTextField
+              <Controller
                 control={control}
-                label="Country"
-                id="country"
                 name="country"
-                placeholder="6-20 characters and Numbers"
-                required
+                render={({ field: { value, onChange } }) => (
+                  <Listbox value={value} onChange={onChange}>
+                    <Label className="block text-sm/6 text-[#474747]">
+                      Country
+                    </Label>
+                    <div className="relative mt-2.5">
+                      <ListboxButton className="grid w-full cursor-default grid-cols-1 rounded-sm bg-[#eeeeee] py-3 pr-2 pl-2 text-left font-light text-gray-900 focus:outline-none sm:text-sm/6 border-1 border-[#e7e7e7] focus:ring-none focus:border-1">
+                        <span className="col-start-1 row-start-1 flex items-center gap-2 pr-6">
+                          {value ? (
+                            <>
+                              <img
+                                alt={value.country_name}
+                                src={
+                                  "https://ai.cloud7hub.uk" + value.country_flag
+                                }
+                                className="w-5 h-5 shrink-0 rounded-full"
+                              />
+                              <span className="block truncate">
+                                {value.country_name}
+                              </span>
+                            </>
+                          ) : (
+                            <span className="block truncate">
+                              Choose a Country
+                            </span>
+                          )}
+                        </span>
+                        <FaCaretDown
+                          aria-hidden="true"
+                          className="col-start-1 row-start-1 size-3 self-center justify-self-end text-gray-500"
+                        />
+                      </ListboxButton>
+
+                      <ListboxOptions
+                        transition
+                        className="absolute z-10 mt-1 max-h-56 w-full overflow-auto rounded-md bg-[#eeeeee] py-1 text-base shadow-lg ring-1 ring-black/5 focus:outline-hidden data-leave:transition data-leave:duration-100 data-leave:ease-in data-closed:data-leave:opacity-0 sm:text-sm"
+                      >
+                        {countryList.map((country, idx) => (
+                          <ListboxOption
+                            key={country.country_name + idx + ""}
+                            value={country}
+                            className="group relative cursor-default py-2 pr-9 pl-3 text-gray-900 select-none"
+                          >
+                            <div className="flex items-center">
+                              <img
+                                alt={country.country_name}
+                                src={
+                                  "https://ai.cloud7hub.uk" +
+                                  country.country_flag
+                                }
+                                className="w-5 h-5 shrink-0 rounded-full"
+                              />
+                              <span className="ml-2 block truncate font-normal">
+                                {country.country_name}
+                              </span>
+                            </div>
+                          </ListboxOption>
+                        ))}
+                      </ListboxOptions>
+                    </div>
+                  </Listbox>
+                )}
               />
             </div>
 
@@ -266,8 +250,17 @@ export default function SignupModal() {
                 label="Email"
                 id="email"
                 name="email"
-                placeholder="Email"
+                placeholder="Insert your mail address"
                 required
+                onBlur={async (e) => {
+                  try {
+                    await checkEmail(e.target.value);
+                  } catch (error) {
+                    if (error instanceof Error) {
+                      setError("email", { message: error.message });
+                    }
+                  }
+                }}
               />
             </div>
 
@@ -277,7 +270,6 @@ export default function SignupModal() {
                 label="Refer Code"
                 id="referral_code"
                 name="referral_code"
-                placeholder="6-20 characters and Numbers"
                 required
               />
             </div>

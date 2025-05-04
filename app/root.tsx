@@ -9,6 +9,43 @@ import type { Route } from "./+types/root";
 import appStylesHref from "./app.css?url";
 import normalizeStyles from "./normalize.css?url";
 
+export async function clientLoader() {
+  const countryListPromise = fetch("https://ai.cloud7hub.uk/country/list")
+    .then((value) => value.json())
+    .then((data) => data.data);
+  const currencyListPromise = fetch(
+    "https://ai.cloud7hub.uk/configuration/currency-list/all/"
+  )
+    .then((value) => value.json())
+    .then((data) => data.data);
+
+  const [countryList, currencyList] = await Promise.all([
+    countryListPromise,
+    currencyListPromise,
+  ]);
+
+  return { countryList, currencyList } as {
+    countryList: {
+      id: number;
+      country_name: string;
+      country_code: string;
+      country_flag: string;
+      phone_code: string;
+    }[];
+    currencyList: {
+      id: number;
+      currency: string;
+      currency_title: string;
+      currency_icon: string;
+      user_currency: boolean;
+      created_at: string;
+      updated_at: string;
+    }[];
+  };
+}
+
+export type RooteLoaderData = ReturnType<typeof clientLoader>;
+
 export default function App() {
   return <Outlet />;
 }
@@ -63,4 +100,8 @@ export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {
       )}
     </main>
   );
+}
+
+export function HydrateFallback() {
+  return <p>Loading Game...</p>;
 }

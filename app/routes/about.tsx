@@ -21,13 +21,6 @@ export default function About({ loaderData }: Route.ComponentProps) {
     <div>
       <h1>Streaming example</h1>
       <h2>Critical data value: {criticalData}</h2>
-
-      <React.Suspense fallback={<div>Loading...</div>}>
-        <Await resolve={nonCriticalData}>
-          {(value) => <h3>Non critical value: {value}</h3>}
-        </Await>
-      </React.Suspense>
-
       <Outlet />
     </div>
   );
