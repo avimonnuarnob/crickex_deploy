@@ -45,7 +45,7 @@ export default function SignupModal({ matches }: Route.ComponentProps) {
     handleSubmit,
     setError,
     clearErrors,
-    formState: { isDirty },
+    formState: { isDirty, errors },
   } = useForm<SignupInput>({
     resolver: zodResolver(signUpSchema),
     defaultValues: {
@@ -54,6 +54,7 @@ export default function SignupModal({ matches }: Route.ComponentProps) {
       password: "",
       // country: null,
       email: "",
+      referral_code: defaultReferral.referral_code,
       otp: "",
     },
   });
@@ -90,10 +91,7 @@ export default function SignupModal({ matches }: Route.ComponentProps) {
             username: data.username.toLowerCase(),
             password: data.password,
             email: data.email.toLowerCase(),
-            referral_code:
-              data.referral_code.length === 0
-                ? defaultReferral.referral_code
-                : data.referral_code.length,
+            referral_code: data.referral_code,
             social_contact_id: 1,
             currency: data.currency,
           }),
