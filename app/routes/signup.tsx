@@ -54,7 +54,7 @@ export default function SignupModal({ matches }: Route.ComponentProps) {
         currency: data.currency,
       }),
     });
-    // navigate(-1);
+    navigate(-1);
   };
   return (
     <Modal
