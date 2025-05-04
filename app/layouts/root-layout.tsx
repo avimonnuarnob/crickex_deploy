@@ -7,10 +7,6 @@ import Topbar from "./Topbar";
 
 let API_DATA: null | string = null;
 
-export async function clientLoader({ params }: Route.LoaderArgs) {
-  await new Promise((res) => setTimeout(() => res("non-critical"), 5000));
-}
-
 export default function RootLayout({ loaderData }: Route.ComponentProps) {
   const [isFull, setIsFull] = useState(false);
 

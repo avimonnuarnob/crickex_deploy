@@ -58,7 +58,7 @@ export async function clientLoader() {
   };
 }
 
-export type RooteLoaderData = ReturnType<typeof clientLoader>;
+export type RootLoaderData = Awaited<ReturnType<typeof clientLoader>>;
 
 export default function App() {
   return <Outlet />;

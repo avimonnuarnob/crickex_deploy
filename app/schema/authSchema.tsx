@@ -46,6 +46,7 @@ export const signUpSchema = z
       })
       .nullable(),
     currency: z.string(),
+    otp: z.string().optional(),
   })
   .required();
 export type LoginInput = z.infer<typeof loginSchema>;

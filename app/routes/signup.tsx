@@ -15,10 +15,31 @@ import { Controller, useForm } from "react-hook-form";
 import { FaCaretDown } from "react-icons/fa";
 import { Link, useNavigate } from "react-router";
 import type { Route } from "./+types/signup";
+import { useState } from "react";
+import { OTPInput, type SlotProps, REGEXP_ONLY_DIGITS } from "input-otp";
+import classNames from "classnames";
 
 export default function SignupModal({ matches }: Route.ComponentProps) {
   const navigate = useNavigate();
   const { currencyList, countryList, defaultReferral } = matches[0].data;
+  const [secondSubmission, setSecondSubmission] = useState(false);
+  const [responseData, setResponseData] = useState<{
+    status: string;
+    message: string;
+    data: {
+      username: string;
+      email: string;
+      password: string;
+      contact: any;
+      referral_code: string;
+      currency: string;
+      country_id: any;
+      social_contact_id: number;
+      reg_link: string;
+      user_type: any;
+      url_id: number;
+    };
+  } | null>(null);
   const {
     control,
     handleSubmit,
@@ -33,28 +54,55 @@ export default function SignupModal({ matches }: Route.ComponentProps) {
       password: "",
       // country: null,
       email: "",
-      referral_code: defaultReferral.referral_code,
+      otp: "",
     },
   });
-
   const onSubmit = async (data: SignupInput) => {
-    console.log("signup data:", data);
-
-    await fetch("https://ai.cloud7hub.uk/auth/user/register/", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        username: data.username.toLowerCase(),
-        password: data.password,
-        email: data.email.toLowerCase(),
-        referral_code: data.referral_code,
-        social_contact_id: 1,
-        currency: data.currency,
-      }),
-    });
-    navigate(-1);
+    if (responseData && secondSubmission) {
+      const response = await fetch(
+        "https://ai.cloud7hub.uk/auth/user/register-confirm/",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            ...responseData,
+            otp: data.otp,
+          }),
+        }
+      );
+      const r = await response.json();
+      if (r.status === "ok") {
+        alert("success");
+      } else {
+        alert("failed");
+      }
+    } else {
+      const response = await fetch(
+        "https://ai.cloud7hub.uk/auth/user/register/",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            username: data.username.toLowerCase(),
+            password: data.password,
+            email: data.email.toLowerCase(),
+            referral_code:
+              data.referral_code.length === 0
+                ? defaultReferral.referral_code
+                : data.referral_code.length,
+            social_contact_id: 1,
+            currency: data.currency,
+          }),
+        }
+      );
+      const responseData = await response.json();
+      setResponseData(responseData.data);
+      setSecondSubmission(true);
+    }
   };
   return (
     <Modal
@@ -66,15 +114,26 @@ export default function SignupModal({ matches }: Route.ComponentProps) {
     >
       <>
         {/* <br className="block" /> */}
-        <div
-          className="w-[200px] h-[35px] my-3.75 mx-auto bg-contain bg-no-repeat bg-center"
-          style={{
-            backgroundImage:
-              'url("https://img.c88rx.com/cx/h5/assets/images/member-logo.png?v=1745315485946")',
-          }}
-        ></div>
+        {!secondSubmission ? (
+          <>
+            <div
+              className="w-[200px] h-[35px] my-3.75 mx-auto bg-contain bg-no-repeat bg-center"
+              style={{
+                backgroundImage:
+                  'url("https://img.c88rx.com/cx/h5/assets/images/member-logo.png?v=1745315485946")',
+              }}
+            ></div>
+            <div className="w-full h-[120px] bg-gray-5"></div>
+          </>
+        ) : null}
 
-        <div className="w-full h-[120px] bg-gray-5"></div>
+        {secondSubmission && (
+          <p className="text-center text-[#acacac] py-4">
+            Please enter the 6-digit code sent to{" "}
+            <span className="text-black">{responseData?.data.email}</span>
+          </p>
+        )}
+
         <div className="px-[15px] py-2.5">
           <form
             onSubmit={(e) => {
@@ -82,197 +141,230 @@ export default function SignupModal({ matches }: Route.ComponentProps) {
               handleSubmit(onSubmit)(e);
             }}
           >
-            <div className="mb-5.5">
-              {/* <FormSelect
+            {secondSubmission ? (
+              <div className="mb-4 overflow-hidden">
+                <Controller
+                  control={control}
+                  name="otp"
+                  rules={{ required: secondSubmission ? true : false }}
+                  render={({ field: { value, onChange } }) => (
+                    <OTPInput
+                      pattern={REGEXP_ONLY_DIGITS}
+                      value={value}
+                      onChange={onChange}
+                      maxLength={6}
+                      containerClassName="group flex items-center has-[:disabled]:opacity-30"
+                      render={({ slots }) => (
+                        <>
+                          <div className="w-full flex gap-2">
+                            {slots.map((slot, idx) => (
+                              <Slot key={idx} {...slot} hasFakeCaret={true} />
+                            ))}
+                          </div>
+                        </>
+                      )}
+                    />
+                  )}
+                />
+
+                <p className="text-sm font-light py-2">Didn’t receive code?</p>
+              </div>
+            ) : (
+              <>
+                <div className="mb-5.5">
+                  {/* <FormSelect
                 name="currency"
                 options={people}
                 control={control}
                 label="Choose Currency"
               /> */}
 
-              <Controller
-                control={control}
-                name="currency"
-                render={({ field: { value, onChange } }) => (
-                  <Listbox value={value} onChange={onChange}>
-                    <Label className="block text-sm/6 text-[#474747]">
-                      Choose currency
-                    </Label>
-                    <div className="relative mt-2.5">
-                      <ListboxButton className="grid w-full cursor-default grid-cols-1 rounded-sm bg-[#eeeeee] py-3 pr-2 pl-2 text-left font-light text-gray-900 focus:outline-none sm:text-sm/6 border-1 border-[#e7e7e7] focus:ring-none focus:border-1">
-                        <span className="col-start-1 row-start-1 flex items-center gap-2 pr-6">
-                          {value ? (
-                            <>
-                              <span className="block truncate">{value}</span>
-                            </>
-                          ) : (
-                            <span className="block truncate">
-                              Choose a currency
+                  <Controller
+                    control={control}
+                    name="currency"
+                    render={({ field: { value, onChange } }) => (
+                      <Listbox value={value} onChange={onChange}>
+                        <Label className="block text-sm/6 text-[#474747]">
+                          Choose currency
+                        </Label>
+                        <div className="relative mt-2.5">
+                          <ListboxButton className="grid w-full cursor-default grid-cols-1 rounded-sm bg-[#eeeeee] py-3 pr-2 pl-2 text-left font-light text-gray-900 focus:outline-none sm:text-sm/6 border-1 border-[#e7e7e7] focus:ring-none focus:border-1">
+                            <span className="col-start-1 row-start-1 flex items-center gap-2 pr-6">
+                              {value ? (
+                                <>
+                                  <span className="block truncate">
+                                    {value}
+                                  </span>
+                                </>
+                              ) : (
+                                <span className="block truncate">
+                                  Choose a currency
+                                </span>
+                              )}
                             </span>
-                          )}
-                        </span>
-                        <FaCaretDown
-                          aria-hidden="true"
-                          className="col-start-1 row-start-1 size-3 self-center justify-self-end text-gray-500"
-                        />
-                      </ListboxButton>
+                            <FaCaretDown
+                              aria-hidden="true"
+                              className="col-start-1 row-start-1 size-3 self-center justify-self-end text-gray-500"
+                            />
+                          </ListboxButton>
 
-                      <ListboxOptions
-                        transition
-                        className="absolute z-10 mt-1 max-h-56 w-full overflow-auto rounded-md bg-[#eeeeee] py-1 text-base shadow-lg ring-1 ring-black/5 focus:outline-hidden data-leave:transition data-leave:duration-100 data-leave:ease-in data-closed:data-leave:opacity-0 sm:text-sm"
-                      >
-                        {currencyList.map((currency) => (
-                          <ListboxOption
-                            key={currency.id}
-                            value={currency.currency}
-                            className="group relative cursor-default py-2 pr-9 pl-3 text-gray-900 select-none"
+                          <ListboxOptions
+                            transition
+                            className="absolute z-10 mt-1 max-h-56 w-full overflow-auto rounded-md bg-[#eeeeee] py-1 text-base shadow-lg ring-1 ring-black/5 focus:outline-hidden data-leave:transition data-leave:duration-100 data-leave:ease-in data-closed:data-leave:opacity-0 sm:text-sm"
                           >
-                            <div className="flex items-center">
-                              <span className="ml-2 block truncate font-normal">
-                                {currency.currency}
-                              </span>
-                            </div>
-                          </ListboxOption>
-                        ))}
-                      </ListboxOptions>
-                    </div>
-                  </Listbox>
-                )}
-              />
-            </div>
-            <div className="mb-3.5">
-              <FormTextField
-                control={control}
-                label="Username"
-                id="username"
-                name="username"
-                placeholder="6-10 character, allow numbers, no space"
-                required
-                className="lowercase"
-                onBlur={async (e) => {
-                  try {
-                    await checkUsername(e.target.value);
-                    clearErrors("username");
-                  } catch (error) {
-                    if (error instanceof Error) {
-                      setError("username", { message: error.message });
-                    }
-                  }
-                }}
-              />
-            </div>
-            <div className="mb-4">
-              <FormTextField
-                control={control}
-                label="Password"
-                id="password"
-                name="password"
-                type="password"
-                placeholder="6-20 characters and Numbers"
-                required
-              />
-            </div>
-
-            <div className="mb-4">
-              <Controller
-                control={control}
-                defaultValue={countryList[0]}
-                name="country"
-                render={({ field: { value, onChange } }) => (
-                  <Listbox value={value} onChange={onChange}>
-                    <Label className="block text-sm/6 text-[#474747]">
-                      Country
-                    </Label>
-                    <div className="relative mt-2.5">
-                      <ListboxButton className="grid w-full cursor-default grid-cols-1 rounded-sm bg-[#eeeeee] py-3 pr-2 pl-2 text-left font-light text-gray-900 focus:outline-none sm:text-sm/6 border-1 border-[#e7e7e7] focus:ring-none focus:border-1">
-                        <span className="col-start-1 row-start-1 flex items-center gap-2 pr-6">
-                          {value ? (
-                            <>
-                              <img
-                                alt={value.country_name}
-                                src={
-                                  "https://ai.cloud7hub.uk" + value.country_flag
-                                }
-                                className="w-5 h-5 shrink-0 rounded-full"
-                              />
-                              <span className="block truncate">
-                                {value.country_name}
-                              </span>
-                            </>
-                          ) : (
-                            <span className="block truncate">
-                              Choose a Country
+                            {currencyList.map((currency) => (
+                              <ListboxOption
+                                key={currency.id}
+                                value={currency.currency}
+                                className="group relative cursor-default py-2 pr-9 pl-3 text-gray-900 select-none"
+                              >
+                                <div className="flex items-center">
+                                  <span className="ml-2 block truncate font-normal">
+                                    {currency.currency}
+                                  </span>
+                                </div>
+                              </ListboxOption>
+                            ))}
+                          </ListboxOptions>
+                        </div>
+                      </Listbox>
+                    )}
+                  />
+                </div>
+                <div className="mb-3.5">
+                  <FormTextField
+                    control={control}
+                    label="Username"
+                    id="username"
+                    name="username"
+                    placeholder="6-10 character, allow numbers, no space"
+                    required
+                    className="lowercase"
+                    onBlur={async (e) => {
+                      try {
+                        await checkUsername(e.target.value);
+                        clearErrors("username");
+                      } catch (error) {
+                        if (error instanceof Error) {
+                          setError("username", { message: error.message });
+                        }
+                      }
+                    }}
+                  />
+                </div>
+                <div className="mb-4">
+                  <FormTextField
+                    control={control}
+                    label="Password"
+                    id="password"
+                    name="password"
+                    type="password"
+                    placeholder="6-20 characters and Numbers"
+                    required
+                  />
+                </div>
+                <div className="mb-4">
+                  <Controller
+                    control={control}
+                    defaultValue={countryList[0]}
+                    name="country"
+                    render={({ field: { value, onChange } }) => (
+                      <Listbox value={value} onChange={onChange}>
+                        <Label className="block text-sm/6 text-[#474747]">
+                          Country
+                        </Label>
+                        <div className="relative mt-2.5">
+                          <ListboxButton className="grid w-full cursor-default grid-cols-1 rounded-sm bg-[#eeeeee] py-3 pr-2 pl-2 text-left font-light text-gray-900 focus:outline-none sm:text-sm/6 border-1 border-[#e7e7e7] focus:ring-none focus:border-1">
+                            <span className="col-start-1 row-start-1 flex items-center gap-2 pr-6">
+                              {value ? (
+                                <>
+                                  <img
+                                    alt={value.country_name}
+                                    src={
+                                      "https://ai.cloud7hub.uk" +
+                                      value.country_flag
+                                    }
+                                    className="w-5 h-5 shrink-0 rounded-full"
+                                  />
+                                  <span className="block truncate">
+                                    {value.country_name}
+                                  </span>
+                                </>
+                              ) : (
+                                <span className="block truncate">
+                                  Choose a Country
+                                </span>
+                              )}
                             </span>
-                          )}
-                        </span>
-                        <FaCaretDown
-                          aria-hidden="true"
-                          className="col-start-1 row-start-1 size-3 self-center justify-self-end text-gray-500"
-                        />
-                      </ListboxButton>
+                            <FaCaretDown
+                              aria-hidden="true"
+                              className="col-start-1 row-start-1 size-3 self-center justify-self-end text-gray-500"
+                            />
+                          </ListboxButton>
 
-                      <ListboxOptions
-                        transition
-                        className="absolute z-10 mt-1 max-h-56 w-full overflow-auto rounded-md bg-[#eeeeee] py-1 text-base shadow-lg ring-1 ring-black/5 focus:outline-hidden data-leave:transition data-leave:duration-100 data-leave:ease-in data-closed:data-leave:opacity-0 sm:text-sm"
-                      >
-                        {countryList.map((country, idx) => (
-                          <ListboxOption
-                            key={country.country_name + idx + ""}
-                            value={country}
-                            className="group relative cursor-default py-2 pr-9 pl-3 text-gray-900 select-none"
+                          <ListboxOptions
+                            transition
+                            className="absolute z-10 mt-1 max-h-56 w-full overflow-auto rounded-md bg-[#eeeeee] py-1 text-base shadow-lg ring-1 ring-black/5 focus:outline-hidden data-leave:transition data-leave:duration-100 data-leave:ease-in data-closed:data-leave:opacity-0 sm:text-sm"
                           >
-                            <div className="flex items-center">
-                              <img
-                                alt={country.country_name}
-                                src={
-                                  "https://ai.cloud7hub.uk" +
-                                  country.country_flag
-                                }
-                                className="w-5 h-5 shrink-0 rounded-full"
-                              />
-                              <span className="ml-2 block truncate font-normal">
-                                {country.country_name}
-                              </span>
-                            </div>
-                          </ListboxOption>
-                        ))}
-                      </ListboxOptions>
-                    </div>
-                  </Listbox>
-                )}
-              />
-            </div>
+                            {countryList.map((country, idx) => (
+                              <ListboxOption
+                                key={country.country_name + idx + ""}
+                                value={country}
+                                className="group relative cursor-default py-2 pr-9 pl-3 text-gray-900 select-none"
+                              >
+                                <div className="flex items-center">
+                                  <img
+                                    alt={country.country_name}
+                                    src={
+                                      "https://ai.cloud7hub.uk" +
+                                      country.country_flag
+                                    }
+                                    className="w-5 h-5 shrink-0 rounded-full"
+                                  />
+                                  <span className="ml-2 block truncate font-normal">
+                                    {country.country_name}
+                                  </span>
+                                </div>
+                              </ListboxOption>
+                            ))}
+                          </ListboxOptions>
+                        </div>
+                      </Listbox>
+                    )}
+                  />
+                </div>
+                <div className="mb-4">
+                  <FormTextField
+                    control={control}
+                    label="Email"
+                    id="email"
+                    name="email"
+                    required
+                    className="lowercase"
+                    onBlur={async (e) => {
+                      try {
+                        await checkEmail(e.target.value);
+                        clearErrors("email");
+                      } catch (error) {
+                        if (error instanceof Error) {
+                          setError("email", { message: error.message });
+                        }
+                      }
+                    }}
+                  />
+                </div>
+                <div className="mb-13">
+                  <FormTextField
+                    control={control}
+                    label="Refer Code"
+                    id="referral_code"
+                    name="referral_code"
+                    required
+                  />
+                </div>
+              </>
+            )}
 
-            <div className="mb-4">
-              <FormTextField
-                control={control}
-                label="Email"
-                id="email"
-                name="email"
-                required
-                className="lowercase"
-                onBlur={async (e) => {
-                  try {
-                    await checkEmail(e.target.value);
-                    clearErrors("email");
-                  } catch (error) {
-                    if (error instanceof Error) {
-                      setError("email", { message: error.message });
-                    }
-                  }
-                }}
-              />
-            </div>
-
-            <div className="mb-13">
-              <FormTextField
-                control={control}
-                label="Refer Code"
-                id="referral_code"
-                name="referral_code"
-                required
-              />
-            </div>
             {/* <div className="mb-1">
             <SelectInput />
           </div>
@@ -315,5 +407,31 @@ export default function SignupModal({ matches }: Route.ComponentProps) {
         </div>
       </>
     </Modal>
+  );
+}
+
+function Slot(props: SlotProps) {
+  return (
+    <div
+      className={classNames(
+        "relative w-10 h-14 text-[2rem]",
+        "flex flex-1 items-center justify-center",
+        "border border-[#E0E0E0] rounded",
+        "bg-[#EEEEEE]",
+        "transition-all duration-300",
+        "group-hover:border-accent-foreground/20 group-focus-within:border-accent-foreground/20"
+      )}
+    >
+      {props.char !== null && <div>{props.char}</div>}
+      {props.isActive && props.hasFakeCaret && <FakeCaret />}
+    </div>
+  );
+}
+
+function FakeCaret() {
+  return (
+    <div className="absolute pointer-events-none inset-0 flex items-center justify-center caret-blink">
+      <div className="w-px h-8 bg-black" />
+    </div>
   );
 }
