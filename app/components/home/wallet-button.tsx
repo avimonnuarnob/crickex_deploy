@@ -5,26 +5,26 @@ import { TfiReload } from "react-icons/tfi";
 
 export default function WalletButton() {
   const [walletData, setWalletData] = useState<number>(0);
-  //   useEffect(() => {
-  //     async function getWalletData() {
-  //       const response = await fetch(
-  //         "https://ai.cloud7hub.uk/auth/user-balance/",
-  //         {
-  //           headers: {
-  //             Authorization: `token ${Cookies.get("userToken")}`,
-  //           },
-  //         }
-  //       );
+  useEffect(() => {
+    async function getWalletData() {
+      const response = await fetch(
+        "https://ai.cloud7hub.uk/auth/user-balance/",
+        {
+          headers: {
+            Authorization: `token ${Cookies.get("userToken")}`,
+          },
+        }
+      );
 
-  //       const responseData = await response.json();
+      const responseData = await response.json();
 
-  //       if (responseData.status === "ok") {
-  //         setWalletData(responseData.data.credit_balance);
-  //       }
-  //     }
+      if (responseData.status === "ok") {
+        setWalletData(responseData.data.credit_balance);
+      }
+    }
 
-  //     getWalletData();
-  //   }, []);
+    getWalletData();
+  }, []);
   return (
     <Button
       className="text-xs h-[34px] flex gap-2 items-center"
