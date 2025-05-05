@@ -18,6 +18,7 @@ import type { Route } from "./+types/signup";
 import { useState } from "react";
 import { OTPInput, type SlotProps, REGEXP_ONLY_DIGITS } from "input-otp";
 import classNames from "classnames";
+import Cookies from "js-cookie";
 
 export default function SignupModal({ matches }: Route.ComponentProps) {
   const navigate = useNavigate();
@@ -72,6 +73,31 @@ export default function SignupModal({ matches }: Route.ComponentProps) {
       const r = await response.json();
       if (r.status === "ok") {
         alert("success");
+        const respose = await fetch(
+          "https://ai.cloud7hub.uk/auth/user/login/",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              username: data.username.toLowerCase(),
+              password: data.password,
+            }),
+          }
+        );
+        const responseData = (await respose.json()) as {
+          status: "failed" | "ok";
+          errors?: string;
+          data?: { token: string; user_base_origin: string };
+        };
+        if (responseData.status === "ok" && responseData.data) {
+          Cookies.set("userToken", responseData.data.token, {
+            sameSite: "Strict",
+          });
+          navigate("/");
+          window.location.reload();
+        }
       } else {
         alert("failed");
       }

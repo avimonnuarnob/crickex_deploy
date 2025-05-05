@@ -5,6 +5,7 @@ import IconButton from "@/components/ui/button/IconButton";
 import { useNavigate } from "react-router";
 import { useState } from "react";
 import Cookies from "js-cookie";
+import WalletButton from "@/components/home/wallet-button";
 
 type TopbarProps = Readonly<{
   isFull: boolean;
@@ -88,6 +89,7 @@ const Topbar = ({ isFull }: TopbarProps) => {
                   >
                     Logout
                   </Button>
+                  <WalletButton />
                 </>
               )}
 
