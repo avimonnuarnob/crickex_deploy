@@ -19,6 +19,7 @@
     "embla-carousel-react": "^8.6.0",
     "input-otp": "^1.4.2",
     "isbot": "^5.1.17",
+    "js-cookie": "^3.0.5",
     "motion": "^12.7.3",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
@@ -30,6 +31,7 @@
   "devDependencies": {
     "@react-router/dev": "^7.5.0",
     "@tailwindcss/vite": "^4.0.0",
+    "@types/js-cookie": "^3.0.6",
     "@types/node": "^20",
     "@types/react": "^19.0.1",
     "@types/react-dom": "^19.0.1",

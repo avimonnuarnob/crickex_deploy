@@ -1,24 +1,19 @@
 import classNames from "classnames";
-import googleIcon from "@/assets/images/icon/google.svg";
-
 import langButton from "@/assets/images/icon/lang.svg";
 import Button from "@/components/ui/button/Button";
 import IconButton from "@/components/ui/button/IconButton";
+import { useNavigate } from "react-router";
 import { useState } from "react";
-import Modal from "@/components/ui/modal/Modal";
-import { FormTextField } from "@/components/ui/form-inputs";
-import { Link, useNavigate } from "react-router";
-import { useForm } from "react-hook-form";
-import { loginSchema, type LoginInput } from "@/schema/authSchema";
-import { zodResolver } from "@hookform/resolvers/zod";
-import SelectInput from "@/components/ui/input/SelectInput";
-import PhoneInput from "@/components/ui/input/PhoneInput";
+import Cookies from "js-cookie";
 
 type TopbarProps = Readonly<{
   isFull: boolean;
 }>;
 
 const Topbar = ({ isFull }: TopbarProps) => {
+  const [isUserLoggedIn, setIsUserLoggedIn] = useState<string | undefined>(
+    Cookies.get("userToken")
+  );
   const navigate = useNavigate();
 
   const loginBtnHandler = () => {
@@ -59,21 +54,42 @@ const Topbar = ({ isFull }: TopbarProps) => {
               }}
             ></div>
             <div className="flex items-center gap-[5px] justify-between">
-              <Button
-                className="bg-blue-3 text-xs w-[105px] h-[34px]"
-                onClick={loginBtnHandler}
-                // href={UnProtectedRoute.Login}
-              >
-                Login
-              </Button>
-              <Button
-                className="text-xs w-[105px] h-[34px]"
-                color="green"
-                onClick={signupBtnHandler}
-                // href={UnProtectedRoute.Signup}
-              >
-                Sign up
-              </Button>
+              {!isUserLoggedIn && (
+                <>
+                  <Button
+                    className="bg-blue-3 text-xs w-[105px] h-[34px]"
+                    onClick={loginBtnHandler}
+                    // href={UnProtectedRoute.Login}
+                  >
+                    Login
+                  </Button>
+                  <Button
+                    className="text-xs w-[105px] h-[34px]"
+                    color="green"
+                    onClick={signupBtnHandler}
+                    // href={UnProtectedRoute.Signup}
+                  >
+                    Sign up
+                  </Button>
+                </>
+              )}
+
+              {isUserLoggedIn && (
+                <>
+                  <Button
+                    className="bg-blue-3 text-xs w-[105px] h-[34px]"
+                    onClick={() => {
+                      Cookies.remove("userToken");
+                      setIsUserLoggedIn(undefined);
+                      navigate("/");
+                      // window.location.reload();
+                    }}
+                    // href={UnProtectedRoute.Login}
+                  >
+                    Logout
+                  </Button>
+                </>
+              )}
 
               <div className="ml-3 grow-0">
                 <IconButton

@@ -24,21 +24,17 @@ export default function SignupModal({ matches }: Route.ComponentProps) {
   const { currencyList, countryList, defaultReferral } = matches[0].data;
   const [secondSubmission, setSecondSubmission] = useState(false);
   const [responseData, setResponseData] = useState<{
-    status: string;
-    message: string;
-    data: {
-      username: string;
-      email: string;
-      password: string;
-      contact: any;
-      referral_code: string;
-      currency: string;
-      country_id: any;
-      social_contact_id: number;
-      reg_link: string;
-      user_type: any;
-      url_id: number;
-    };
+    username: string;
+    email: string;
+    password: string;
+    contact: any;
+    referral_code: string;
+    currency: string;
+    country_id: any;
+    social_contact_id: number;
+    reg_link: string;
+    user_type: any;
+    url_id: number;
   } | null>(null);
   const {
     control,
