@@ -34,7 +34,7 @@ export default function WalletButton() {
           "https://ai.cloud7hub.uk/auth/user-balance/",
           {
             headers: {
-              Authorization: `token ${Cookies.get("userToken")}`,
+              Authorization: `Token ${Cookies.get("userToken")}`,
             },
           }
         );

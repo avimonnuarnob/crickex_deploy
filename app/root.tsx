@@ -113,8 +113,8 @@ export function Layout({ children }: { children: React.ReactNode }) {
       <head>
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <link rel="stylesheet" href={appStylesHref} />
         <link rel="stylesheet" href={normalizeStyles} />
+        <link rel="stylesheet" href={appStylesHref} />
         <title>Live Game & Sportsbook</title>
         <Links />
         <Meta />

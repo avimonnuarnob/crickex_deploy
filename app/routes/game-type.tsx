@@ -1,7 +1,9 @@
 import { Outlet, useSearchParams } from "react-router";
 import type { Route } from "./+types/game-type";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import classNames from "classnames";
+import Cookies from "js-cookie";
+import Modal from "@/components/ui/modal/Modal";
 
 type GAMES = GAME[];
 
@@ -31,6 +33,9 @@ export async function clientLoader({ params }: Route.ClientLoaderArgs) {
 }
 
 export default function GameType({ loaderData }: Route.ComponentProps) {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const gameurl = useRef("");
+
   const [searchParams] = useSearchParams();
   const vendor = searchParams.get("vendor");
   const [gameFilter, setGameFilter] = useState<string[]>(() =>
@@ -102,9 +107,24 @@ export default function GameType({ loaderData }: Route.ComponentProps) {
           }}
         >
           {filteredGames.map((game, i) => (
-            <div
+            <button
               key={i.toString()}
-              className="w-[180px] rounded-md overflow-hidden bg-white"
+              // overflow hidden somehow getting overwritten by normalize css file. maybe tailwind has less precedence over normalize css.
+              className="w-[180px] rounded-md overflow-hidden! bg-white"
+              onClick={async () => {
+                const response = await fetch(
+                  "https://ai.cloud7hub.uk/game/launchGame/BCON/SL/?game_id=420013999&operator=bcon",
+                  {
+                    method: "GET",
+                    headers: {
+                      Authorization: `Token ${Cookies.get("userToken")}`,
+                    },
+                  }
+                );
+                const data = (await response.json()) as any;
+                gameurl.current = data.data.gameUrl;
+                setIsModalOpen(true);
+              }}
             >
               <img
                 src={"https://ai.cloud7hub.uk" + game.imgFileName}
@@ -112,12 +132,22 @@ export default function GameType({ loaderData }: Route.ComponentProps) {
                 className="w-full h-[120px]"
               />
               <h3 className="p-2">{game.gameName.gameName_enus}</h3>
-            </div>
+            </button>
           ))}
         </div>
         <div className="text-[13px] pt-3.75 pb-5 text-[#00000080] text-center">
           －end of page－
         </div>
+
+        <Modal
+          onClose={() => {
+            setIsModalOpen(false);
+          }}
+          isOpen={isModalOpen}
+          title="Game"
+        >
+          <iframe src={gameurl.current} className="w-full h-100"></iframe>
+        </Modal>
         <Outlet />
       </div>
     </>
