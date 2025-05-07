@@ -5,6 +5,8 @@ import { FaChevronRight, FaChevronLeft } from "react-icons/fa6";
 import homeIcon from "@/assets/images/icon/home.svg";
 import NavItem from "./NavItem";
 import Submenu from "./Submenu";
+import { useRouteLoaderData } from "react-router";
+import type { RootLoaderData } from "@/root";
 
 type SidebarProps = Readonly<{
   isFull: boolean;
@@ -12,6 +14,8 @@ type SidebarProps = Readonly<{
 }>;
 
 const Sidebar = ({ isFull, setIsFull }: SidebarProps) => {
+  const data = useRouteLoaderData<RootLoaderData>("root");
+
   return (
     <div className={classNames("relative flex-none bg-blue-1 flex flex-col")}>
       {isFull ? (
@@ -58,6 +62,26 @@ const Sidebar = ({ isFull, setIsFull }: SidebarProps) => {
             </NavItem>
             <div className="border-blue-3 border-b" />
           </li>
+
+          {data?.gameProviders.map((gameType) => (
+            <li
+              key={gameType.id}
+              className={classNames({
+                "-ml-[9.5px]": !isFull,
+              })}
+            >
+              <Submenu
+                isFull={isFull}
+                icon={"https://ai.cloud7hub.uk" + gameType.thumbnail}
+                text={gameType.title}
+                children={gameType.game_provider.map((provider) => ({
+                  icon: "https://ai.cloud7hub.uk" + provider.thumbnail,
+                  text: provider.title,
+                  href: `/game/${provider.title}`,
+                }))}
+              />
+            </li>
+          ))}
 
           {navLinks.map((navLink, index) =>
             navLink.children ? (

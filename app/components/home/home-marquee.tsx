@@ -1,4 +1,17 @@
+import { useEffect, useState } from "react";
+
 export default function HomeMarquee() {
+  const [data, setData] = useState([]);
+  useEffect(() => {
+    const getAnnouncementData = async () => {
+      const response = await fetch(
+        "https://ai.cloud7hub.uk/statics/announcements/"
+      );
+      const responseData = await response.json();
+      setData(responseData.data);
+    };
+    getAnnouncementData();
+  }, []);
   return (
     <div className="flex items-center">
       <span
@@ -9,10 +22,9 @@ export default function HomeMarquee() {
         }}
       />
       <p className="marquee overflow-hidden box-border w-full">
-        <span className="text-sm">
-          🏏 Join Crickex now for Back & Lay, Premium Cricket, Fancy Bets, Daily
-          Bonuses, Weekly Cashback, and more—Get your Free ID today! 🎉🚀
-        </span>
+        {data?.map((el) => (
+          <span className="text-sm">{el.announcement}</span>
+        ))}
       </p>
     </div>
   );

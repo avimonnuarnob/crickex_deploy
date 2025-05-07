@@ -2,37 +2,9 @@ import React, { Fragment, useState } from "react";
 import { Tab, TabGroup, TabList, TabPanel, TabPanels } from "@headlessui/react";
 import { motion, AnimatePresence } from "motion/react";
 
-import casino from "@/assets/images/icon/casino.svg";
-import cricket from "@/assets/images/icon/cricket.svg";
-import sportIcon from "@/assets/images/icon/sport.svg";
+import type { GAMES } from "@/routes/index";
 
-const tabs = [
-  { name: "SPORTS", icon: sportIcon },
-  { name: "CASINO", icon: sportIcon },
-  { name: "SLOTS", icon: sportIcon },
-  { name: "TABLE", icon: sportIcon },
-  { name: "CRASH", icon: sportIcon },
-  { name: "FISHING", icon: sportIcon },
-  { name: "ARCADE", icon: sportIcon },
-  { name: "LOTTERY", icon: sportIcon },
-];
-
-const panelItems = [
-  { label: "JILI" },
-  { label: "JDB" },
-  { label: "FC" },
-  { label: "KA" },
-  { label: "JOKER" },
-  { label: "CQ9" },
-  { label: "Lucky365" },
-  { label: "JILI" },
-  { label: "JDB" },
-  { label: "FC" },
-  { label: "KA" },
-  { label: "JOKER" },
-];
-
-export default function CategoryTab() {
+export default function CategoryTab({ games }: { games: GAMES }) {
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [previousIndex, setPreviousIndex] = useState(0);
 
@@ -40,21 +12,25 @@ export default function CategoryTab() {
     setPreviousIndex(selectedIndex);
     setSelectedIndex(index);
   };
+
   return (
     <div className="flex w-full justify-center">
       <div className="w-full">
         <TabGroup selectedIndex={selectedIndex} onChange={handleTabChange}>
           <TabList className="flex bg-[#004179] text-white rounded overflow-hidden">
-            {tabs.map((tab, idx) => (
-              <Tab key={tab.name} className="data-selected:outline-none">
+            {games.map((game) => (
+              <Tab key={game.id} className="data-selected:outline-none">
                 {({ selected }) => (
                   <div
                     className={` flex flex-col data items-center justify-center px-5 py-1.5 font-bold transition relative ${
                       selected && "bg-[#005dac]"
                     } `}
                   >
-                    <img src={tab.icon} className="pt-3" />
-                    <span className="text-[13px] mt-2.75">{tab.name}</span>
+                    <img
+                      src={"https://ai.cloud7hub.uk" + game.thumbnail}
+                      className="pt-3 w-10 h-10 object-cover"
+                    />
+                    <span className="text-[13px] mt-2.75">{game.title}</span>
                     {selected && (
                       <span className="absolute bottom-[0px] left-1/2 -translate-x-1/2 w-0 h-0 border-l-8 border-r-8 border-b-8 border-transparent border-b-white" />
                     )}
@@ -64,11 +40,11 @@ export default function CategoryTab() {
             ))}
           </TabList>
           <TabPanels>
-            {tabs.map((tab, idx) => (
-              <TabPanel key={tab.name}>
+            {games.map((game, idx) => (
+              <TabPanel key={game.id}>
                 <div className="flex py-2.5 gap-1 items-center">
                   <div className="w-1 h-4 bg-[#005dac] rounded"></div>
-                  <span className="font-bold text-[15px]">{tab.name}</span>
+                  <span className="font-bold text-[15px]">{game.title}</span>
                 </div>
                 <AnimatePresence>
                   <motion.div
@@ -85,21 +61,20 @@ export default function CategoryTab() {
                     transition={{ duration: 0.5 }}
                     className="grid md:grid-cols-8 gap-1 rounded overflow-hidden pb-2.75"
                   >
-                    {panelItems.map((item, idx) => (
+                    {game.game_provider.map((item) => (
                       <div
-                        key={idx}
+                        key={item.id}
                         className="bg-white p-2 text-center text-sm font-light flex flex-col items-center"
                       >
                         <img
-                          src="https://img.c88rx.com/cx/h5/assets/images/brand/black/provider-awcmjili.png?v=1744705193129&source=mcdsrc"
-                          width="40"
-                          height="40"
+                          src={"https://ai.cloud7hub.uk" + item.thumbnail}
+                          className="w-10 h-10 object-cover"
                         />
-                        {item.label}
+                        {item.title}
                       </div>
                     ))}
                     {Array.from({
-                      length: 8 - (panelItems.length % 8),
+                      length: 8 - (game.game_provider.length % 8),
                     }).map((el, index) => (
                       <div
                         key={"blank-" + index}
