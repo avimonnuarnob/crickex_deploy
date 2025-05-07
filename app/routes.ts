@@ -14,15 +14,21 @@ export default [
         id: "home-signup",
       }),
     ]),
-    ...prefix("about", [
-      route("/", "./routes/about.tsx", [
-        route("account-login-quick", "./routes/login.tsx", {
-          id: "about-login",
-        }),
-        route("new-register-entry/account", "./routes/signup.tsx", {
-          id: "about-signup",
-        }),
-      ]),
+
+    route("/", "./routes/about.tsx", [
+      route("account-login-quick", "./routes/login.tsx", {
+        id: "about-login",
+      }),
+      route("new-register-entry/account", "./routes/signup.tsx", {
+        id: "about-signup",
+      }),
+    ]),
+
+    route("/:gametype", "./routes/game-type.tsx", [
+      route("account-login-quick", "./routes/login.tsx", { id: "game-login" }),
+      route("new-register-entry/account", "./routes/signup.tsx", {
+        id: "game-signup",
+      }),
     ]),
   ]),
 ] satisfies RouteConfig;
