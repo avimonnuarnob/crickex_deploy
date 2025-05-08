@@ -30,5 +30,10 @@ export default [
         id: "game-signup",
       }),
     ]),
+
+    route(
+      "/open-game/:pcode/:ptype/:gcode/:operator",
+      "./routes/open-game.tsx"
+    ),
   ]),
 ] satisfies RouteConfig;
