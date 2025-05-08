@@ -24,8 +24,17 @@ export default function GameLauncher({ loaderData }: Route.ComponentProps) {
   console.log(gamebox);
   return (
     <div className="mt-18 py-1">
-      <div className="w-full aspect-video border text-center">
-        <React.Suspense fallback={<div>Loading...</div>}>
+      <div className="w-full h-dvh text-center">
+        <React.Suspense
+          fallback={
+            <div className="flex justify-center items-center flex-col h-full">
+              <div className="loader">
+                <span className="sr-only">Loading...</span>
+              </div>
+              <span>Loading...</span>
+            </div>
+          }
+        >
           <Await resolve={gamebox}>
             {(value) => {
               return (

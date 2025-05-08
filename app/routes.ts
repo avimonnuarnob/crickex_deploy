@@ -30,7 +30,8 @@ export default [
         id: "game-signup",
       }),
     ]),
-
+  ]),
+  layout("./layouts/game-layout.tsx", [
     route(
       "/open-game/:pcode/:ptype/:gcode/:operator",
       "./routes/open-game.tsx"
