@@ -15,12 +15,7 @@ export default function RootLayout({ loaderData }: Route.ComponentProps) {
       <main className="flex h-full flex-1 flex-col items-center overflow-auto">
         <TopbarGame isFull={isFull} />
         <div className="w-full flex-1">
-          <div
-            className={classNames("mx-auto max-w-[1200px]", {
-              "w-[calc(100%-(16px*2))]": !isFull,
-              "w-[calc(100%-(16px*4))]": isFull,
-            })}
-          >
+          <div>
             <Outlet />
           </div>
         </div>
