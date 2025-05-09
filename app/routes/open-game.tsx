@@ -50,7 +50,6 @@ export default function GameLauncher({ loaderData }: Route.ComponentProps) {
                       width: "0px",
                       height: "100%",
                       minWidth: "100%",
-                      border: "20px solid red",
                     }}
                   ></iframe>
                 </div>
