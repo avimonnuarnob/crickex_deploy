@@ -13,7 +13,7 @@ type TopbarProps = Readonly<{
 }>;
 
 const TopbarGame = ({ isFull }: TopbarProps) => {
-  const { ptype, pcode } = useParams();
+  const { gcode, pcode } = useParams();
   const [isUserLoggedIn, setIsUserLoggedIn] = useState<string | undefined>(
     Cookies.get("userToken")
   );
@@ -44,7 +44,7 @@ const TopbarGame = ({ isFull }: TopbarProps) => {
             <Button
               className="flex gap-1 items-center text-lg"
               onClick={() => {
-                navigate(`/${ptype}#vendor=${pcode}`);
+                navigate(-1);
               }}
             >
               <img src={backDirection} height={16} width={16} alt="lang" />{" "}
