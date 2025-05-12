@@ -2,6 +2,7 @@ import { Outlet, useNavigate, useSearchParams } from "react-router";
 import type { Route } from "./+types/game-type";
 import { useEffect, useState } from "react";
 import classNames from "classnames";
+import Cookies from "js-cookie";
 
 type GAMES = GAME[];
 
@@ -32,6 +33,7 @@ export async function clientLoader({ params }: Route.ClientLoaderArgs) {
 
 export default function GameType({ loaderData }: Route.ComponentProps) {
   const navigate = useNavigate();
+  const [isLoading, setIsLoading] = useState(false);
 
   const [searchParams] = useSearchParams();
   const vendor = searchParams.get("vendor");
@@ -45,6 +47,30 @@ export default function GameType({ loaderData }: Route.ComponentProps) {
       setGameFilter([vendor]);
     }
   }, [vendor]);
+
+  const onClickHandler = async (game: GAME) => {
+    if (game.iframe) {
+      navigate(
+        `/open-game/${game.p_code}/${game.p_type}/${game.g_code}/${game.operator}`
+      );
+    } else {
+      setIsLoading(true);
+      await fetch(
+        `https://ai.cloud7hub.uk/game/launchGame/${game.p_code}/${game.p_type}/?game_id=${game.g_code}&operator=${game.operator}`,
+        {
+          method: "GET",
+          headers: {
+            Authorization: `Token ${Cookies.get("userToken")}`,
+          },
+        }
+      )
+        .then((d) => d.json())
+        .then((game_info) => {
+          window.open(game_info?.data?.gameUrl, "_blank")?.focus();
+          setIsLoading(false);
+        });
+    }
+  };
 
   const gameProviders: string[] = [
     ...new Set(games.map((game) => game.p_code)),
@@ -96,6 +122,7 @@ export default function GameType({ loaderData }: Route.ComponentProps) {
         <div className="flex pt-5.25 pb-4.25 gap-1 items-center mx-2">
           <div className="w-1 h-4 bg-[#005dac]"></div>
           <span className="font-bold">Favourites</span>
+          {isLoading && <span className="animate-pulse">Loading...</span>}
         </div>
         <div
           className="grid gap-x-2.5 gap-y-5 mx-2"
@@ -108,11 +135,7 @@ export default function GameType({ loaderData }: Route.ComponentProps) {
               key={i.toString()}
               // overflow hidden somehow getting overwritten by normalize css file. maybe tailwind has less precedence over normalize css.
               className="w-[180px] rounded-md overflow-hidden! bg-white cursor-pointer"
-              onClick={() => {
-                navigate(
-                  `/open-game/${game.p_code}/${game.p_type}/${game.g_code}/${game.operator}`
-                );
-              }}
+              onClick={() => onClickHandler(game)}
             >
               <img
                 src={"https://ai.cloud7hub.uk" + game.imgFileName}
