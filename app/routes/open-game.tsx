@@ -22,7 +22,6 @@ export async function clientLoader({ params }: Route.ClientLoaderArgs) {
 
 export default function GameLauncher({ loaderData }: Route.ComponentProps) {
   const { gamebox } = loaderData;
-  console.log(gamebox);
   return (
     <div className="mt-14.75">
       <React.Suspense

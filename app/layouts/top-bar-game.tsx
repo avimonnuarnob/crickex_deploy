@@ -3,7 +3,7 @@ import langButton from "@/assets/images/icon/lang.svg";
 import backDirection from "@/assets/images/icon/direction-back.svg";
 import Button from "@/components/ui/button/Button";
 import IconButton from "@/components/ui/button/IconButton";
-import { useNavigate } from "react-router";
+import { useNavigate, useParams } from "react-router";
 import { useState } from "react";
 import Cookies from "js-cookie";
 import WalletButton from "@/components/home/wallet-button";
@@ -13,6 +13,7 @@ type TopbarProps = Readonly<{
 }>;
 
 const TopbarGame = ({ isFull }: TopbarProps) => {
+  const { ptype, pcode } = useParams();
   const [isUserLoggedIn, setIsUserLoggedIn] = useState<string | undefined>(
     Cookies.get("userToken")
   );
@@ -43,7 +44,7 @@ const TopbarGame = ({ isFull }: TopbarProps) => {
             <Button
               className="flex gap-1 items-center text-lg"
               onClick={() => {
-                navigate(-1);
+                navigate(`/${ptype}?vendor=${pcode}`);
               }}
             >
               <img src={backDirection} height={16} width={16} alt="lang" />{" "}

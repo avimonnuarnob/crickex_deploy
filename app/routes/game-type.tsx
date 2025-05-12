@@ -49,27 +49,31 @@ export default function GameType({ loaderData }: Route.ComponentProps) {
   }, [vendor]);
 
   const onClickHandler = async (game: GAME) => {
-    if (game.iframe) {
-      navigate(
-        `/open-game/${game.p_code}/${game.p_type}/${game.g_code}/${game.operator}`
-      );
-    } else {
-      setIsLoading(true);
-      await fetch(
-        `https://ai.cloud7hub.uk/game/launchGame/${game.p_code}/${game.p_type}/?game_id=${game.g_code}&operator=${game.operator}`,
-        {
-          method: "GET",
-          headers: {
-            Authorization: `Token ${Cookies.get("userToken")}`,
-          },
-        }
-      )
-        .then((d) => d.json())
-        .then((game_info) => {
-          window.open(game_info?.data?.gameUrl, "_blank")?.focus();
-          setIsLoading(false);
-        });
-    }
+    // if (game.iframe) {
+    //   navigate(
+    //     `/open-game/${game.p_code}/${game.p_type}/${game.g_code}/${game.operator}`
+    //   );
+    // } else {
+    //   setIsLoading(true);
+    //   await fetch(
+    //     `https://ai.cloud7hub.uk/game/launchGame/${game.p_code}/${game.p_type}/?game_id=${game.g_code}&operator=${game.operator}`,
+    //     {
+    //       method: "GET",
+    //       headers: {
+    //         Authorization: `Token ${Cookies.get("userToken")}`,
+    //       },
+    //     }
+    //   )
+    //     .then((d) => d.json())
+    //     .then((game_info) => {
+    //       window.open(game_info?.data?.gameUrl, "_blank")?.focus();
+    //       setIsLoading(false);
+    //     });
+    // }
+
+    navigate(
+      `/open-game/${game.p_code}/${game.p_type}/${game.g_code}/${game.operator}`
+    );
   };
 
   const gameProviders: string[] = [
