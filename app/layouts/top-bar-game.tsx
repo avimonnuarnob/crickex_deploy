@@ -44,7 +44,7 @@ const TopbarGame = ({ isFull }: TopbarProps) => {
             <Button
               className="flex gap-1 items-center text-lg"
               onClick={() => {
-                navigate(`/${ptype}?vendor=${pcode}`);
+                navigate(`/${ptype}#vendor=${pcode}`);
               }}
             >
               <img src={backDirection} height={16} width={16} alt="lang" />{" "}
