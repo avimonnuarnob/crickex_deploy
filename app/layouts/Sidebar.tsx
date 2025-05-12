@@ -77,7 +77,7 @@ const Sidebar = ({ isFull, setIsFull }: SidebarProps) => {
                 children={gameType.game_provider.map((provider) => ({
                   icon: "https://ai.cloud7hub.uk" + provider.thumbnail,
                   text: provider.title,
-                  href: `/${gameType.game_type_code}?vendor=${provider.provider_code}`,
+                  href: `/${gameType.game_type_code}#vendor=${provider.provider_code}`,
                 }))}
               />
             </li>
