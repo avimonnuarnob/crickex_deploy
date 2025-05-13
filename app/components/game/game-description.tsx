@@ -9,7 +9,9 @@ export default function GameDescription({
   onClickHandler: any;
 }) {
   const [shouldShowSection] = useImageLoaded(
-    "https://ai.cloud7hub.uk" + game.imgFileName
+    game.imgFileName.startsWith("/")
+      ? "https://ai.cloud7hub.uk" + game.imgFileName
+      : game.imgFileName
   );
 
   return (
@@ -20,7 +22,11 @@ export default function GameDescription({
     >
       {shouldShowSection ? (
         <img
-          src={"https://ai.cloud7hub.uk" + game.imgFileName}
+          src={
+            game.imgFileName.startsWith("/")
+              ? "https://ai.cloud7hub.uk" + game.imgFileName
+              : game.imgFileName
+          }
           alt={game.gameName.gameName_enus}
           className="w-full h-[120px]"
           decoding="async"
