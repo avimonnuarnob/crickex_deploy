@@ -2,45 +2,62 @@ import type { GAME, GAMES } from "@/routes/game-type";
 import classNames from "classnames";
 import Cookies from "js-cookie";
 import { useEffect, useState } from "react";
-import { useLocation, useNavigate, useSearchParams } from "react-router";
+import { Link, useLocation, useNavigate, useSearchParams } from "react-router";
+import Modal from "../ui/modal/Modal";
+import { UnProtectedRoute } from "@/constants/routes";
+import Button from "../ui/button/Button";
 
 export default function GalleryForGames({ games }: { games: GAMES }) {
   const navigate = useNavigate();
-  const { hash } = useLocation();
+  const { hash, pathname } = useLocation();
   const vendor = hash.replace("#vendor=", "");
 
   const [isLoading, setIsLoading] = useState(false);
-
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const [gameFilter, setGameFilter] = useState<string[]>(() =>
     vendor ? [vendor] : []
   );
+
   useEffect(() => {
     if (gameFilter.length && vendor) {
       setGameFilter([vendor]);
     }
   }, [vendor]);
 
+  const loginBtnHandler = () => {
+    navigate(pathname + "/account-login-quick");
+  };
+
+  const signupBtnHandler = () => {
+    navigate(pathname + "/new-register-entry/account");
+  };
+
   const onClickHandler = async (game: GAME) => {
-    if (game.iframe) {
-      navigate(
-        `/open-game/${game.p_code}/${game.p_type}/${game.g_code}/${game.operator}`
-      );
+    const userToken = Cookies.get("userToken");
+    if (!userToken) {
+      setIsModalOpen(true);
     } else {
-      setIsLoading(true);
-      await fetch(
-        `https://ai.cloud7hub.uk/game/launchGame/${game.p_code}/${game.p_type}/?game_id=${game.g_code}&operator=${game.operator}`,
-        {
-          method: "GET",
-          headers: {
-            Authorization: `Token ${Cookies.get("userToken")}`,
-          },
-        }
-      )
-        .then((d) => d.json())
-        .then((game_info) => {
-          window.open(game_info?.data?.gameUrl, "_blank")?.focus();
-          setIsLoading(false);
-        });
+      if (game.iframe) {
+        navigate(
+          `/open-game/${game.p_code}/${game.p_type}/${game.g_code}/${game.operator}`
+        );
+      } else {
+        setIsLoading(true);
+        await fetch(
+          `https://ai.cloud7hub.uk/game/launchGame/${game.p_code}/${game.p_type}/?game_id=${game.g_code}&operator=${game.operator}`,
+          {
+            method: "GET",
+            headers: {
+              Authorization: `Token ${userToken}`,
+            },
+          }
+        )
+          .then((d) => d.json())
+          .then((game_info) => {
+            window.open(game_info?.data?.gameUrl, "_blank")?.focus();
+            setIsLoading(false);
+          });
+      }
     }
   };
 
@@ -122,6 +139,30 @@ export default function GalleryForGames({ games }: { games: GAMES }) {
       <div className="text-[13px] pt-3.75 pb-5 text-[#00000080] text-center">
         －end of page－
       </div>
+
+      <Modal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        title="Notification"
+      >
+        <div className="px-4 pt-2.5 pb-5">
+          <p className="mb-6 text-sm">
+            Please login or sin up to play the game.
+          </p>
+          <div className="mx-auto grid w-full max-w-sm grid-cols-2 gap-4">
+            <Button className="h-10 rounded-xs" onClick={loginBtnHandler}>
+              Login
+            </Button>
+            <Button
+              className="rounded-xs text-black"
+              color="yellow"
+              onClick={signupBtnHandler}
+            >
+              Sign Up
+            </Button>
+          </div>
+        </div>
+      </Modal>
     </>
   );
 }

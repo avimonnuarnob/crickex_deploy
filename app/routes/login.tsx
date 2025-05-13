@@ -12,6 +12,7 @@ export default function LoginModal() {
   const navigate = useNavigate();
 
   const [responseError, setError] = useState<null | string>(null);
+  const [isUserLoggedIn, setIsUserLoggedIn] = useState(false);
 
   const {
     control,
@@ -46,8 +47,8 @@ export default function LoginModal() {
     }
     if (responseData.status === "ok" && responseData.data) {
       Cookies.set("userToken", responseData.data.token, { sameSite: "Strict" });
-      navigate("/");
-      window.location.reload();
+      setIsUserLoggedIn(true);
+      navigate(-1);
     }
   };
   return (
@@ -60,6 +61,7 @@ export default function LoginModal() {
     >
       <>
         {/* <br className="block" /> */}
+
         <div
           className="w-[200px] h-[35px] mx-auto my-7 bg-contain bg-no-repeat bg-center"
           style={{
@@ -70,6 +72,11 @@ export default function LoginModal() {
         {responseError && (
           <p className="text-center bg-red-500 mx-2 py-4 text-white shadow rounded animate-bounce">
             {responseError}
+          </p>
+        )}
+        {isUserLoggedIn && (
+          <p className="text-center bg-green-500 mx-2 py-4 text-white shadow rounded animate-bounce">
+            Logging in successful
           </p>
         )}
         <div className="px-4 py-2.5">

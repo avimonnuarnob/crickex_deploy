@@ -95,7 +95,7 @@ export default function SignupModal({ matches }: Route.ComponentProps) {
           Cookies.set("userToken", responseData.data.token, {
             sameSite: "Strict",
           });
-          navigate("/");
+          // navigate(-1);
           window.location.reload();
         }
       } else {

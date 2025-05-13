@@ -2,7 +2,7 @@ import classNames from "classnames";
 import langButton from "@/assets/images/icon/lang.svg";
 import Button from "@/components/ui/button/Button";
 import IconButton from "@/components/ui/button/IconButton";
-import { useNavigate } from "react-router";
+import { useLocation, useNavigate } from "react-router";
 import { useState } from "react";
 import Cookies from "js-cookie";
 import WalletButton from "@/components/home/wallet-button";
@@ -16,13 +16,22 @@ const Topbar = ({ isFull }: TopbarProps) => {
     Cookies.get("userToken")
   );
   const navigate = useNavigate();
+  const location = useLocation();
 
   const loginBtnHandler = () => {
-    navigate("/account-login-quick");
+    if (location.pathname === "/") {
+      navigate("/account-login-quick");
+    } else {
+      navigate(location.pathname + "/account-login-quick");
+    }
   };
 
   const signupBtnHandler = () => {
-    navigate("/new-register-entry/account");
+    if (location.pathname === "/") {
+      navigate("/new-register-entry/account");
+    } else {
+      navigate(location.pathname + "/new-register-entry/account");
+    }
   };
 
   return (
@@ -60,7 +69,6 @@ const Topbar = ({ isFull }: TopbarProps) => {
                   <Button
                     className="bg-blue-3 text-xs w-[105px] h-[34px]"
                     onClick={loginBtnHandler}
-                    // href={UnProtectedRoute.Login}
                   >
                     Login
                   </Button>
@@ -68,7 +76,6 @@ const Topbar = ({ isFull }: TopbarProps) => {
                     className="text-xs w-[105px] h-[34px]"
                     color="green"
                     onClick={signupBtnHandler}
-                    // href={UnProtectedRoute.Signup}
                   >
                     Sign up
                   </Button>
@@ -82,7 +89,7 @@ const Topbar = ({ isFull }: TopbarProps) => {
                     onClick={() => {
                       Cookies.remove("userToken");
                       setIsUserLoggedIn(undefined);
-                      navigate("/");
+                      // navigate("/");
                       // window.location.reload();
                     }}
                     // href={UnProtectedRoute.Login}
