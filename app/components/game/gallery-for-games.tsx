@@ -6,6 +6,7 @@ import { Link, useLocation, useNavigate, useSearchParams } from "react-router";
 import Modal from "../ui/modal/Modal";
 import { UnProtectedRoute } from "@/constants/routes";
 import Button from "../ui/button/Button";
+import GameDescription from "./game-description";
 
 export default function GalleryForGames({ games }: { games: GAMES }) {
   const navigate = useNavigate();
@@ -119,21 +120,11 @@ export default function GalleryForGames({ games }: { games: GAMES }) {
         }}
       >
         {filteredGames.map((game, i) => (
-          <button
+          <GameDescription
             key={i.toString()}
-            // overflow hidden somehow getting overwritten by normalize css file. maybe tailwind has less precedence over normalize css.
-            className="w-[180px] rounded-md overflow-hidden! bg-white cursor-pointer"
-            onClick={() => onClickHandler(game)}
-          >
-            <img
-              src={"https://ai.cloud7hub.uk" + game.imgFileName}
-              alt={`Match ${i + 1}`}
-              className="w-full h-[120px]"
-              decoding="async"
-              loading="lazy"
-            />
-            <h3 className="p-2">{game.gameName.gameName_enus}</h3>
-          </button>
+            game={game}
+            onClickHandler={onClickHandler}
+          />
         ))}
       </div>
       <div className="text-[13px] pt-3.75 pb-5 text-[#00000080] text-center">
