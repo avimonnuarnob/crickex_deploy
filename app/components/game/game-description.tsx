@@ -12,8 +12,6 @@ export default function GameDescription({
     "https://ai.cloud7hub.uk" + game.imgFileName
   );
 
-  console.log(shouldShowSection);
-
   return (
     <button
       // overflow hidden somehow getting overwritten by normalize css file. maybe tailwind has less precedence over normalize css.
