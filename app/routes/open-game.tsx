@@ -26,7 +26,7 @@ export default function GameLauncher({ loaderData }: Route.ComponentProps) {
     <div className="mt-14.75">
       <React.Suspense
         fallback={
-          <div className="flex justify-center items-center flex-col h-full">
+          <div className="flex justify-center items-center flex-col h-full mt-24">
             <div className="loader">
               <span className="sr-only">Loading...</span>
             </div>

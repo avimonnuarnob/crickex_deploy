@@ -112,6 +112,8 @@ export default function GalleryForGames({ games }: { games: GAMES }) {
               src={"https://ai.cloud7hub.uk" + game.imgFileName}
               alt={`Match ${i + 1}`}
               className="w-full h-[120px]"
+              decoding="async"
+              loading="lazy"
             />
             <h3 className="p-2">{game.gameName.gameName_enus}</h3>
           </button>
