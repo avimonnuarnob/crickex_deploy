@@ -8,9 +8,11 @@ export default function GameDescription({
   game: GAME;
   onClickHandler: any;
 }) {
-  const shouldShowSection = useImageLoaded(
+  const [shouldShowSection] = useImageLoaded(
     "https://ai.cloud7hub.uk" + game.imgFileName
   );
+
+  console.log(shouldShowSection);
 
   return (
     <button
