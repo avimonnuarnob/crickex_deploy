@@ -74,7 +74,7 @@ export default function GalleryForGames({ games }: { games: GAMES }) {
   }
 
   return (
-    <>
+    <div>
       <div className="flex gap-2.5 bg-white px-2 pt-2 pb-1.5 overflow-x-scroll [&::-webkit-scrollbar]:h-1.5 [&::-webkit-scrollbar-thumb]:bg-gray-300 [&::-webkit-scrollbar-thumb]:rounded">
         <button
           className={classNames(
@@ -154,6 +154,6 @@ export default function GalleryForGames({ games }: { games: GAMES }) {
           </div>
         </div>
       </Modal>
-    </>
+    </div>
   );
 }

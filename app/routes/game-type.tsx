@@ -1,8 +1,6 @@
-import { Await, Outlet, useNavigate, useSearchParams } from "react-router";
+import { Await, Outlet, useLocation } from "react-router";
 import type { Route } from "./+types/game-type";
-import { Suspense, useEffect, useState } from "react";
-import classNames from "classnames";
-import Cookies from "js-cookie";
+import { Suspense } from "react";
 import GalleryForGames from "@/components/game/gallery-for-games";
 
 export type GAMES = GAME[];
@@ -37,9 +35,10 @@ export function clientLoader({ params }: Route.ClientLoaderArgs) {
 
 export default function GameType({ loaderData }: Route.ComponentProps) {
   const { promiseOfGames } = loaderData;
+  const { pathname, hash } = useLocation();
 
   return (
-    <div className="mt-18 py-1">
+    <div className="mt-18 py-1" key={pathname}>
       <Suspense
         fallback={
           <div className="flex justify-center items-center flex-col h-full">
