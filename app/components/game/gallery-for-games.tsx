@@ -15,7 +15,6 @@ export default function GalleryForGames({ games }: { games: GAMES }) {
   const { hash, pathname } = useLocation();
   const vendor = hash.replace("#vendor=", "");
 
-  const [isLoading, setIsLoading] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [gameFilter, setGameFilter] = useState<string[]>(() =>
     vendor ? [vendor] : []
@@ -34,35 +33,6 @@ export default function GalleryForGames({ games }: { games: GAMES }) {
 
   const signupBtnHandler = () => {
     navigate(pathname + "/new-register-entry/account");
-  };
-
-  const onClickHandler = async (game: GAME) => {
-    const userToken = Cookies.get("userToken");
-    if (!userToken) {
-      setIsModalOpen(true);
-    } else {
-      if (game.iframe) {
-        navigate(
-          `/open-game/${game.p_code}/${game.p_type}/${game.g_code}/${game.operator}`
-        );
-      } else {
-        setIsLoading(true);
-        await fetch(
-          `https://ai.cloud7hub.uk/game/launchGame/${game.p_code}/${game.p_type}/?game_id=${game.g_code}&operator=${game.operator}`,
-          {
-            method: "GET",
-            headers: {
-              Authorization: `Token ${userToken}`,
-            },
-          }
-        )
-          .then((d) => d.json())
-          .then((game_info) => {
-            window.open(game_info?.data?.gameUrl, "_blank")?.focus();
-            setIsLoading(false);
-          });
-      }
-    }
   };
 
   const gameProviders: string[] = [
@@ -113,7 +83,6 @@ export default function GalleryForGames({ games }: { games: GAMES }) {
       <div className="flex pt-5.25 pb-4.25 gap-1 items-center mx-2">
         <div className="w-1 h-4 bg-[#005dac]"></div>
         <span className="font-bold">Favourites</span>
-        {isLoading && <span className="animate-pulse">Loading...</span>}
       </div>
 
       <div
@@ -126,7 +95,7 @@ export default function GalleryForGames({ games }: { games: GAMES }) {
           <GameDescription
             key={game.gameName.gameName_enus}
             game={game}
-            onClickHandler={onClickHandler}
+            setIsModalOpen={setIsModalOpen}
           />
         ))}
       </div>
