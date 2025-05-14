@@ -34,7 +34,7 @@ export default function GameDescription({
         />
       ) : (
         <div className="w-full h-[120px] flex justify-center items-center">
-          <div className="loader"></div>
+          <div className="loader small"></div>
         </div>
       )}
       <h3 className="p-2">{game.gameName.gameName_enus}</h3>
