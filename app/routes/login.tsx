@@ -58,6 +58,7 @@ export default function LoginModal() {
       }}
       isOpen={true}
       title="Login"
+      isFullScreen={true}
     >
       <>
         {/* <br className="block" /> */}
@@ -124,7 +125,7 @@ export default function LoginModal() {
               </Button>
             </div>
 
-            <p className="text-gray-3 text-center text-sm mb-59.5">
+            <p className="text-gray-3 text-center text-sm mb-1.5">
               Do not have an account?{" "}
               <Link to="/" className="text-blue-1">
                 Sign Up
