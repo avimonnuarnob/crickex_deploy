@@ -8,6 +8,8 @@ import { UnProtectedRoute } from "@/constants/routes";
 import Button from "../ui/button/Button";
 import GameDescription from "./game-description";
 
+const GAMES_PER_PAGE = 20;
+
 export default function GalleryForGames({ games }: { games: GAMES }) {
   const navigate = useNavigate();
   const { hash, pathname } = useLocation();
@@ -18,6 +20,7 @@ export default function GalleryForGames({ games }: { games: GAMES }) {
   const [gameFilter, setGameFilter] = useState<string[]>(() =>
     vendor ? [vendor] : []
   );
+  const [pageNumber, setPageNumber] = useState(1);
 
   useEffect(() => {
     if (gameFilter.length && vendor) {
@@ -68,10 +71,9 @@ export default function GalleryForGames({ games }: { games: GAMES }) {
   const filteredGames = gameFilter.length
     ? games.filter((game) => gameFilter.includes(game.p_code))
     : games;
-
-  if (vendor) {
-    // setGameFilter(gameFilter.concat(vendor));
-  }
+  const totalPages =
+    Math.floor(filteredGames.length / GAMES_PER_PAGE) +
+    (filteredGames.length % GAMES_PER_PAGE === 0 ? 0 : 1);
 
   return (
     <div>
@@ -113,22 +115,35 @@ export default function GalleryForGames({ games }: { games: GAMES }) {
         <span className="font-bold">Favourites</span>
         {isLoading && <span className="animate-pulse">Loading...</span>}
       </div>
+
       <div
         className="grid gap-x-2.5 gap-y-5 mx-2"
         style={{
           gridTemplateColumns: "repeat(auto-fill,minmax(180px,1fr))",
         }}
       >
-        {filteredGames.map((game, i) => (
+        {filteredGames.slice(0, pageNumber * GAMES_PER_PAGE).map((game, i) => (
           <GameDescription
-            key={i.toString()}
+            key={game.gameName.gameName_enus}
             game={game}
             onClickHandler={onClickHandler}
           />
         ))}
       </div>
-      <div className="text-[13px] pt-3.75 pb-5 text-[#00000080] text-center">
-        －end of page－
+
+      <div className="text-[13px] pt-3.75 pb-5">
+        {totalPages > 0 && totalPages === pageNumber ? (
+          <p className=" text-[#00000080] text-center">－end of page－</p>
+        ) : (
+          <div className="mx-auto w-max">
+            <Button
+              onClick={() => setPageNumber((pageNumber) => pageNumber + 1)}
+              className=""
+            >
+              Load More
+            </Button>
+          </div>
+        )}
       </div>
 
       <Modal
