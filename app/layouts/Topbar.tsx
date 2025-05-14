@@ -38,7 +38,7 @@ const Topbar = ({ isFull }: TopbarProps) => {
     <>
       <div
         className={classNames(
-          "bg-blue-1 fixed z-1 top-0 right-0 border-black",
+          "bg-blue-1 fixed z-10 top-0 right-0 border-black",
           {
             "left-15.75": !isFull,
             "left-62.5": isFull,
