@@ -22,7 +22,7 @@ const Modal = ({ isOpen, onClose, children, title }: ModalProps) => {
         <Dialog open={isOpen} onClose={onClose} className="relative z-50">
           <DialogBackdrop className="fixed inset-0 backdrop-blur-xs" />
 
-          <div className="fixed inset-0 flex w-screen justify-center p-2 md:p-30 ">
+          <div className="fixed inset-0 flex w-screen justify-center p-2 md:p-27.75">
             <motion.div
               initial={{ opacity: 0, y: 100 }}
               animate={{ opacity: 1, y: 0 }}
