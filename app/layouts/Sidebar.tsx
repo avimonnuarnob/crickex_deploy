@@ -1,6 +1,6 @@
 import { navLinks } from "@/constants/navLinks";
 import classNames from "classnames";
-import { type Dispatch, type SetStateAction } from "react";
+import { useState, type Dispatch, type SetStateAction } from "react";
 import { FaChevronRight, FaChevronLeft } from "react-icons/fa6";
 import homeIcon from "@/assets/images/icon/home.svg";
 import NavItem from "./NavItem";
@@ -15,7 +15,23 @@ type SidebarProps = Readonly<{
 
 const Sidebar = ({ isFull, setIsFull }: SidebarProps) => {
   const data = useRouteLoaderData<RootLoaderData>("root");
+  const [activeDisclosurePanel, setActiveDisclosurePanel] = useState<any>(null);
 
+  function togglePanels(newPanel: any) {
+    if (activeDisclosurePanel) {
+      if (
+        activeDisclosurePanel.key !== newPanel.key &&
+        activeDisclosurePanel.open
+      ) {
+        activeDisclosurePanel.close();
+      }
+    }
+
+    setActiveDisclosurePanel({
+      ...newPanel,
+      open: !newPanel.open,
+    });
+  }
   return (
     <div className={classNames("relative flex-none bg-blue-1 flex flex-col")}>
       {isFull ? (
@@ -79,6 +95,8 @@ const Sidebar = ({ isFull, setIsFull }: SidebarProps) => {
                   text: provider.title,
                   href: `/games/${gameType.game_type_code}#vendor=${provider.provider_code}`,
                 }))}
+                togglePanels={togglePanels}
+                index={gameType.game_type_code + gameType.id}
               />
             </li>
           ))}
@@ -92,7 +110,12 @@ const Sidebar = ({ isFull, setIsFull }: SidebarProps) => {
                 key={index}
                 onClick={() => setIsFull(true)}
               >
-                <Submenu isFull={isFull} {...navLink} />
+                <Submenu
+                  isFull={isFull}
+                  {...navLink}
+                  togglePanels={togglePanels}
+                  index={"navlink" + index}
+                />
               </li>
             ) : (
               <li

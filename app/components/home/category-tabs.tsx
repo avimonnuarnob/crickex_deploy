@@ -3,8 +3,11 @@ import { Tab, TabGroup, TabList, TabPanel, TabPanels } from "@headlessui/react";
 import { motion, AnimatePresence } from "motion/react";
 
 import type { GAMES } from "@/routes/index";
+import { useNavigate } from "react-router";
 
 export default function CategoryTab({ games }: { games: GAMES }) {
+  const navigate = useNavigate();
+
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [previousIndex, setPreviousIndex] = useState(0);
 
@@ -64,7 +67,12 @@ export default function CategoryTab({ games }: { games: GAMES }) {
                     {game.game_provider.map((item) => (
                       <div
                         key={item.id}
-                        className="bg-white p-2 text-center text-sm font-light flex flex-col items-center"
+                        className="bg-white p-2 text-center text-sm font-light flex flex-col items-center cursor-pointer"
+                        onClick={() => {
+                          navigate(
+                            `/games/${game.game_type_code}#vendor=${item.provider_code}`
+                          );
+                        }}
                       >
                         <img
                           src={"https://ai.cloud7hub.uk" + item.thumbnail}
