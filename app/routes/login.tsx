@@ -7,12 +7,13 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { Link, useNavigate } from "react-router";
 import Cookies from "js-cookie";
+import { useCurrentUser } from "@/contexts/CurrentUserContext";
 
 export default function LoginModal() {
   const navigate = useNavigate();
+  const { isLoggedIn, loginUser } = useCurrentUser();
 
   const [responseError, setError] = useState<null | string>(null);
-  const [isUserLoggedIn, setIsUserLoggedIn] = useState(false);
 
   const {
     control,
@@ -46,8 +47,7 @@ export default function LoginModal() {
       setError(responseData.errors);
     }
     if (responseData.status === "ok" && responseData.data) {
-      Cookies.set("userToken", responseData.data.token, { sameSite: "Strict" });
-      setIsUserLoggedIn(true);
+      loginUser(responseData.data.token);
       navigate(-1);
     }
   };
@@ -75,7 +75,7 @@ export default function LoginModal() {
             {responseError}
           </p>
         )}
-        {isUserLoggedIn && (
+        {isLoggedIn && (
           <p className="text-center bg-green-500 mx-2 py-4 text-white shadow rounded animate-bounce">
             Logging in successful
           </p>

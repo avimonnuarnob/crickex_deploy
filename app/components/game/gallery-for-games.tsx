@@ -1,10 +1,8 @@
-import type { GAME, GAMES } from "@/routes/game-type";
+import type { GAMES } from "@/routes/game-type";
 import classNames from "classnames";
-import Cookies from "js-cookie";
 import { useEffect, useState } from "react";
-import { Link, useLocation, useNavigate, useSearchParams } from "react-router";
+import { useLocation, useNavigate } from "react-router";
 import Modal from "../ui/modal/Modal";
-import { UnProtectedRoute } from "@/constants/routes";
 import Button from "../ui/button/Button";
 import GameDescription from "./game-description";
 
@@ -28,11 +26,11 @@ export default function GalleryForGames({ games }: { games: GAMES }) {
   }, [vendor]);
 
   const loginBtnHandler = () => {
-    navigate(pathname + "/account-login-quick");
+    navigate(location.pathname + "/account-login-quick" + location.hash);
   };
 
   const signupBtnHandler = () => {
-    navigate(pathname + "/new-register-entry/account");
+    navigate(location.pathname + "/new-register-entry/account" + location.hash);
   };
 
   const gameProviders: string[] = [

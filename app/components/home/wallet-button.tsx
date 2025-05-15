@@ -2,9 +2,12 @@ import { useEffect, useState } from "react";
 import Button from "../ui/button/Button";
 import Cookies from "js-cookie";
 import { TfiReload } from "react-icons/tfi";
+import classNames from "classnames";
 
 export default function WalletButton() {
   const [walletData, setWalletData] = useState<number>(0);
+  const [isLoading, setIsLoading] = useState(false);
+
   useEffect(() => {
     async function getWalletData() {
       const response = await fetch(
@@ -20,9 +23,10 @@ export default function WalletButton() {
 
       if (responseData.status === "ok") {
         setWalletData(responseData.data.credit_balance);
+        setIsLoading(false);
       }
     }
-
+    setIsLoading(true);
     getWalletData();
   }, []);
   return (
@@ -30,6 +34,7 @@ export default function WalletButton() {
       className="text-xs h-[34px] flex gap-2 items-center"
       color="green"
       onClick={async () => {
+        setIsLoading(true);
         const response = await fetch(
           "https://ai.cloud7hub.uk/auth/user-balance/",
           {
@@ -43,11 +48,17 @@ export default function WalletButton() {
 
         if (responseData.status === "ok") {
           setWalletData(responseData.data.credit_balance);
+          setIsLoading(false);
         }
       }}
       // href={UnProtectedRoute.Login}
     >
-      <TfiReload /> <span>Main wallet ${walletData}</span>
+      <TfiReload
+        className={classNames({
+          "animate-spin": isLoading,
+        })}
+      />{" "}
+      <span>Main wallet ${walletData}</span>
     </Button>
   );
 }

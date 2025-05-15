@@ -19,9 +19,12 @@ import { useState } from "react";
 import { OTPInput, type SlotProps, REGEXP_ONLY_DIGITS } from "input-otp";
 import classNames from "classnames";
 import Cookies from "js-cookie";
+import { useCurrentUser } from "@/contexts/CurrentUserContext";
 
 export default function SignupModal({ matches }: Route.ComponentProps) {
   const navigate = useNavigate();
+  const { loginUser } = useCurrentUser();
+
   const { currencyList, countryList, defaultReferral } = matches[0].data;
   const [secondSubmission, setSecondSubmission] = useState(false);
   const [responseData, setResponseData] = useState<{
@@ -92,11 +95,8 @@ export default function SignupModal({ matches }: Route.ComponentProps) {
           data?: { token: string; user_base_origin: string };
         };
         if (responseData.status === "ok" && responseData.data) {
-          Cookies.set("userToken", responseData.data.token, {
-            sameSite: "Strict",
-          });
-          // navigate(-1);
-          window.location.reload();
+          loginUser(responseData.data.token);
+          navigate(-1);
         }
       } else {
         alert("failed");

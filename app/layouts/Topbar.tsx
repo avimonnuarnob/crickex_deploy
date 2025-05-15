@@ -3,18 +3,15 @@ import langButton from "@/assets/images/icon/lang.svg";
 import Button from "@/components/ui/button/Button";
 import IconButton from "@/components/ui/button/IconButton";
 import { useLocation, useNavigate } from "react-router";
-import { useState } from "react";
-import Cookies from "js-cookie";
 import WalletButton from "@/components/home/wallet-button";
+import { useCurrentUser } from "@/contexts/CurrentUserContext";
 
 type TopbarProps = Readonly<{
   isFull: boolean;
 }>;
 
 const Topbar = ({ isFull }: TopbarProps) => {
-  const [isUserLoggedIn, setIsUserLoggedIn] = useState<string | undefined>(
-    Cookies.get("userToken")
-  );
+  const { isLoggedIn, logoutUser } = useCurrentUser();
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -22,7 +19,7 @@ const Topbar = ({ isFull }: TopbarProps) => {
     if (location.pathname === "/") {
       navigate("/account-login-quick");
     } else {
-      navigate(location.pathname + "/account-login-quick");
+      navigate(location.pathname + "/account-login-quick" + location.hash);
     }
   };
 
@@ -30,7 +27,9 @@ const Topbar = ({ isFull }: TopbarProps) => {
     if (location.pathname === "/") {
       navigate("/new-register-entry/account");
     } else {
-      navigate(location.pathname + "/new-register-entry/account");
+      navigate(
+        location.pathname + "/new-register-entry/account" + location.hash
+      );
     }
   };
 
@@ -64,7 +63,7 @@ const Topbar = ({ isFull }: TopbarProps) => {
               }}
             ></div>
             <div className="flex items-center gap-[5px] justify-between">
-              {!isUserLoggedIn && (
+              {!isLoggedIn && (
                 <>
                   <Button
                     className="bg-blue-3 text-xs w-[105px] h-[34px]"
@@ -82,16 +81,11 @@ const Topbar = ({ isFull }: TopbarProps) => {
                 </>
               )}
 
-              {isUserLoggedIn && (
+              {isLoggedIn && (
                 <>
                   <Button
                     className="bg-blue-3 text-xs w-[105px] h-[34px]"
-                    onClick={() => {
-                      Cookies.remove("userToken");
-                      setIsUserLoggedIn(undefined);
-                      // navigate("/");
-                      // window.location.reload();
-                    }}
+                    onClick={logoutUser}
                     // href={UnProtectedRoute.Login}
                   >
                     Logout

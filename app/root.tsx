@@ -12,6 +12,7 @@ import type { Route } from "./+types/root";
 import appStylesHref from "./app.css?url";
 import normalizeStyles from "./normalize.css?url";
 import type { GAMES } from "./routes/index.tsx";
+import CurrentUserProvider from "./contexts/CurrentUserContext";
 
 export async function clientLoader() {
   const countryListPromise = fetch("https://ai.cloud7hub.uk/country/list")
@@ -101,7 +102,11 @@ export async function clientLoader() {
 export type RootLoaderData = Awaited<ReturnType<typeof clientLoader>>;
 
 export default function App() {
-  return <Outlet />;
+  return (
+    <CurrentUserProvider>
+      <Outlet />
+    </CurrentUserProvider>
+  );
 }
 
 // The Layout component is a special export for the root route.
