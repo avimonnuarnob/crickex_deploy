@@ -1,63 +1,29 @@
-const matches = [
-  {
-    team1: "KKR",
-    team2: "GT",
-    match: "39ᵗʰ MATCH",
-    date: "APR 21, MONDAY",
-    time: "10:00 PM",
-    image: "/images/match1.png",
-  },
-  {
-    team1: "LSG",
-    team2: "DC",
-    match: "40ᵗʰ MATCH",
-    date: "APR 22, TUESDAY",
-    time: "10:00 PM",
-    image: "/images/match2.png",
-  },
-  {
-    team1: "SRH",
-    team2: "MI",
-    match: "41ˢᵗ MATCH",
-    date: "APR 23, WEDNESDAY",
-    time: "10:00 PM",
-    image: "/images/match3.png",
-  },
-  {
-    team1: "SRH",
-    team2: "MI",
-    match: "41ˢᵗ MATCH",
-    date: "APR 23, WEDNESDAY",
-    time: "10:00 PM",
-    image: "/images/match3.png",
-  },
-  {
-    team1: "SRH",
-    team2: "MI",
-    match: "41ˢᵗ MATCH",
-    date: "APR 23, WEDNESDAY",
-    time: "10:00 PM",
-    image: "/images/match3.png",
-  },
-  {
-    team1: "SRH",
-    team2: "MI",
-    match: "41ˢᵗ MATCH",
-    date: "APR 23, WEDNESDAY",
-    time: "10:00 PM",
-    image: "/images/match3.png",
-  },
-  {
-    team1: "SRH",
-    team2: "MI",
-    match: "41ˢᵗ MATCH",
-    date: "APR 23, WEDNESDAY",
-    time: "10:00 PM",
-    image: "/images/match3.png",
-  },
-];
+import type { GAME, GAMES } from "@/routes/game-type";
+import { useEffect, useState } from "react";
+import GameDescription from "../game/game-description";
+import Modal from "../ui/modal/Modal";
+import { useNavigate } from "react-router";
+import Button from "../ui/button/Button";
 
 export default function FeaturedGames() {
+  const [gamesData, setGamesData] = useState<GAMES | null>(null);
+  const navigate = useNavigate();
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const loginBtnHandler = () => {
+    setIsModalOpen(false);
+    navigate("/account-login-quick");
+  };
+
+  const signupBtnHandler = () => {
+    setIsModalOpen(false);
+    navigate("/new-register-entry/account");
+  };
+  useEffect(() => {
+    fetch(`https://ai.cloud7hub.uk/game/getGameListByType/HT/`)
+      .then((response) => response.json())
+      .then((d) => setGamesData(d.data));
+  }, []);
   return (
     <div className="w-full">
       <div className="flex py-2 gap-1 items-center">
@@ -66,22 +32,40 @@ export default function FeaturedGames() {
       </div>
 
       <div className="overflow-x-auto [&::-webkit-scrollbar]:h-1.5 [&::-webkit-scrollbar-thumb]:bg-gray-300 [&::-webkit-scrollbar-thumb]:rounded">
-        <div className="flex space-x-2 min-w-max">
-          {matches.map((m, i) => (
-            <div
-              key={i}
-              className="w-[180px] rounded-md overflow-hidden bg-white"
-            >
-              <img
-                src="https://img.c88rx.com/upload/game/AWCMJILI/JILI-SLOT-027.png"
-                alt={`Match ${i + 1}`}
-                className="w-full h-[120px] object-cover"
-              />
-              <h3 className="p-2">Super Ace</h3>
-            </div>
+        <div className="flex gap-x-2 min-w-max">
+          {gamesData?.map((game, i) => (
+            <GameDescription
+              key={game.gameName.gameName_enus}
+              game={game}
+              setIsModalOpen={setIsModalOpen}
+            />
           ))}
         </div>
       </div>
+
+      <Modal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        title="Notification"
+      >
+        <div className="px-4 pt-2.5 pb-5">
+          <p className="mb-6 text-sm">
+            Please login or sign up to play the game.
+          </p>
+          <div className="mx-auto grid w-full max-w-sm grid-cols-2 gap-4">
+            <Button className="h-10 rounded-xs" onClick={loginBtnHandler}>
+              Login
+            </Button>
+            <Button
+              className="rounded-xs text-black"
+              color="yellow"
+              onClick={signupBtnHandler}
+            >
+              Sign Up
+            </Button>
+          </div>
+        </div>
+      </Modal>
     </div>
   );
 }

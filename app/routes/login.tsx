@@ -14,6 +14,7 @@ export default function LoginModal() {
   const { isLoggedIn, loginUser } = useCurrentUser();
 
   const [responseError, setError] = useState<null | string>(null);
+  const [isLoading, setIsLoading] = useState(false);
 
   const {
     control,
@@ -28,6 +29,7 @@ export default function LoginModal() {
   });
 
   const onSubmit = async (data: LoginInput) => {
+    setIsLoading(true);
     const respose = await fetch("https://ai.cloud7hub.uk/auth/user/login/", {
       method: "POST",
       headers: {
@@ -43,6 +45,7 @@ export default function LoginModal() {
       errors?: string;
       data?: { token: string; user_base_origin: string };
     };
+    setIsLoading(false);
     if (responseData.status === "failed" && responseData.errors) {
       setError(responseData.errors);
     }
@@ -120,6 +123,7 @@ export default function LoginModal() {
                 size="lg"
                 isBlock
                 isDisabled={!isDirty}
+                isLoading={isLoading}
               >
                 Login
               </Button>

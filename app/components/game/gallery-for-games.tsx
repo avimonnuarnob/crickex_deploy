@@ -26,10 +26,12 @@ export default function GalleryForGames({ games }: { games: GAMES }) {
   }, [vendor]);
 
   const loginBtnHandler = () => {
+    setIsModalOpen(false);
     navigate(location.pathname + "/account-login-quick" + location.hash);
   };
 
   const signupBtnHandler = () => {
+    setIsModalOpen(false);
     navigate(location.pathname + "/new-register-entry/account" + location.hash);
   };
 
@@ -120,7 +122,7 @@ export default function GalleryForGames({ games }: { games: GAMES }) {
       >
         <div className="px-4 pt-2.5 pb-5">
           <p className="mb-6 text-sm">
-            Please login or sin up to play the game.
+            Please login or sign up to play the game.
           </p>
           <div className="mx-auto grid w-full max-w-sm grid-cols-2 gap-4">
             <Button className="h-10 rounded-xs" onClick={loginBtnHandler}>

@@ -18,7 +18,6 @@ import type { Route } from "./+types/signup";
 import { useState } from "react";
 import { OTPInput, type SlotProps, REGEXP_ONLY_DIGITS } from "input-otp";
 import classNames from "classnames";
-import Cookies from "js-cookie";
 import { useCurrentUser } from "@/contexts/CurrentUserContext";
 
 export default function SignupModal({ matches }: Route.ComponentProps) {
@@ -40,6 +39,8 @@ export default function SignupModal({ matches }: Route.ComponentProps) {
     user_type: any;
     url_id: number;
   } | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
+
   const {
     control,
     handleSubmit,
@@ -58,6 +59,7 @@ export default function SignupModal({ matches }: Route.ComponentProps) {
     },
   });
   const onSubmit = async (data: SignupInput) => {
+    setIsLoading(true);
     if (responseData && secondSubmission) {
       const response = await fetch(
         "https://ai.cloud7hub.uk/auth/user/register-confirm/",
@@ -94,10 +96,12 @@ export default function SignupModal({ matches }: Route.ComponentProps) {
           data?: { token: string; user_base_origin: string };
         };
         if (responseData.status === "ok" && responseData.data) {
+          setIsLoading(false);
           loginUser(responseData.data.token);
           navigate(-1);
         }
       } else {
+        setIsLoading(false);
         alert("failed");
       }
     } else {
@@ -121,7 +125,7 @@ export default function SignupModal({ matches }: Route.ComponentProps) {
         }
       );
       const responseData = await response.json();
-
+      setIsLoading(false);
       setResponseData(responseData.data);
       setSecondSubmission(true);
     }
@@ -399,6 +403,7 @@ export default function SignupModal({ matches }: Route.ComponentProps) {
                 size="lg"
                 isBlock
                 isDisabled={!isDirty}
+                isLoading={isLoading}
               >
                 Submit
               </Button>
