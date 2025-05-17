@@ -49,12 +49,11 @@ export default function SignupModal({ matches }: Route.ComponentProps) {
   } = useForm<SignupInput>({
     resolver: zodResolver(signUpSchema),
     defaultValues: {
-      currency: "",
       username: "",
       password: "",
       // country: null,
       email: "",
-      referral_code: defaultReferral.referral_code,
+      referral_code: "",
       otp: "",
     },
   });
@@ -113,7 +112,9 @@ export default function SignupModal({ matches }: Route.ComponentProps) {
             username: data.username.toLowerCase(),
             password: data.password,
             email: data.email.toLowerCase(),
-            referral_code: data.referral_code,
+            referral_code: data.referral_code.length
+              ? data.referral_code
+              : defaultReferral.referral_code,
             social_contact_id: 1,
             currency: data.currency,
           }),
@@ -193,15 +194,9 @@ export default function SignupModal({ matches }: Route.ComponentProps) {
             ) : (
               <>
                 <div className="mb-5.5">
-                  {/* <FormSelect
-                name="currency"
-                options={people}
-                control={control}
-                label="Choose Currency"
-              /> */}
-
                   <Controller
                     control={control}
+                    defaultValue={currencyList[0].currency}
                     name="currency"
                     render={({ field: { value, onChange } }) => (
                       <Listbox value={value} onChange={onChange}>
@@ -380,7 +375,6 @@ export default function SignupModal({ matches }: Route.ComponentProps) {
                     label="Refer Code"
                     id="referral_code"
                     name="referral_code"
-                    required
                   />
                 </div>
               </>
