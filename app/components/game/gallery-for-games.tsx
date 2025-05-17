@@ -101,17 +101,32 @@ export default function GalleryForGames({ games }: { games: GAMES }) {
       </div>
 
       <div className="text-[13px] pt-3.75 pb-5">
-        {totalPages > 0 && totalPages === pageNumber ? (
+        {totalPages > 0 && pageNumber >= totalPages ? (
           <p className=" text-[#00000080] text-center">－end of page－</p>
         ) : (
-          <div className="mx-auto w-max">
-            <Button
-              onClick={() => setPageNumber((pageNumber) => pageNumber + 1)}
-              className=""
-            >
-              Load More
-            </Button>
-          </div>
+          <>
+            <div className="mx-auto w-max">
+              <Button
+                onClick={() => setPageNumber((pageNumber) => pageNumber + 1)}
+                className=""
+              >
+                Load More
+              </Button>
+            </div>
+
+            <div className="w-96 bg-gray-200 rounded-full h-1.25 dark:bg-gray-700 mx-auto mt-8">
+              <div
+                className="bg-blue-600 h-1.25 rounded-full"
+                style={{ width: `${(pageNumber / totalPages) * 100}%` }}
+              ></div>
+              <p className="text-center mt-4">
+                Showing{" "}
+                {filteredGames.slice(0, pageNumber * GAMES_PER_PAGE).length} of{" "}
+                {""}
+                {filteredGames.length} games
+              </p>
+            </div>
+          </>
         )}
       </div>
 
