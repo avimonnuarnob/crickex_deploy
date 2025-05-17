@@ -2,6 +2,7 @@ import Cookies from "js-cookie";
 import type { Route } from "./+types/open-game";
 import React from "react";
 import { Await } from "react-router";
+import { motion } from "motion/react";
 
 export async function clientLoader({ params }: Route.ClientLoaderArgs) {
   const { pcode, ptype, gcode, operator } = params;
@@ -38,8 +39,15 @@ export default function GameLauncher({ loaderData }: Route.ComponentProps) {
           {(value) => {
             return (
               <>
-                <div
-                  style={{ height: "calc(100vh - 59px)", overflow: "hidden" }}
+                <motion.div
+                  initial={{ opacity: 1, y: 700 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ ease: "linear" }}
+                  style={{
+                    height: "calc(100vh - 59px)",
+                    overflow: "hidden",
+                    background: "#d9d9d9",
+                  }}
                 >
                   <iframe
                     src={value.data.gameUrl}
@@ -51,7 +59,7 @@ export default function GameLauncher({ loaderData }: Route.ComponentProps) {
                       minWidth: "100%",
                     }}
                   ></iframe>
-                </div>
+                </motion.div>
               </>
             );
           }}

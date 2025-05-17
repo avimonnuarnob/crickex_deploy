@@ -8,12 +8,14 @@ import { useState } from "react";
 import Cookies from "js-cookie";
 import WalletButton from "@/components/home/wallet-button";
 
+import { BsArrowReturnLeft } from "react-icons/bs";
+
 type TopbarProps = Readonly<{
   isFull: boolean;
 }>;
 
 const TopbarGame = ({ isFull }: TopbarProps) => {
-  const { gcode, pcode } = useParams();
+  const { ptype, pcode } = useParams();
   const [isUserLoggedIn, setIsUserLoggedIn] = useState<string | undefined>(
     Cookies.get("userToken")
   );
@@ -41,17 +43,13 @@ const TopbarGame = ({ isFull }: TopbarProps) => {
           })}
         >
           <div className="flex h-15 items-center justify-between py-4">
-            <Button
-              className="flex gap-1 items-center text-lg"
+            <IconButton
+              className="bg-blue-7"
+              icon={<BsArrowReturnLeft className="text-2xl" />}
               onClick={() => {
-                navigate(-1);
+                navigate(`/games/${ptype}#vendor=${pcode}`);
               }}
-            >
-              <img src={backDirection} height={16} width={16} alt="lang" />{" "}
-              <span className="underline underline-offset-2 text-[#FF1F1F]">
-                Back
-              </span>
-            </Button>
+            ></IconButton>
 
             <div className="flex items-center gap-[5px] justify-between">
               {!isUserLoggedIn && (
