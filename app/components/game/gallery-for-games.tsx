@@ -6,11 +6,11 @@ import Modal from "../ui/modal/Modal";
 import Button from "../ui/button/Button";
 import GameDescription from "./game-description";
 
-const GAMES_PER_PAGE = 20;
+const GAMES_PER_PAGE = 1;
 
 export default function GalleryForGames({ games }: { games: GAMES }) {
   const navigate = useNavigate();
-  const { hash, pathname } = useLocation();
+  const { hash } = useLocation();
   const vendor = hash.replace("#vendor=", "");
 
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -100,7 +100,7 @@ export default function GalleryForGames({ games }: { games: GAMES }) {
         ))}
       </div>
 
-      <div className="text-[13px] pt-3.75 pb-5">
+      <div className="text-[13px] mt-6 mb-6">
         {totalPages > 0 && pageNumber >= totalPages ? (
           <p className=" text-[#00000080] text-center">－end of page－</p>
         ) : (
@@ -108,24 +108,25 @@ export default function GalleryForGames({ games }: { games: GAMES }) {
             <div className="mx-auto w-max">
               <Button
                 onClick={() => setPageNumber((pageNumber) => pageNumber + 1)}
-                className=""
+                className="w-[105px]"
               >
                 Load More
               </Button>
             </div>
 
-            <div className="w-96 bg-gray-200 rounded-full h-1.25 dark:bg-gray-700 mx-auto mt-8">
+            <div className="w-96 bg-gray-200 rounded-full h-1.25 dark:bg-gray-700 mx-auto mt-6">
               <div
                 className="bg-blue-600 h-1.25 rounded-full"
                 style={{ width: `${(pageNumber / totalPages) * 100}%` }}
               ></div>
-              <p className="text-center mt-4">
-                Showing{" "}
-                {filteredGames.slice(0, pageNumber * GAMES_PER_PAGE).length} of{" "}
-                {""}
-                {filteredGames.length} games
-              </p>
             </div>
+
+            <p className="text-center mt-4">
+              Showing{" "}
+              {filteredGames.slice(0, pageNumber * GAMES_PER_PAGE).length} of{" "}
+              {""}
+              {filteredGames.length} games
+            </p>
           </>
         )}
       </div>
