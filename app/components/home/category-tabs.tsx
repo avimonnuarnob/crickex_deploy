@@ -20,7 +20,7 @@ export default function CategoryTab({ games }: { games: GAMES }) {
     <div className="flex w-full justify-center">
       <div className="w-full">
         <TabGroup selectedIndex={selectedIndex} onChange={handleTabChange}>
-          <TabList className="flex bg-[#004179] text-white rounded overflow-hidden">
+          <TabList className="flex bg-[#004179] text-white rounded overflow-x-scroll [&::-webkit-scrollbar]:h-0">
             {games.map((game) => (
               <Tab key={game.id} className="data-selected:outline-none">
                 {({ selected }) => (
@@ -42,53 +42,52 @@ export default function CategoryTab({ games }: { games: GAMES }) {
               </Tab>
             ))}
           </TabList>
-          <TabPanels>
+          <TabPanels className="flex overflow-hidden">
             {games.map((game, idx) => (
-              <TabPanel key={game.id}>
-                <div className="flex py-2.5 gap-1 items-center">
-                  <div className="w-1 h-4 bg-[#005dac] rounded"></div>
-                  <span className="font-bold text-[15px]">{game.title}</span>
-                </div>
+              <TabPanel
+                static={true}
+                className="flex-1 min-w-full"
+                key={game.id}
+              >
                 <AnimatePresence>
                   <motion.div
                     key="div"
-                    initial={{
-                      opacity: 1,
-                      x: selectedIndex < previousIndex ? -200 : 200,
-                    }}
-                    animate={{ opacity: 1, x: 0 }}
-                    exit={{
-                      // y: -100,
-                      x: selectedIndex < previousIndex ? 500 : -500,
-                    }}
-                    transition={{ duration: 0.5 }}
-                    className="grid md:grid-cols-8 gap-1 rounded overflow-hidden pb-2.75"
+                    animate={{ x: selectedIndex * -100 + "%" }}
+                    transition={{ duration: 0.3 }}
                   >
-                    {game.game_provider.map((item) => (
-                      <div
-                        key={item.id}
-                        className="bg-white p-2 text-center text-sm font-light flex flex-col items-center cursor-pointer"
-                        onClick={() => {
-                          navigate(
-                            `/games/${game.game_type_code}#vendor=${item.provider_code}`
-                          );
-                        }}
-                      >
-                        <img
-                          src={"https://ai.cloud7hub.uk" + item.thumbnail}
-                          className="w-10 h-10 object-cover"
-                        />
-                        {item.title}
-                      </div>
-                    ))}
-                    {Array.from({
-                      length: 8 - (game.game_provider.length % 8),
-                    }).map((el, index) => (
-                      <div
-                        key={"blank-" + index}
-                        className="bg-white p-2 text-center text-sm font-semibold hidden md:block"
-                      ></div>
-                    ))}
+                    <div className="flex py-2.5 gap-1 items-center">
+                      <div className="w-1 h-4 bg-[#005dac] rounded"></div>
+                      <span className="font-bold text-[15px]">
+                        {game.title}
+                      </span>
+                    </div>
+                    <div className="grid md:grid-cols-8 gap-1 rounded overflow-hidden pb-2.75">
+                      {game.game_provider.map((item) => (
+                        <div
+                          key={item.id}
+                          className="bg-white p-2 text-center text-sm font-light flex flex-col items-center cursor-pointer"
+                          onClick={() => {
+                            navigate(
+                              `/games/${game.game_type_code}#vendor=${item.provider_code}`
+                            );
+                          }}
+                        >
+                          <img
+                            src={"https://ai.cloud7hub.uk" + item.thumbnail}
+                            className="w-10 h-10 object-cover"
+                          />
+                          {item.title}
+                        </div>
+                      ))}
+                      {Array.from({
+                        length: 8 - (game.game_provider.length % 8),
+                      }).map((el, index) => (
+                        <div
+                          key={"blank-" + index}
+                          className="bg-white p-2 text-center text-sm font-semibold hidden md:block"
+                        ></div>
+                      ))}
+                    </div>
                   </motion.div>
                 </AnimatePresence>
               </TabPanel>

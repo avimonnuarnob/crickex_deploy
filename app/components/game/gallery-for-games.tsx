@@ -6,7 +6,7 @@ import Modal from "../ui/modal/Modal";
 import Button from "../ui/button/Button";
 import GameDescription from "./game-description";
 
-const GAMES_PER_PAGE = 1;
+const GAMES_PER_PAGE = 20;
 
 export default function GalleryForGames({ games }: { games: GAMES }) {
   const navigate = useNavigate();
