@@ -45,7 +45,7 @@ const TopbarGame = ({ isFull }: TopbarProps) => {
           <div className="flex h-15 items-center justify-between py-4">
             <IconButton
               className="bg-blue-7"
-              icon={<BsArrowReturnLeft className="text-2xl" />}
+              icon={<BsArrowReturnLeft className="text-xs" />}
               onClick={() => {
                 navigate(`/games/${ptype}#vendor=${pcode}`);
               }}
