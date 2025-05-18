@@ -9,10 +9,8 @@ export default function CategoryTab({ games }: { games: GAMES }) {
   const navigate = useNavigate();
 
   const [selectedIndex, setSelectedIndex] = useState(0);
-  const [previousIndex, setPreviousIndex] = useState(0);
 
   const handleTabChange = (index: number) => {
-    setPreviousIndex(selectedIndex);
     setSelectedIndex(index);
   };
 
@@ -33,7 +31,9 @@ export default function CategoryTab({ games }: { games: GAMES }) {
                       src={"https://ai.cloud7hub.uk" + game.thumbnail}
                       className="pt-3 w-10 h-10 object-cover"
                     />
-                    <span className="text-[13px] mt-2.75">{game.title}</span>
+                    <span className="text-[13px] mt-2.75">
+                      {game.title.toUpperCase()}
+                    </span>
                     {selected && (
                       <span className="absolute bottom-[0px] left-1/2 -translate-x-1/2 w-0 h-0 border-l-8 border-r-8 border-b-8 border-transparent border-b-white" />
                     )}
@@ -51,7 +51,6 @@ export default function CategoryTab({ games }: { games: GAMES }) {
               >
                 <AnimatePresence>
                   <motion.div
-                    key="div"
                     animate={{ x: selectedIndex * -100 + "%" }}
                     transition={{ duration: 0.3 }}
                   >
