@@ -3,6 +3,9 @@ import { FormTextField } from "@/components/ui/form-inputs";
 import Modal from "@/components/ui/modal/Modal";
 import { signUpSchema, type SignupInput } from "@/schema/authSchema";
 import { checkEmail, checkUsername } from "@/services/user/user_core";
+import { GiConfirmed } from "react-icons/gi";
+import { FaRegCircleXmark } from "react-icons/fa6";
+
 import {
   Label,
   Listbox,
@@ -12,7 +15,7 @@ import {
 } from "@headlessui/react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Controller, useForm } from "react-hook-form";
-import { FaCaretDown } from "react-icons/fa";
+import { FaCaretDown, FaLaptopHouse } from "react-icons/fa";
 import { Link, useNavigate } from "react-router";
 import type { Route } from "./+types/signup";
 import { useState } from "react";
@@ -26,6 +29,9 @@ export default function SignupModal({ matches }: Route.ComponentProps) {
 
   const { currencyList, countryList, defaultReferral } = matches[0].data;
   const [secondSubmission, setSecondSubmission] = useState(false);
+  const [isSuccessfulRegistration, setIsSuccessfullRegistration] = useState<
+    boolean | undefined
+  >(undefined);
   const [responseData, setResponseData] = useState<{
     username: string;
     email: string;
@@ -58,6 +64,13 @@ export default function SignupModal({ matches }: Route.ComponentProps) {
       otp: "",
     },
   });
+
+  const loginBtnHandler = () => {
+    navigate("/account-login-quick", {
+      replace: true,
+    });
+  };
+
   const onSubmit = async (data: SignupInput) => {
     setIsLoading(true);
     if (responseData && secondSubmission) {
@@ -76,33 +89,11 @@ export default function SignupModal({ matches }: Route.ComponentProps) {
       );
       const r = await response.json();
       if (r.status === "ok") {
-        alert("success");
-        const respose = await fetch(
-          "https://ai.cloud7hub.uk/auth/user/login/",
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-              username: data.username.toLowerCase(),
-              password: data.password,
-            }),
-          }
-        );
-        const responseData = (await respose.json()) as {
-          status: "failed" | "ok";
-          errors?: string;
-          data?: { token: string; user_base_origin: string };
-        };
-        if (responseData.status === "ok" && responseData.data) {
-          setIsLoading(false);
-          loginUser(responseData.data.token);
-          navigate(-1);
-        }
+        setIsLoading(false);
+        setIsSuccessfullRegistration(true);
       } else {
         setIsLoading(false);
-        alert("failed");
+        setIsSuccessfullRegistration(false);
       }
     } else {
       const response = await fetch(
@@ -130,6 +121,51 @@ export default function SignupModal({ matches }: Route.ComponentProps) {
       setSecondSubmission(true);
     }
   };
+
+  if (isSuccessfulRegistration === true) {
+    return (
+      <Modal
+        onClose={() => {
+          // setIsSuccessfullRegistration(undefined);
+          navigate(-1);
+        }}
+        isOpen={isSuccessfulRegistration === true}
+        title="Registration Confirmation"
+      >
+        <div className="flex flex-col justify-between items-center p-4">
+          <div className="h-[527px] flex flex-col items-center gap-4 mt-4">
+            <GiConfirmed className="text-[66px] text-green-1 mx-auto" />
+            <span>Your registration was successful</span>
+          </div>
+
+          <Button size="lg" isBlock onClick={loginBtnHandler}>
+            Continue to login
+          </Button>
+        </div>
+      </Modal>
+    );
+  }
+
+  if (isSuccessfulRegistration === false) {
+    return (
+      <Modal
+        onClose={() => {
+          // setIsSuccessfullRegistration(undefined);
+          navigate(-1);
+        }}
+        isOpen={isSuccessfulRegistration === false}
+        title="Registration Confirmation"
+      >
+        <div className="flex flex-col justify-between items-center p-4">
+          <div className="flex flex-col items-center gap-4 mt-4">
+            <FaRegCircleXmark className="text-[66px] text-red-1 mx-auto" />
+            <span>Your registration has failed</span>
+          </div>
+        </div>
+      </Modal>
+    );
+  }
+
   return (
     <Modal
       onClose={() => {
