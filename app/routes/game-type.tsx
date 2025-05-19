@@ -22,13 +22,24 @@ export interface GameName {
   gameName_zhcn: string;
 }
 
+const cache = new Map();
+
 // try to link these types with clientloader response
 export function clientLoader({ params }: Route.ClientLoaderArgs) {
+  const key = `Game-Type-${params.gametype}`;
+
+  if (cache.get(key)) {
+    const promiseOfGames = new Promise((resolve) => resolve(cache.get(key)));
+    return { promiseOfGames };
+  }
   const promiseOfGames = fetch(
     `https://ai.cloud7hub.uk/game/getGameListByType/${params.gametype}/`
   )
     .then((response) => response.json())
-    .then((d) => d.data);
+    .then((d) => {
+      cache.set(key, d.data);
+      return d.data;
+    });
 
   return { promiseOfGames };
 }
