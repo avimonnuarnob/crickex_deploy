@@ -208,7 +208,7 @@ export default function SignupModal({ matches }: Route.ComponentProps) {
                           Choose currency
                         </Label>
                         <div className="relative mt-2.5">
-                          <ListboxButton className="grid w-full cursor-default grid-cols-1 rounded-sm bg-[#eeeeee] py-3 pr-2 pl-2 text-left font-light text-gray-900 focus:outline-none sm:text-sm/6 border-1 border-[#e7e7e7] focus:ring-none focus:border-1">
+                          <ListboxButton className="grid w-full cursor-default grid-cols-1 rounded-sm bg-[#eeeeee] py-3 pr-2 pl-2 text-left font-light text-gray-900 focus:outline-1 focus:outline-blue-1 sm:text-sm/6">
                             <span className="col-start-1 row-start-1 flex items-center gap-2 pr-6">
                               {value ? (
                                 <>
@@ -230,7 +230,7 @@ export default function SignupModal({ matches }: Route.ComponentProps) {
 
                           <ListboxOptions
                             transition
-                            className="absolute z-10 mt-1 max-h-56 w-full overflow-auto rounded-md bg-[#eeeeee] py-1 text-base shadow-lg ring-1 ring-black/5 focus:outline-hidden data-leave:transition data-leave:duration-100 data-leave:ease-in data-closed:data-leave:opacity-0 sm:text-sm"
+                            className="absolute z-10 mt-1 max-h-56 w-full overflow-auto rounded-md bg-[#eeeeee] py-1 text-base shadow-lg ring-1 ring-black/5 focus:outline-hidden data-leave:transition data-leave:duration-100 data-leave:ease-in data-closed:data-leave:opacity-0 sm:text-sm border-1 border-[#e7e7e7]"
                           >
                             {currencyList.map((currency) => (
                               <ListboxOption
@@ -294,7 +294,7 @@ export default function SignupModal({ matches }: Route.ComponentProps) {
                           Country
                         </Label>
                         <div className="relative mt-2.5">
-                          <ListboxButton className="grid w-full cursor-default grid-cols-1 rounded-sm bg-[#eeeeee] py-3 pr-2 pl-2 text-left font-light text-gray-900 focus:outline-none sm:text-sm/6 border-1 border-[#e7e7e7] focus:ring-none focus:border-1">
+                          <ListboxButton className="grid w-full cursor-default grid-cols-1 rounded-sm bg-[#eeeeee] py-3 pr-2 pl-2 text-left font-light text-gray-900 focus:outline-1 focus:outline-blue-1 sm:text-sm/6 border-1 border-[#e7e7e7]">
                             <span className="col-start-1 row-start-1 flex items-center gap-2 pr-6">
                               {value ? (
                                 <>

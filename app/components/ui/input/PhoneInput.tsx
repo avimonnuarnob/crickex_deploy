@@ -49,7 +49,7 @@ const PhoneInput = ({
             id={id}
             type={isPassword && showPassword ? "text" : type}
             className={classNames(
-              "border-none bg-gray-8 focus:ring-blue-1 w-full border px-4 py-3.75 text-xs transition-all focus:ring-1 focus:outline-none font-light",
+              "border-none bg-gray-8 focus:ring-blue-1 w-full border px-4 py-3.75 text-xs transition-all focus:ring-none focus:outline-1 font-light",
               {
                 "border-red-1 focus:ring-2 focus:ring-red-400": !!error,
               },
