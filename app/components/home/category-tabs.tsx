@@ -14,12 +14,14 @@ export default function CategoryTab({ providers }: { providers: PROVIDERS }) {
     setSelectedIndex(index);
   };
 
+  const filteredProviders = providers.filter((gameType) => gameType.menu_card);
+
   return (
     <div className="flex w-full justify-center">
       <div className="w-full">
         <TabGroup selectedIndex={selectedIndex} onChange={handleTabChange}>
           <TabList className="flex bg-[#004179] text-white rounded overflow-x-scroll [&::-webkit-scrollbar]:h-0">
-            {providers.map((gameType) => (
+            {filteredProviders.map((gameType) => (
               <Tab key={gameType.id} className="data-selected:outline-none">
                 {({ selected }) => (
                   <div
@@ -43,7 +45,7 @@ export default function CategoryTab({ providers }: { providers: PROVIDERS }) {
             ))}
           </TabList>
           <TabPanels className="flex overflow-hidden">
-            {providers.map((gameType, idx) => (
+            {filteredProviders.map((gameType, idx) => (
               <TabPanel
                 static={true}
                 className="flex-1 min-w-full"

@@ -19,11 +19,13 @@ export default function FeaturedGames() {
     setIsModalOpen(false);
     navigate("/new-register-entry/account");
   };
+
   useEffect(() => {
     fetch(`https://ai.cloud7hub.uk/game/getGameListByType/HT/`)
       .then((response) => response.json())
       .then((d) => setGamesData(d.data));
   }, []);
+
   return (
     <div className="w-full">
       <div className="flex py-2 gap-1 items-center">

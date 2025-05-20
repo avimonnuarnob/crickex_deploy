@@ -54,7 +54,7 @@ const Sidebar = ({ isFull, setIsFull }: SidebarProps) => {
 
       <div
         className={classNames(
-          "overflow-x-hidden overflow-y-scroll transition-[width] flex-1 [&::-webkit-scrollbar]:hidden border-r-5 border-[#255c93]",
+          "overflow-x-hidden overflow-y-scroll transition-[width] transition-discrete duration-150 flex-1 [&::-webkit-scrollbar]:hidden border-r-5 border-[#255c93]",
           {
             "w-15.75": !isFull,
             "w-62.5": isFull,
@@ -79,27 +79,29 @@ const Sidebar = ({ isFull, setIsFull }: SidebarProps) => {
             <div className="border-blue-3 border-b" />
           </li>
 
-          {data?.gameProviders.map((gameType) => (
-            <li
-              key={gameType.id}
-              className={classNames({
-                "-ml-[9.5px]": !isFull,
-              })}
-            >
-              <Submenu
-                isFull={isFull}
-                icon={"https://ai.cloud7hub.uk" + gameType.thumbnail}
-                text={gameType.title}
-                children={gameType.game_provider.map((provider) => ({
-                  icon: "https://ai.cloud7hub.uk" + provider.thumbnail,
-                  text: provider.title,
-                  href: `/games/${gameType.game_type_code}#vendor=${provider.provider_code}`,
-                }))}
-                togglePanels={togglePanels}
-                index={gameType.game_type_code + gameType.id}
-              />
-            </li>
-          ))}
+          {data?.gameProviders
+            .filter((gameType) => gameType.top_menu)
+            .map((gameType) => (
+              <li
+                key={gameType.id}
+                className={classNames({
+                  "-ml-[9.5px]": !isFull,
+                })}
+              >
+                <Submenu
+                  isFull={isFull}
+                  icon={"https://ai.cloud7hub.uk" + gameType.thumbnail}
+                  text={gameType.title}
+                  children={gameType.game_provider.map((provider) => ({
+                    icon: "https://ai.cloud7hub.uk" + provider.thumbnail,
+                    text: provider.title,
+                    href: `/games/${gameType.game_type_code}#vendor=${provider.provider_code}`,
+                  }))}
+                  togglePanels={togglePanels}
+                  index={gameType.game_type_code + gameType.id}
+                />
+              </li>
+            ))}
 
           {navLinks.map((navLink, index) =>
             navLink.children ? (
