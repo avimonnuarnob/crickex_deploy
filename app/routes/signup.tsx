@@ -171,6 +171,7 @@ export default function SignupModal({ matches }: Route.ComponentProps) {
       onClose={() => {
         navigate(-1);
       }}
+      isFullScreen={true}
       isOpen={true}
       title="Sign up"
     >
