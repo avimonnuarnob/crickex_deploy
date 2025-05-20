@@ -1,7 +1,7 @@
 import Cookies from "js-cookie";
 import type { Route } from "./+types/open-game";
 import React from "react";
-import { Await } from "react-router";
+import { Await, useSearchParams } from "react-router";
 import { motion } from "motion/react";
 
 export async function clientLoader({ params }: Route.ClientLoaderArgs) {

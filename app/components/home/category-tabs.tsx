@@ -14,7 +14,7 @@ export default function CategoryTab({ providers }: { providers: PROVIDERS }) {
     setSelectedIndex(index);
   };
 
-  const filteredProviders = providers.filter((gameType) => gameType.menu_card);
+  const filteredProviders = providers.filter((gameType) => gameType.top_menu);
 
   return (
     <div className="flex w-full justify-center">

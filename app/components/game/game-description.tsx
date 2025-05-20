@@ -3,7 +3,7 @@ import type { GAME } from "@/routes/game-type";
 import classNames from "classnames";
 import Cookies from "js-cookie";
 import { useState, type Dispatch, type SetStateAction } from "react";
-import { useNavigate } from "react-router";
+import { useLocation, useNavigate } from "react-router";
 
 export default function GameDescription({
   game,
@@ -18,6 +18,7 @@ export default function GameDescription({
       : game.imgFileName
   );
   const navigate = useNavigate();
+  const location = useLocation();
 
   const [isLoading, setIsLoading] = useState(false);
 
@@ -28,7 +29,12 @@ export default function GameDescription({
     } else {
       if (game.iframe) {
         navigate(
-          `/open-game/${game.p_code}/${game.p_type}/${game.g_code}/${game.operator}`
+          `/open-game/${game.p_code}/${game.p_type}/${game.g_code}/${game.operator}`,
+          {
+            state: {
+              redirect: location.pathname,
+            },
+          }
         );
       } else {
         setIsLoading(true);

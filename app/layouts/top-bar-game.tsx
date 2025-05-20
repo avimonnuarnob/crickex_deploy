@@ -3,7 +3,7 @@ import langButton from "@/assets/images/icon/lang.svg";
 import backDirection from "@/assets/images/icon/direction-back.svg";
 import Button from "@/components/ui/button/Button";
 import IconButton from "@/components/ui/button/IconButton";
-import { useNavigate, useParams } from "react-router";
+import { useLocation, useNavigate, useParams } from "react-router";
 import { useState } from "react";
 import Cookies from "js-cookie";
 import WalletButton from "@/components/home/wallet-button";
@@ -20,6 +20,9 @@ const TopbarGame = ({ isFull }: TopbarProps) => {
     Cookies.get("userToken")
   );
   const navigate = useNavigate();
+  const location = useLocation();
+
+  const redirect = location.state.redirect;
 
   const loginBtnHandler = () => {
     navigate("/account-login-quick");
@@ -47,7 +50,11 @@ const TopbarGame = ({ isFull }: TopbarProps) => {
               className="bg-blue-7"
               icon={<BsArrowReturnLeft className="text-xs" />}
               onClick={() => {
-                navigate(`/games/${ptype}#vendor=${pcode}`);
+                if (redirect === "/") {
+                  navigate("/");
+                } else {
+                  navigate(`/games/${ptype}#vendor=${pcode}`);
+                }
               }}
             ></IconButton>
 
