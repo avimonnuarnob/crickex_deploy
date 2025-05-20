@@ -52,23 +52,40 @@ export default function SignupModal({ matches }: Route.ComponentProps) {
     handleSubmit,
     setError,
     clearErrors,
-    formState: { isDirty, errors },
+    formState: { isDirty },
   } = useForm<SignupInput>({
     resolver: zodResolver(signUpSchema),
     defaultValues: {
       username: "",
       password: "",
-      // country: null,
       email: "",
       referral_code: "",
       otp: "",
     },
   });
 
-  const loginBtnHandler = () => {
-    navigate("/account-login-quick", {
-      replace: true,
+  const loginBtnHandler = async () => {
+    setIsLoading(true);
+    const respose = await fetch("https://ai.cloud7hub.uk/auth/user/login/", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        username: responseData?.username.toLowerCase(),
+        password: responseData?.password,
+      }),
     });
+    const r = (await respose.json()) as {
+      status: "failed" | "ok";
+      errors?: string;
+      data?: { token: string; user_base_origin: string };
+    };
+    if (r.status === "ok" && r.data) {
+      setIsLoading(false);
+      loginUser(r.data.token);
+      navigate(-1);
+    }
   };
 
   const onSubmit = async (data: SignupInput) => {
@@ -138,7 +155,12 @@ export default function SignupModal({ matches }: Route.ComponentProps) {
             <span>Your registration was successful</span>
           </div>
 
-          <Button size="lg" isBlock onClick={loginBtnHandler}>
+          <Button
+            size="lg"
+            isBlock
+            onClick={loginBtnHandler}
+            isLoading={isLoading}
+          >
             Continue to login
           </Button>
         </div>
