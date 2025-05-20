@@ -11,7 +11,7 @@ import type { Route } from "./+types/root";
 
 import appStylesHref from "./app.css?url";
 import normalizeStyles from "./normalize.css?url";
-import type { GAMES } from "./routes/index.tsx";
+import type { PROVIDERS } from "./routes/index.tsx";
 import CurrentUserProvider from "./contexts/CurrentUserContext";
 
 export async function clientLoader() {
@@ -95,7 +95,7 @@ export async function clientLoader() {
       local_agent_id: number;
       url_id: number;
     };
-    gameProviders: GAMES;
+    gameProviders: PROVIDERS;
   };
 }
 

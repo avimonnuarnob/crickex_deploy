@@ -8,7 +8,13 @@ import GameDescription from "./game-description";
 
 const GAMES_PER_PAGE = 20;
 
-export default function GalleryForGames({ games }: { games: GAMES }) {
+export default function GalleryForGames({
+  games,
+  providersMap,
+}: {
+  games: GAMES;
+  providersMap: Map<string, string>;
+}) {
   const navigate = useNavigate();
   const { hash } = useLocation();
   const vendor = hash.replace("#vendor=", "");
@@ -50,7 +56,7 @@ export default function GalleryForGames({ games }: { games: GAMES }) {
       <div className="flex gap-2.5 bg-white px-2 pt-2 pb-1.5 overflow-x-scroll [&::-webkit-scrollbar]:h-1.5 [&::-webkit-scrollbar-thumb]:bg-gray-300 [&::-webkit-scrollbar-thumb]:rounded">
         <button
           className={classNames(
-            "bg-[#f5f5f5] px-4 py-2 text-[13px] rounded w-[93px] h-[30px] text-center cursor-pointer hover:opacity-[0.7]",
+            "bg-[#f5f5f5] px-4 py-2 text-[13px] rounded min-w-[93px] h-[30px] text-center cursor-pointer hover:opacity-[0.7]",
             { "bg-[#005dac]! text-white": gameFilter.length === 0 }
           )}
           onClick={() => {
@@ -63,7 +69,7 @@ export default function GalleryForGames({ games }: { games: GAMES }) {
           <button
             key={provider}
             className={classNames(
-              "bg-[#f5f5f5] px-4 py-2 text-[13px] rounded w-[93px] h-[30px] text-center cursor-pointer hover:opacity-[0.7]",
+              "bg-[#f5f5f5] px-4 py-2 text-[13px] rounded min-w-[93px] h-[30px] text-center cursor-pointer hover:opacity-[0.7]",
               { "bg-[#005dac]! text-white": gameFilter.includes(provider) }
             )}
             onClick={() => {
@@ -76,7 +82,7 @@ export default function GalleryForGames({ games }: { games: GAMES }) {
               }
             }}
           >
-            {provider}
+            {providersMap.get(provider)}
           </button>
         ))}
       </div>

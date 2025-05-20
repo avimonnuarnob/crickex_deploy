@@ -1,7 +1,14 @@
-import { Await, Outlet, useLocation } from "react-router";
+import {
+  Await,
+  Outlet,
+  useLoaderData,
+  useLocation,
+  useRouteLoaderData,
+} from "react-router";
 import type { Route } from "./+types/game-type";
 import { Suspense } from "react";
 import GalleryForGames from "@/components/game/gallery-for-games";
+import type { RootLoaderData } from "@/root";
 
 export type GAMES = GAME[];
 
@@ -44,10 +51,20 @@ export function clientLoader({ params }: Route.ClientLoaderArgs) {
   return { promiseOfGames };
 }
 
-export default function GameType({ loaderData }: Route.ComponentProps) {
+export default function GameType({ loaderData, params }: Route.ComponentProps) {
   const { promiseOfGames } = loaderData;
+  const data = useRouteLoaderData<RootLoaderData>("root");
   const { pathname, hash } = useLocation();
-
+  const { gametype } = params;
+  const providersMap = new Map<string, string>();
+  const gameProviders = data?.gameProviders
+    .find((gameType) => gameType.game_type_code === gametype)
+    ?.game_provider.forEach((provider) => {
+      if (providersMap.get(provider.provider_code)) {
+        return;
+      }
+      providersMap.set(provider.provider_code, provider.provider_name);
+    });
   return (
     <div className="mt-18 py-1" key={pathname}>
       <Suspense
@@ -61,7 +78,11 @@ export default function GameType({ loaderData }: Route.ComponentProps) {
         }
       >
         <Await resolve={promiseOfGames}>
-          {(games) => <GalleryForGames games={games} />}
+          {(games: GAMES) => {
+            return (
+              <GalleryForGames games={games} providersMap={providersMap} />
+            );
+          }}
         </Await>
       </Suspense>
       <Outlet />

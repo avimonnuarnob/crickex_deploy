@@ -14,11 +14,11 @@ import HomeSlider from "@/components/home/home-slider";
 import type { Route } from "./+types/index";
 import type { RootLoaderData } from "@/root";
 
-export type GAMES = GAME[];
+export type PROVIDERS = GAMETYPE[];
 
-export interface GAME {
+export interface GAMETYPE {
   id: number;
-  game_provider: GameProvider[];
+  game_provider: GAMEPROVIDER[];
   page: { id: number; name: string };
   title: string;
   game_type_code: string;
@@ -34,7 +34,7 @@ export interface GAME {
   features: boolean;
 }
 
-export interface GameProvider {
+export interface GAMEPROVIDER {
   id: number;
   title: string;
   provider_name: string;
@@ -58,7 +58,7 @@ export default function Home() {
       <div className="mt-18 py-1">
         <HomeSlider />
         <HomeMarquee />
-        {data?.gameProviders && <CategoryTab games={data.gameProviders} />}
+        {data?.gameProviders && <CategoryTab providers={data?.gameProviders} />}
         <div className="py-2.75">
           <FavouriteGames />
         </div>
