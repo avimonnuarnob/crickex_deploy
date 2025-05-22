@@ -13,7 +13,6 @@ import {
   Field,
   Input,
 } from "@headlessui/react";
-import { GrClose } from "react-icons/gr";
 import { FaChevronRight } from "react-icons/fa6";
 import IconButton from "../ui/button/IconButton";
 import { FaSearch } from "react-icons/fa";
@@ -89,40 +88,51 @@ export default function GalleryForGames({
       ? 0
       : 1);
 
+  console.log(totalPages);
+
   return (
     <div>
-      <div className="flex gap-2.5 bg-white px-2 pt-2 pb-1.5 overflow-x-scroll [&::-webkit-scrollbar]:h-1.5 [&::-webkit-scrollbar-thumb]:bg-gray-300 [&::-webkit-scrollbar-thumb]:rounded">
-        <button
-          className={classNames(
-            "bg-[#f5f5f5] px-4 py-2 text-[13px] rounded min-w-[93px] h-[30px] text-center cursor-pointer hover:opacity-[0.7]",
-            { "bg-[#005dac]! text-white": gameFilter.length === 0 }
-          )}
-          onClick={() => {
-            setGameFilter([]);
-          }}
-        >
-          All
-        </button>
-        {gameProviders.map((provider) => (
+      <div className="relative overflow-hidden rounded">
+        <div className="flex gap-2.5 bg-white px-2 pt-2 pb-1.5 overflow-x-scroll [&::-webkit-scrollbar]:h-1.5 [&::-webkit-scrollbar-thumb]:bg-gray-300 [&::-webkit-scrollbar-thumb]:rounded">
           <button
-            key={provider}
             className={classNames(
               "bg-[#f5f5f5] px-4 py-2 text-[13px] rounded min-w-[93px] h-[30px] text-center cursor-pointer hover:opacity-[0.7]",
-              { "bg-[#005dac]! text-white": gameFilter.includes(provider) }
+              { "bg-[#005dac]! text-white": gameFilter.length === 0 }
             )}
             onClick={() => {
-              if (gameFilter.includes(provider)) {
-                setGameFilter(
-                  gameFilter.filter((filter) => filter !== provider)
-                );
-              } else {
-                setGameFilter(gameFilter.concat(provider));
-              }
+              setGameFilter([]);
             }}
           >
-            {providersMap.get(provider)}
+            All
           </button>
-        ))}
+          {gameProviders.map((provider) => (
+            <button
+              key={provider}
+              className={classNames(
+                "bg-[#f5f5f5] px-4 py-2 text-[13px] rounded min-w-[93px] h-[30px] text-center cursor-pointer hover:opacity-[0.7]",
+                { "bg-[#005dac]! text-white": gameFilter.includes(provider) }
+              )}
+              onClick={() => {
+                if (gameFilter.includes(provider)) {
+                  setGameFilter(
+                    gameFilter.filter((filter) => filter !== provider)
+                  );
+                } else {
+                  setGameFilter(gameFilter.concat(provider));
+                }
+              }}
+            >
+              {providersMap.get(provider)}
+            </button>
+          ))}
+          <IconButton
+            className="absolute right-0 top-0 bottom-0 aspect-square rounded-none"
+            icon={
+              <FaSearch aria-hidden="true" className=" text-white size-4" />
+            }
+            onClick={() => setOpen(true)}
+          ></IconButton>
+        </div>
       </div>
 
       <div className="flex items-center justify-between">
@@ -130,8 +140,6 @@ export default function GalleryForGames({
           <div className="w-1 h-4 bg-[#005dac]"></div>
           <span className="font-bold">Favourites</span>
         </div>
-
-        <Button onClick={() => setOpen(true)}>Open Drawer</Button>
       </div>
 
       <div
@@ -159,7 +167,7 @@ export default function GalleryForGames({
       </div>
 
       <div className="text-[13px] mt-6 mb-6">
-        {totalPages > 0 && pageNumber >= totalPages ? (
+        {pageNumber >= totalPages ? (
           <p className=" text-[#00000080] text-center">－end of page－</p>
         ) : (
           <>
@@ -251,6 +259,7 @@ export default function GalleryForGames({
                         ></IconButton>
                         <Field className="flex-1">
                           <Input
+                            defaultValue={textFilterInput}
                             name="filter"
                             placeholder="Search Games"
                             className="w-full h-full focus:ring-0 focus:outline-0 text-sm font-normal"
@@ -258,7 +267,7 @@ export default function GalleryForGames({
                         </Field>
 
                         <IconButton
-                          type="button"
+                          type="submit"
                           className="bg-transparent hover:bg-transparent"
                           icon={
                             <FaSearch
@@ -266,14 +275,13 @@ export default function GalleryForGames({
                               className="size-6 text-black "
                             />
                           }
-                          onClick={() => setOpen(false)}
                         ></IconButton>
                       </DialogTitle>
                     </div>
                     <div className="relative mt-6 flex-1 px-4">
                       {/* Your content */}
                       <p>Providers</p>
-                      <div className="flex gap-2.5 bg-white pt-2 pb-1.5 overflow-x-scroll [&::-webkit-scrollbar]:h-1.5 [&::-webkit-scrollbar-thumb]:bg-gray-300 [&::-webkit-scrollbar-thumb]:rounded">
+                      <div className="flex flex-wrap gap-2.5 bg-white pt-2 pb-1.5">
                         <button
                           type="button"
                           className={classNames(
