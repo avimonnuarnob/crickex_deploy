@@ -71,7 +71,7 @@ export default function GameDescription({
         <img
           src={
             game.imgFileName.startsWith("/")
-              ? "https://ai.cloud7hub.uk" + game.imgFileName
+              ? "https://img.softtake.net" + game.imgFileName
               : game.imgFileName
           }
           alt={game.gameName.gameName_enus}

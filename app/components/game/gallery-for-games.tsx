@@ -5,6 +5,18 @@ import { useLocation, useNavigate } from "react-router";
 import Modal from "../ui/modal/Modal";
 import Button from "../ui/button/Button";
 import GameDescription from "./game-description";
+import {
+  Dialog,
+  DialogBackdrop,
+  DialogPanel,
+  DialogTitle,
+  Field,
+  Input,
+} from "@headlessui/react";
+import { GrClose } from "react-icons/gr";
+import { FaChevronRight } from "react-icons/fa6";
+import IconButton from "../ui/button/IconButton";
+import { FaSearch } from "react-icons/fa";
 
 const GAMES_PER_PAGE = 20;
 
@@ -24,6 +36,8 @@ export default function GalleryForGames({
     vendor ? [vendor] : []
   );
   const [pageNumber, setPageNumber] = useState(1);
+  const [open, setOpen] = useState(false);
+  const [textFilterInput, setTextFilterInput] = useState("");
 
   useEffect(() => {
     if (gameFilter.length && vendor) {
@@ -44,12 +58,36 @@ export default function GalleryForGames({
   const gameProviders: string[] = [
     ...new Set(games.map((game) => game.p_code)),
   ];
+
   const filteredGames = gameFilter.length
-    ? games.filter((game) => gameFilter.includes(game.p_code))
+    ? games.filter((game) => {
+        return gameFilter.includes(game.p_code);
+      })
     : games;
+
   const totalPages =
-    Math.floor(filteredGames.length / GAMES_PER_PAGE) +
-    (filteredGames.length % GAMES_PER_PAGE === 0 ? 0 : 1);
+    Math.floor(
+      (textFilterInput.length
+        ? filteredGames.filter((game) =>
+            game.gameName.gameName_enus
+              .toLocaleLowerCase()
+              .includes(textFilterInput)
+          )
+        : filteredGames
+      ).length / GAMES_PER_PAGE
+    ) +
+    ((textFilterInput.length
+      ? filteredGames.filter((game) =>
+          game.gameName.gameName_enus
+            .toLocaleLowerCase()
+            .includes(textFilterInput)
+        )
+      : filteredGames
+    ).length %
+      GAMES_PER_PAGE ===
+    0
+      ? 0
+      : 1);
 
   return (
     <div>
@@ -86,9 +124,14 @@ export default function GalleryForGames({
           </button>
         ))}
       </div>
-      <div className="flex pt-5.25 pb-4.25 gap-1 items-center mx-2">
-        <div className="w-1 h-4 bg-[#005dac]"></div>
-        <span className="font-bold">Favourites</span>
+
+      <div className="flex items-center justify-between">
+        <div className="flex pt-5.25 pb-4.25 gap-1 items-center mx-2">
+          <div className="w-1 h-4 bg-[#005dac]"></div>
+          <span className="font-bold">Favourites</span>
+        </div>
+
+        <Button onClick={() => setOpen(true)}>Open Drawer</Button>
       </div>
 
       <div
@@ -97,13 +140,22 @@ export default function GalleryForGames({
           gridTemplateColumns: "repeat(auto-fill,minmax(180px,1fr))",
         }}
       >
-        {filteredGames.slice(0, pageNumber * GAMES_PER_PAGE).map((game, i) => (
-          <GameDescription
-            key={game.gameName.gameName_enus}
-            game={game}
-            setIsModalOpen={setIsModalOpen}
-          />
-        ))}
+        {(textFilterInput.length
+          ? filteredGames.filter((game) =>
+              game.gameName.gameName_enus
+                .toLocaleLowerCase()
+                .includes(textFilterInput)
+            )
+          : filteredGames
+        )
+          .slice(0, pageNumber * GAMES_PER_PAGE)
+          .map((game, i) => (
+            <GameDescription
+              key={game.gameName.gameName_enus}
+              game={game}
+              setIsModalOpen={setIsModalOpen}
+            />
+          ))}
       </div>
 
       <div className="text-[13px] mt-6 mb-6">
@@ -160,6 +212,121 @@ export default function GalleryForGames({
           </div>
         </div>
       </Modal>
+
+      <Dialog open={open} onClose={setOpen} className="relative z-10">
+        <DialogBackdrop
+          transition
+          className="fixed inset-0 transition-opacity duration-300 ease-in-out data-closed:opacity-0"
+        />
+
+        <div className="fixed inset-0 overflow-hidden">
+          <div className="absolute inset-0 overflow-hidden">
+            <div className="pointer-events-none fixed inset-y-0 right-0 flex max-w-full">
+              <DialogPanel
+                transition
+                className="pointer-events-auto relative w-screen max-w-md transform transition duration-300 ease-in-out data-closed:translate-x-full sm:duration-300"
+              >
+                <form
+                  className="h-full bg-white p-1"
+                  onSubmit={(e) => {
+                    e.preventDefault();
+                    const data = new FormData(e.currentTarget);
+                    const filterText = data.get("filter") as string;
+                    filterText && setTextFilterInput(filterText);
+                  }}
+                >
+                  <div className="flex  flex-col">
+                    <div className="">
+                      <DialogTitle className="text-base font-semibold text-gray-900 flex">
+                        <IconButton
+                          type="button"
+                          className="bg-transparent hover:bg-transparent"
+                          icon={
+                            <FaChevronRight
+                              aria-hidden="true"
+                              className="size-6 text-black"
+                            />
+                          }
+                          onClick={() => setOpen(false)}
+                        ></IconButton>
+                        <Field className="flex-1">
+                          <Input
+                            name="filter"
+                            placeholder="Search Games"
+                            className="w-full h-full focus:ring-0 focus:outline-0 text-sm font-normal"
+                          />
+                        </Field>
+
+                        <IconButton
+                          type="button"
+                          className="bg-transparent hover:bg-transparent"
+                          icon={
+                            <FaSearch
+                              aria-hidden="true"
+                              className="size-6 text-black "
+                            />
+                          }
+                          onClick={() => setOpen(false)}
+                        ></IconButton>
+                      </DialogTitle>
+                    </div>
+                    <div className="relative mt-6 flex-1 px-4">
+                      {/* Your content */}
+                      <p>Providers</p>
+                      <div className="flex gap-2.5 bg-white pt-2 pb-1.5 overflow-x-scroll [&::-webkit-scrollbar]:h-1.5 [&::-webkit-scrollbar-thumb]:bg-gray-300 [&::-webkit-scrollbar-thumb]:rounded">
+                        <button
+                          type="button"
+                          className={classNames(
+                            "bg-[#f5f5f5] px-4 py-2 text-[13px] rounded min-w-[93px] h-[30px] text-center cursor-pointer hover:opacity-[0.7]",
+                            {
+                              "bg-[#005dac]! text-white":
+                                gameFilter.length === 0,
+                            }
+                          )}
+                          onClick={() => {
+                            setGameFilter([]);
+                          }}
+                        >
+                          All
+                        </button>
+                        {gameProviders.map((provider) => (
+                          <button
+                            type="button"
+                            key={provider}
+                            className={classNames(
+                              "bg-[#f5f5f5] px-4 py-2 text-[13px] rounded min-w-[93px] h-[30px] text-center cursor-pointer hover:opacity-[0.7]",
+                              {
+                                "bg-[#005dac]! text-white":
+                                  gameFilter.includes(provider),
+                              }
+                            )}
+                            onClick={() => {
+                              if (gameFilter.includes(provider)) {
+                                setGameFilter(
+                                  gameFilter.filter(
+                                    (filter) => filter !== provider
+                                  )
+                                );
+                              } else {
+                                setGameFilter(gameFilter.concat(provider));
+                              }
+                            }}
+                          >
+                            {providersMap.get(provider)}
+                          </button>
+                        ))}
+                      </div>
+                      <Button type="submit" isBlock={true}>
+                        Confirm
+                      </Button>
+                    </div>
+                  </div>
+                </form>
+              </DialogPanel>
+            </div>
+          </div>
+        </div>
+      </Dialog>
     </div>
   );
 }

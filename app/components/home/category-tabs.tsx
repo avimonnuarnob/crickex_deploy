@@ -30,7 +30,7 @@ export default function CategoryTab({ providers }: { providers: PROVIDERS }) {
                     } `}
                   >
                     <img
-                      src={"https://ai.cloud7hub.uk" + gameType.thumbnail}
+                      src={"https://img.softtake.net" + gameType.thumbnail}
                       className="pt-3 w-10 h-10 object-cover"
                     />
                     <span className="text-[13px] mt-2.75">
@@ -78,7 +78,7 @@ export default function CategoryTab({ providers }: { providers: PROVIDERS }) {
                           }}
                         >
                           <img
-                            src={"https://ai.cloud7hub.uk" + item.thumbnail}
+                            src={"https://img.softtake.net" + item.thumbnail}
                             className="w-10 h-10 object-cover"
                           />
                           {item.title}
