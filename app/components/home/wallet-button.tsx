@@ -31,7 +31,7 @@ export default function WalletButton() {
   }, []);
   return (
     <Button
-      className="text-xs h-[34px] flex gap-2 items-center"
+      className="h-[34px] flex gap-2.5 items-center"
       color="green"
       onClick={async () => {
         setIsLoading(true);
@@ -54,11 +54,12 @@ export default function WalletButton() {
       // href={UnProtectedRoute.Login}
     >
       <TfiReload
-        className={classNames({
+        className={classNames("stroke-1", {
           "animate-spin": isLoading,
         })}
-      />{" "}
-      <span>Main wallet ${walletData}</span>
+      />
+      <span>Main Wallet</span>
+      <span className="font-bold">${walletData}</span>
     </Button>
   );
 }

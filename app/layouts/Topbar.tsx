@@ -5,6 +5,8 @@ import IconButton from "@/components/ui/button/IconButton";
 import { useLocation, useNavigate } from "react-router";
 import WalletButton from "@/components/home/wallet-button";
 import { useCurrentUser } from "@/contexts/CurrentUserContext";
+import ProfileButton from "@/components/layout/profile-button";
+import { BsCreditCard2BackFill } from "react-icons/bs";
 
 type TopbarProps = Readonly<{
   isFull: boolean;
@@ -62,7 +64,7 @@ const Topbar = ({ isFull }: TopbarProps) => {
                   'url("https://img.c88rx.com/cx/h5/assets/images/logo.png?v=1744705193129")',
               }}
             ></div>
-            <div className="flex items-center gap-[5px] justify-between">
+            <div className="flex items-center gap-4 justify-between">
               {!isLoggedIn && (
                 <>
                   <Button
@@ -83,26 +85,26 @@ const Topbar = ({ isFull }: TopbarProps) => {
 
               {isLoggedIn && (
                 <>
-                  <Button
-                    className="bg-blue-3 text-xs w-[105px] h-[34px]"
+                  <IconButton
+                    icon={<BsCreditCard2BackFill className="w-5 h-3.5" />}
+                    className="bg-blue-3 h-[34px]"
                     onClick={logoutUser}
                     // href={UnProtectedRoute.Login}
                   >
-                    Logout
-                  </Button>
+                    Deposit
+                  </IconButton>
                   <WalletButton />
+                  <ProfileButton />
                 </>
               )}
 
-              <div className="ml-3 grow-0">
-                <IconButton
-                  color="link"
-                  icon={
-                    <img src={langButton} height={24} width={24} alt="lang" />
-                  }
-                  className="!p-0"
-                />
-              </div>
+              <IconButton
+                color="link"
+                icon={
+                  <img src={langButton} height={24} width={24} alt="lang" />
+                }
+                className="p-0!"
+              />
             </div>
           </div>
         </div>

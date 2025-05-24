@@ -21,7 +21,7 @@ const IconButton = <T extends React.ElementType = "button">({
     <Button
       as={as as React.ElementType}
       {...props}
-      className={classNames("flex items-center gap-2", className)}
+      className={classNames("flex items-center gap-2.5", className)}
     >
       {iconPosition === "left" && Icon && <>{Icon}</>}
       {children}

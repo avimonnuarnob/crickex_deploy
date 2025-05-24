@@ -9,10 +9,13 @@ import {
 } from "react-router";
 import type { Route } from "./+types/root";
 
+import loader from "./assets/loader.webm";
+
 import appStylesHref from "./app.css?url";
 import normalizeStyles from "./normalize.css?url";
 import type { PROVIDERS } from "./routes/index.tsx";
 import CurrentUserProvider from "./contexts/CurrentUserContext";
+import { useEffect } from "react";
 
 export async function clientLoader() {
   const countryListPromise = fetch("https://ai.cloud7hub.uk/country/list")
@@ -102,6 +105,13 @@ export async function clientLoader() {
 export type RootLoaderData = Awaited<ReturnType<typeof clientLoader>>;
 
 export default function App() {
+  useEffect(() => {
+    const s1 = document.createElement("script");
+    s1.async = true;
+    s1.src = "https://embed.tawk.to/6783e17249e2fd8dfe06606e/1ihdihae5";
+    s1.setAttribute("crossorigin", "*");
+    document.body.appendChild(s1);
+  }, []);
   return (
     <CurrentUserProvider>
       <Outlet />
@@ -165,5 +175,11 @@ export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {
 }
 
 export function HydrateFallback() {
-  return <p>Loading Game...</p>;
+  return (
+    <div className="flex w-screen h-screen justify-center items-center">
+      <video width={250} autoPlay={true} muted={true} loop={true}>
+        <source src={loader} type="video/webm" />
+      </video>
+    </div>
+  );
 }
