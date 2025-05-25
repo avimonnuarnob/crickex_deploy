@@ -1,72 +1,100 @@
 import { ProtectedRoute } from "./routes";
 
+import talkIcon from "@/assets/images/icon-talk.png";
+import customerIcon from "@/assets/images/icon-customer.png";
+import emailIcon from "@/assets/images/icon-email.png";
+import telegramIcon from "@/assets/images/icon-telegram.png";
+import promotionIcon from "@/assets/images/icon-promotion.png";
+import sponsorshipIcon from "@/assets/images/icon-sponsorship.png";
+import leaderboardIcon from "@/assets/images/icon-leaderboard.png";
+import referBonusIcon from "@/assets/images/icon-refer-bonus.png";
+import downloadIcon from "@/assets/images/icon-download.png";
+import responsibleGamingIcon from "@/assets/images/icon-responsible-gaming.png";
+import affiliateIcon from "@/assets/images/icon-affiliate.png";
+import crickexBlogIcon from "@/assets/images/icon-crickex-blog.png";
+import aboutUsIcon from "@/assets/images/icon-about-us.png";
+import faqIcon from "@/assets/images/icon-faq.png";
+
 export const navLinks = [
-  // {
-  //   href: "/about",
-  //   icon: exclusiveIcon,
-  //   text: "Exclusive",
-  // },
   {
-    icon: "https://img.c88rx.com/cx/h5/assets/images/icon-set/theme-icon/side-nav/icon-talk.png?v=1745315485946",
+    href: "#",
+    icon: promotionIcon,
+    text: "Promotions",
+  },
+  {
+    href: "#",
+    icon: sponsorshipIcon,
+    text: "Sponsorship",
+  },
+  {
+    href: "#",
+    icon: leaderboardIcon,
+    text: "Leaderboard",
+  },
+
+  {
+    href: "#",
+    icon: referBonusIcon,
+    text: "Refer Bonus",
+  },
+
+  {
+    href: "#",
+    icon: downloadIcon,
+    text: "Download",
+  },
+  {
+    href: "#",
+    icon: responsibleGamingIcon,
+    text: "Responsible Gaming",
+  },
+  {
+    href: "#",
+    icon: affiliateIcon,
+    text: "Affiliate",
+  },
+
+  {
+    icon: talkIcon,
     text: "Contact Us",
     children: [
       {
-        icon: "https://img.c88rx.com/cx/h5/assets/images/icon-set/theme-icon/member-center/icon-customer.png?v=1745315485946",
+        icon: customerIcon,
         href: ProtectedRoute.Cricket,
         text: "CS Link",
       },
+      {
+        icon: emailIcon,
+        href: ProtectedRoute.Cricket,
+        text: "Support Email",
+      },
+      {
+        icon: emailIcon,
+        href: ProtectedRoute.Cricket,
+        text: "Marketing Email",
+      },
 
       {
-        icon: "https://img.c88rx.com/cx/h5/assets/images/icon-set/theme-icon/member-center/icon-customer.png?v=1745315485946",
+        icon: telegramIcon,
         href: ProtectedRoute.Cricket,
         text: "Telegram Link",
       },
     ],
   },
-  {
-    href: "/about",
-    icon: "https://img.c88rx.com/cx/h5/assets/images/icon-set/theme-icon/side-nav/icon-promotion.png?v=1745315485946",
-    text: "Promotions",
-  },
-  {
-    href: "#",
-    icon: "https://img.c88rx.com/cx/h5/assets/images/icon-set/theme-icon/side-nav/icon-sponsorship.png?v=1745315485946",
-    text: "Sponsorship",
-  },
-  {
-    href: "#",
-    icon: "https://img.c88rx.com/cx/h5/assets/images/icon-set/theme-icon/side-nav/icon-leaderboard.png?v=1745315485946",
-    text: "Leaderboard",
-  },
-  {
-    href: "#",
-    icon: "https://img.c88rx.com/cx/h5/assets/images/icon-set/theme-icon/side-nav/icon-download.png?v=1745315485946",
-    text: "Download",
-  },
-  {
-    href: "#",
-    icon: "https://img.c88rx.com/cx/h5/assets/images/icon-set/theme-icon/side-nav/icon-responsible-gaming.png?v=1745315485946",
-    text: "Responsible Gaming",
-  },
-  {
-    href: "#",
-    icon: "https://img.c88rx.com/cx/h5/assets/images/icon-set/theme-icon/side-nav/icon-affiliate.png?v=1745315485946",
-    text: "Affiliate",
-  },
 
   {
     href: "#",
-    icon: "https://img.c88rx.com/cx/h5/assets/images/icon-set/theme-icon/side-nav/icon-crickex-blog.png?v=1745315485946",
+    icon: crickexBlogIcon,
     text: "Crickex Blog",
   },
   {
     href: "#",
-    icon: "https://img.c88rx.com/cx/h5/assets/images/icon-set/theme-icon/side-nav/icon-about-us.png?v=1745315485946",
+    icon: aboutUsIcon,
     text: "About Us",
   },
   {
     href: "#",
-    icon: "https://img.c88rx.com/cx/h5/assets/images/icon-set/theme-icon/side-nav/icon-faq.png?v=1745315485946",
+    icon: faqIcon,
     text: "FAQ",
   },
 ];

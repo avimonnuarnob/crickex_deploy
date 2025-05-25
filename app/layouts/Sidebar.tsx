@@ -7,6 +7,8 @@ import Submenu from "./Submenu";
 import { useRouteLoaderData } from "react-router";
 import type { RootLoaderData } from "@/root";
 
+import homeIcon from "@/assets/images/icon-home.png";
+
 type SidebarProps = Readonly<{
   isFull: boolean;
   setIsFull: Dispatch<SetStateAction<boolean>>;
@@ -66,13 +68,7 @@ const Sidebar = ({ isFull, setIsFull }: SidebarProps) => {
               "-ml-[9.5px]": !isFull,
             })}
           >
-            <NavItem
-              href="/"
-              icon={
-                "https://img.c88rx.com/cx/h5/assets/images/icon-set/theme-icon/side-nav/icon-home.png?v=1744705193129"
-              }
-              isFull={isFull}
-            >
+            <NavItem href="/" icon={homeIcon} isFull={isFull}>
               Home
             </NavItem>
             <div className="border-blue-3 border-b" />
