@@ -25,15 +25,15 @@ export default function CategoryTab({ providers }: { providers: PROVIDERS }) {
               <Tab key={gameType.id} className="data-selected:outline-none">
                 {({ selected }) => (
                   <div
-                    className={` flex flex-col data items-center justify-center px-5 py-1.5 font-bold transition relative ${
+                    className={` flex flex-col data items-center justify-center w-22.5 h-19 font-bold transition relative ${
                       selected && "bg-[#005dac]"
                     } `}
                   >
                     <img
                       src={"https://ai.cloud7hub.uk" + gameType.thumbnail}
-                      className="pt-3 w-10 h-10 object-cover"
+                      className="pt-1.5 w-10 h-10 object-cover"
                     />
-                    <span className="text-[13px] mt-2.75">
+                    <span className="text-[13px] mt-2.25 mb-0.5">
                       {gameType.title.toUpperCase()}
                     </span>
                     {selected && (
@@ -55,11 +55,11 @@ export default function CategoryTab({ providers }: { providers: PROVIDERS }) {
                   <motion.div
                     animate={{ x: selectedIndex * -100 + "%" }}
                     transition={{ duration: 0 }}
-                    className="flex py-2.5 gap-1 items-center"
+                    className="flex pt-2.75 pb-2 gap-1.25 items-center"
                   >
-                    <div className="w-1 h-4 bg-[#005dac] rounded"></div>
+                    <div className="w-1 h-3.75 bg-[#005dac] rounded"></div>
                     <span className="font-bold text-[15px]">
-                      {gameType.title}
+                      {gameType.title.toUpperCase()}
                     </span>
                   </motion.div>
                   <motion.div
