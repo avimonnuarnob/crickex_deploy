@@ -62,7 +62,7 @@ const PROFILE_ITEMS = [
 ];
 
 export default function ProfileButton() {
-  const { logoutUser } = useCurrentUser();
+  const { logoutUser, userInfo } = useCurrentUser();
 
   const onClickHandler = (id: string) => {
     if (id === "Log Out") {
@@ -85,7 +85,7 @@ export default function ProfileButton() {
         <MenuSection className="pt-1 px-4 pb-4.5">
           <MenuItem as="div">
             <span className="block text-base font-bold text-[#555555]">
-              MD. Ruhul Amin
+              {userInfo?.username}
             </span>
 
             <span className="block text-sm mt-1 text-[#555555]">

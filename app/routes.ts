@@ -20,6 +20,7 @@ export default [
       route("new-register-entry/account", "./routes/signup.tsx", {
         id: "home-signup",
       }),
+      route("member/wallet/deposit", "./routes/deposit.tsx"),
     ]),
   ]),
 

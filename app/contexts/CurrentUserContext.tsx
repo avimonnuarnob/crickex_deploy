@@ -1,9 +1,67 @@
 import Cookies from "js-cookie";
-import React, { useState, useEffect, createContext, useContext } from "react";
+import React, {
+  useState,
+  useEffect,
+  createContext,
+  useContext,
+  type Dispatch,
+  type SetStateAction,
+} from "react";
 interface CurrentUserContextType {
   isLoggedIn: Boolean;
+  userInfo?: UserProfile;
+  userWalletData?: UserWallet;
+  setUserWalletData: Dispatch<SetStateAction<UserWallet | undefined>>;
   loginUser: (token: string) => void;
   logoutUser: () => void;
+}
+
+interface UserProfile {
+  username: string;
+  support_contact: string;
+  telegram_chat_id: any;
+  is_active: boolean;
+  first_name: string;
+  last_name: string;
+  email: string;
+  contact: any;
+  gender: any;
+  dob: any;
+  currency: string;
+  date_joined: string;
+  user_type: string;
+  country_id: any;
+  address: any;
+  photo: any;
+  category_id: string;
+  referral_code: string;
+  agent_referral_code: string;
+  social_contact_id: SocialContactId;
+  agent_social_contact_id: any[];
+  user_base_origin: string;
+  reg_link: string;
+  url_id: number;
+  domain_bot: string;
+}
+
+interface SocialContactId {
+  id: number;
+  name: string;
+  prefix: string;
+  general_user_show: boolean;
+  admin_show: boolean;
+  agent_show: boolean;
+  social_register: boolean;
+  sort_id: number;
+  logo: string;
+}
+
+export interface UserWallet {
+  provider_balance: number;
+  credit_balance: number;
+  reserve_balance: number;
+  coin_balance: number;
+  total_cashin: number;
 }
 
 const CurrentUserContext = createContext<CurrentUserContextType | null>(null);
@@ -14,6 +72,54 @@ const CurrentUserProvider: React.FC<{ children: React.ReactNode }> = ({
   const [user, setUser] = React.useState<string | undefined>(
     Cookies.get("userToken")
   );
+
+  const [userInfo, setUserInfo] = useState<UserProfile | undefined>();
+  const [userWalletData, setUserWalletData] = useState<
+    UserWallet | undefined
+  >();
+
+  useEffect(() => {
+    const getUserInfo = async () => {
+      const response = await fetch(
+        "https://ai.cloud7hub.uk/auth/user/profile/",
+        {
+          headers: {
+            Authorization: `Token ${user}`,
+          },
+        }
+      );
+
+      const responseData = await response.json();
+      setUserInfo(responseData.data);
+    };
+
+    if (user) {
+      getUserInfo();
+    }
+  }, [user]);
+
+  useEffect(() => {
+    async function getWalletData() {
+      const response = await fetch(
+        "https://ai.cloud7hub.uk/auth/user-balance/",
+        {
+          headers: {
+            Authorization: `token ${user}`,
+          },
+        }
+      );
+
+      const responseData = await response.json();
+
+      if (responseData.status === "ok") {
+        setUserWalletData(responseData.data);
+      }
+    }
+
+    if (user) {
+      getWalletData();
+    }
+  }, [user]);
 
   const loginUser = (token: string) => {
     Cookies.set("userToken", token, { sameSite: "Strict" });
@@ -27,7 +133,14 @@ const CurrentUserProvider: React.FC<{ children: React.ReactNode }> = ({
 
   return (
     <CurrentUserContext.Provider
-      value={{ isLoggedIn: Boolean(user), loginUser, logoutUser }}
+      value={{
+        isLoggedIn: Boolean(user),
+        userInfo,
+        userWalletData,
+        setUserWalletData,
+        loginUser,
+        logoutUser,
+      }}
     >
       {children}
     </CurrentUserContext.Provider>

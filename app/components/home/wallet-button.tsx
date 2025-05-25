@@ -3,32 +3,12 @@ import Button from "../ui/button/Button";
 import Cookies from "js-cookie";
 import { TfiReload } from "react-icons/tfi";
 import classNames from "classnames";
+import { useCurrentUser } from "@/contexts/CurrentUserContext";
 
 export default function WalletButton() {
-  const [walletData, setWalletData] = useState<number>(0);
+  const { userWalletData, setUserWalletData } = useCurrentUser();
   const [isLoading, setIsLoading] = useState(false);
 
-  useEffect(() => {
-    async function getWalletData() {
-      const response = await fetch(
-        "https://ai.cloud7hub.uk/auth/user-balance/",
-        {
-          headers: {
-            Authorization: `token ${Cookies.get("userToken")}`,
-          },
-        }
-      );
-
-      const responseData = await response.json();
-
-      if (responseData.status === "ok") {
-        setWalletData(responseData.data.credit_balance);
-        setIsLoading(false);
-      }
-    }
-    setIsLoading(true);
-    getWalletData();
-  }, []);
   return (
     <Button
       className="h-[34px] flex gap-2.5 items-center"
@@ -47,7 +27,7 @@ export default function WalletButton() {
         const responseData = await response.json();
 
         if (responseData.status === "ok") {
-          setWalletData(responseData.data.credit_balance);
+          setUserWalletData(responseData.data);
           setIsLoading(false);
         }
       }}
@@ -59,7 +39,7 @@ export default function WalletButton() {
         })}
       />
       <span>Main Wallet</span>
-      <span className="font-bold">${walletData}</span>
+      <span className="font-bold">${userWalletData?.credit_balance}</span>
     </Button>
   );
 }

@@ -96,7 +96,9 @@ const Topbar = ({ isFull }: TopbarProps) => {
                   <IconButton
                     icon={<BsCreditCard2BackFill className="w-5 h-3.5" />}
                     className="bg-blue-3 h-[34px]"
-                    // onClick={logoutUser}
+                    onClick={() => {
+                      navigate("/member/wallet/deposit");
+                    }}
                     // href={UnProtectedRoute.Login}
                   >
                     Deposit
