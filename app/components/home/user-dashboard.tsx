@@ -8,14 +8,16 @@ import { useState } from "react";
 import classNames from "classnames";
 
 export default function UserDashboard() {
-  const { userWalletData, setUserWalletData } = useCurrentUser();
+  const { userWalletData, setUserWalletData, userInfo } = useCurrentUser();
   const [isLoading, setIsLoading] = useState(false);
 
   return (
     <div className="px-3.75 pt-2.5 pb-2.75 bg-blue-2 flex gap-3.5 items-center rounded">
       <div className="flex-1 self-start">
         <div className="w-50 text-white">
-          <span className="text-[13px] block mt-1 mb-2">Md Ruhul Amin</span>
+          <span className="text-[13px] block mt-1 mb-2">
+            {userInfo?.first_name} {userInfo?.last_name}
+          </span>
           <div className="flex justify-between items-center">
             <span className="font-bold">
               $ {userWalletData?.credit_balance}

@@ -85,7 +85,7 @@ export default function ProfileButton() {
         <MenuSection className="pt-1 px-4 pb-4.5">
           <MenuItem as="div">
             <span className="block text-base font-bold text-[#555555]">
-              {userInfo?.username}
+              {userInfo?.first_name} {userInfo?.last_name}
             </span>
 
             <span className="block text-sm mt-1 text-[#555555]">
