@@ -177,7 +177,7 @@ export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {
 export function HydrateFallback() {
   return (
     <div className="flex w-screen h-screen justify-center items-center">
-      <video width={250} autoPlay={true} muted={true} loop={true}>
+      <video width={150} autoPlay={true} muted={true} loop={true}>
         <source src={loader} type="video/webm" />
       </video>
     </div>
