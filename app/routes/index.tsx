@@ -14,6 +14,7 @@ import HomeSlider from "@/components/home/home-slider";
 import type { Route } from "./+types/index";
 import type { RootLoaderData } from "@/root";
 import UserDashboard from "@/components/home/user-dashboard";
+import { useCurrentUser } from "@/contexts/CurrentUserContext";
 
 export type PROVIDERS = GAMETYPE[];
 
@@ -53,13 +54,14 @@ export interface GAMEPROVIDER {
 
 export default function Home() {
   const data = useRouteLoaderData<RootLoaderData>("root");
+  const { isLoggedIn } = useCurrentUser();
 
   return (
     <div className="">
       <div className="mt-18 py-1">
         <HomeSlider />
         <HomeMarquee />
-        <UserDashboard />
+        {isLoggedIn && <UserDashboard />}
         {data?.gameProviders && <CategoryTab providers={data?.gameProviders} />}
         <div className="py-2.75">
           <FavouriteGames />
