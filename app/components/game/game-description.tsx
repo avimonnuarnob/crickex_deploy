@@ -14,7 +14,7 @@ export default function GameDescription({
 }) {
   const [shouldShowSection] = useImageLoaded(
     game.imgFileName.startsWith("/")
-      ? "https://ai.cloud7hub.uk" + game.imgFileName
+      ? "https://img.softtake.net" + game.imgFileName
       : game.imgFileName
   );
   const navigate = useNavigate();
