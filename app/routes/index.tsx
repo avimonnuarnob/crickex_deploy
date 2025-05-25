@@ -13,6 +13,7 @@ import {
 import HomeSlider from "@/components/home/home-slider";
 import type { Route } from "./+types/index";
 import type { RootLoaderData } from "@/root";
+import UserDashboard from "@/components/home/user-dashboard";
 
 export type PROVIDERS = GAMETYPE[];
 
@@ -58,6 +59,7 @@ export default function Home() {
       <div className="mt-18 py-1">
         <HomeSlider />
         <HomeMarquee />
+        <UserDashboard />
         {data?.gameProviders && <CategoryTab providers={data?.gameProviders} />}
         <div className="py-2.75">
           <FavouriteGames />

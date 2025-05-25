@@ -1,8 +1,4 @@
-import casino from "@/assets/images/icon/casino.svg";
-import cricket from "@/assets/images/icon/cricket.svg";
-import sportIcon from "@/assets/images/icon/sport.svg";
-import promotionsIcon from "@/assets/images/icon/promotions.svg";
-import { GuestRoute, ProtectedRoute } from "./routes";
+import { ProtectedRoute } from "./routes";
 
 export const navLinks = [
   // {

@@ -2,7 +2,6 @@ import { navLinks } from "@/constants/navLinks";
 import classNames from "classnames";
 import { useState, type Dispatch, type SetStateAction } from "react";
 import { FaChevronRight, FaChevronLeft } from "react-icons/fa6";
-import homeIcon from "@/assets/images/icon/home.svg";
 import NavItem from "./NavItem";
 import Submenu from "./Submenu";
 import { useRouteLoaderData } from "react-router";

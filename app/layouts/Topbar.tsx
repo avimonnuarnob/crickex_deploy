@@ -1,5 +1,5 @@
 import classNames from "classnames";
-import langButton from "@/assets/images/icon/lang.svg";
+import langButton from "@/assets/icon/lang.svg";
 import Button from "@/components/ui/button/Button";
 import IconButton from "@/components/ui/button/IconButton";
 import { useLocation, useNavigate } from "react-router";
