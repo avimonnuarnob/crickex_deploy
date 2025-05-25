@@ -64,9 +64,9 @@ const Topbar = ({ isFull }: TopbarProps) => {
                   'url("https://img.c88rx.com/cx/h5/assets/images/logo.png?v=1744705193129")',
               }}
             ></div>
-            <div className="flex items-center gap-4 justify-between">
+            <>
               {!isLoggedIn && (
-                <>
+                <div className="flex items-center gap-1.25 justify-between">
                   <Button
                     className="bg-blue-3 text-xs w-[105px] h-[34px]"
                     onClick={loginBtnHandler}
@@ -80,11 +80,19 @@ const Topbar = ({ isFull }: TopbarProps) => {
                   >
                     Sign up
                   </Button>
-                </>
+                  <IconButton
+                    color="link"
+                    icon={
+                      <img src={langButton} height={24} width={24} alt="lang" />
+                    }
+                    className="p-0! ml-3!"
+                  />
+                </div>
               )}
-
+            </>
+            <>
               {isLoggedIn && (
-                <>
+                <div className="flex items-center gap-4 justify-between">
                   <IconButton
                     icon={<BsCreditCard2BackFill className="w-5 h-3.5" />}
                     className="bg-blue-3 h-[34px]"
@@ -95,17 +103,16 @@ const Topbar = ({ isFull }: TopbarProps) => {
                   </IconButton>
                   <WalletButton />
                   <ProfileButton />
-                </>
+                  <IconButton
+                    color="link"
+                    icon={
+                      <img src={langButton} height={24} width={24} alt="lang" />
+                    }
+                    className="p-0!"
+                  />
+                </div>
               )}
-
-              <IconButton
-                color="link"
-                icon={
-                  <img src={langButton} height={24} width={24} alt="lang" />
-                }
-                className="p-0!"
-              />
-            </div>
+            </>
           </div>
         </div>
       </div>
