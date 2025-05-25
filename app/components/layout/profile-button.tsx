@@ -1,10 +1,10 @@
 import {
+  Button,
   Menu,
   MenuButton,
   MenuItem,
   MenuItems,
   MenuSection,
-  MenuSeparator,
 } from "@headlessui/react";
 import IconButton from "../ui/button/IconButton";
 import { CgProfile } from "react-icons/cg";
@@ -21,6 +21,7 @@ import resetpasswordsIcon from "../../assets/images/icon-resetpasswords.png";
 import inboxIcon from "../../assets/images/icon-inbox.png";
 import referralIcon from "../../assets/images/icon-referral.png";
 import logoutIcon from "../../assets/images/icon-logout.png";
+import { useCurrentUser } from "@/contexts/CurrentUserContext";
 
 const PROFILE_ITEMS = [
   {
@@ -61,6 +62,13 @@ const PROFILE_ITEMS = [
 ];
 
 export default function ProfileButton() {
+  const { logoutUser } = useCurrentUser();
+
+  const onClickHandler = (id: string) => {
+    if (id === "Log Out") {
+      logoutUser();
+    } else return;
+  };
   return (
     <Menu>
       <MenuButton as={React.Fragment}>
@@ -71,24 +79,21 @@ export default function ProfileButton() {
         />
       </MenuButton>
       <MenuItems
-        anchor={{ to: "bottom end", gap: "18px", offset: "45px" }}
+        anchor={{ to: "bottom end", gap: "15px", offset: "45px" }}
         className="[--anchor-max-height:35rem] w-55 bg-white rounded z-10"
       >
-        <MenuSection className="pt-2 px-4 pb-4.5">
+        <MenuSection className="pt-1 px-4 pb-4.5">
           <MenuItem as="div">
-            <data
-              value="MD. Ruhul Amin"
-              className="text-base font-bold text-[#555555]"
-            >
+            <span className="block text-base font-bold text-[#555555]">
               MD. Ruhul Amin
-            </data>
+            </span>
 
-            <p className="text-sm mt-2 text-[#555555]">Gift Points</p>
+            <span className="block text-sm mt-1 text-[#555555]">
+              Gift Points
+            </span>
 
-            <div className="flex items-center">
-              <data className="text-lg font-bold text-blue-1" value={0}>
-                0
-              </data>
+            <div className="flex items-center -mt-0.5">
+              <span className="text-lg font-bold text-blue-1">0</span>
               <IconButton
                 className="inline-block"
                 color="link"
@@ -101,21 +106,25 @@ export default function ProfileButton() {
             </div>
           </MenuItem>
         </MenuSection>
-        {PROFILE_ITEMS.map((section) => (
-          <MenuSection key={section.section_id} className="py-2 px-4">
-            {section.section_items.map((item) => (
-              <MenuItem key={item.name}>
-                <a
-                  className="flex items-center gap-4 py-2 data-focus:bg-blue-100"
-                  href="#"
-                >
-                  <img src={item.icon} width={30} height={30} />
-                  <span className="text-[#555555] font-bold">{item.name}</span>
-                </a>
-              </MenuItem>
-            ))}
-          </MenuSection>
-        ))}
+        <>
+          {PROFILE_ITEMS.map((section) => (
+            <MenuSection key={section.section_id} className="py-1.75 px-4">
+              {section.section_items.map((item) => (
+                <MenuItem key={item.name}>
+                  <Button
+                    className="w-full flex items-center gap-4 py-2 data-focus:bg-blue-100 text-left cursor-pointer"
+                    onClick={() => onClickHandler(item.name)}
+                  >
+                    <img src={item.icon} width={30} height={30} />
+                    <span className="text-[#555555] font-bold">
+                      {item.name}
+                    </span>
+                  </Button>
+                </MenuItem>
+              ))}
+            </MenuSection>
+          ))}
+        </>
       </MenuItems>
     </Menu>
   );
