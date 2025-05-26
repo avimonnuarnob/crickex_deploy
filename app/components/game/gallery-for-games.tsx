@@ -2,8 +2,9 @@ import type { GAMES } from "@/routes/game-type";
 import classNames from "classnames";
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router";
-import Modal from "../ui/modal/Modal";
-import Button from "../ui/button/Button";
+import Modal from "@/components/ui/modal/Modal";
+import Button from "@/components/ui/button/Button";
+
 import GameDescription from "./game-description";
 import {
   Dialog,
@@ -14,8 +15,10 @@ import {
   Input,
 } from "@headlessui/react";
 import { FaChevronRight } from "react-icons/fa6";
-import IconButton from "../ui/button/IconButton";
+import IconButton from "@/components/ui/button/IconButton";
 import { FaSearch } from "react-icons/fa";
+
+import noGameImage from "@/assets/images/img-no-game.png";
 
 const GAMES_PER_PAGE = 20;
 
@@ -64,29 +67,17 @@ export default function GalleryForGames({
       })
     : games;
 
+  const gamesToShow = textFilterInput?.length
+    ? filteredGames.filter((game) =>
+        game.gameName.gameName_enus
+          .toLocaleLowerCase()
+          .includes(textFilterInput)
+      )
+    : filteredGames;
+
   const totalPages =
-    Math.floor(
-      (textFilterInput?.length
-        ? filteredGames.filter((game) =>
-            game.gameName.gameName_enus
-              .toLocaleLowerCase()
-              .includes(textFilterInput)
-          )
-        : filteredGames
-      ).length / GAMES_PER_PAGE
-    ) +
-    ((textFilterInput?.length
-      ? filteredGames.filter((game) =>
-          game.gameName.gameName_enus
-            .toLocaleLowerCase()
-            .includes(textFilterInput)
-        )
-      : filteredGames
-    ).length %
-      GAMES_PER_PAGE ===
-    0
-      ? 0
-      : 1);
+    Math.floor(gamesToShow.length / GAMES_PER_PAGE) +
+    (gamesToShow.length % GAMES_PER_PAGE === 0 ? 0 : 1);
 
   return (
     <div>
@@ -140,29 +131,43 @@ export default function GalleryForGames({
         </div>
       </div>
 
-      <div
-        className="grid gap-x-2.5 gap-y-5 mx-2"
-        style={{
-          gridTemplateColumns: "repeat(auto-fill,minmax(180px,1fr))",
-        }}
-      >
-        {(textFilterInput?.length
-          ? filteredGames.filter((game) =>
-              game.gameName.gameName_enus
-                .toLocaleLowerCase()
-                .includes(textFilterInput)
-            )
-          : filteredGames
-        )
-          .slice(0, pageNumber * GAMES_PER_PAGE)
-          .map((game, i) => (
+      {gamesToShow.length ? (
+        <div
+          className="grid gap-x-2.5 gap-y-5 mx-2"
+          style={{
+            gridTemplateColumns: "repeat(auto-fill,minmax(180px,1fr))",
+          }}
+        >
+          {gamesToShow.slice(0, pageNumber * GAMES_PER_PAGE).map((game, i) => (
             <GameDescription
               key={game.gameName.gameName_enus}
               game={game}
               setIsModalOpen={setIsModalOpen}
             />
           ))}
-      </div>
+        </div>
+      ) : (
+        <div className="p-12.5 bg-white flex flex-col items-center gap-8 drop-shadow-lg">
+          <div className="text-blue-1 flex flex-col items-center gap-2">
+            <h3 className="text-[68px] font-bold tracking-tighter">SORRY</h3>
+            <span>Sorry,</span>
+            <span>No matching games</span>
+          </div>
+
+          <Button
+            className="w-57.5 h-11.25"
+            onClick={() => setTextFilterInput(undefined)}
+          >
+            Back
+          </Button>
+
+          <img
+            src={noGameImage}
+            alt="game_not_found"
+            className="w-full h-[40vh] object-contain"
+          />
+        </div>
+      )}
 
       <div className="text-[13px] mt-6 mb-6">
         {pageNumber >= totalPages ? (
