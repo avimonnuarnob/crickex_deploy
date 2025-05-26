@@ -125,6 +125,25 @@ const Sidebar = ({ isFull, setIsFull }: SidebarProps) => {
               </li>
             )
           )}
+          {/* design purpose 🤷 */}
+          <li
+            className={classNames({
+              "-ml-[9.5px]": !isFull,
+            })}
+          >
+            <div
+              className={classNames(
+                "flex items-center transition-colors gap-4"
+              )}
+              style={{
+                padding: isFull ? "10px 23px 10px 23px" : "10px 10px 10px 23px",
+              }}
+            >
+              <div className="w-7.5 h-7.5" />
+              <span style={{ width: "11ch" }}></span>
+            </div>
+          </li>
+          {/* design purpose 🤷 */}
         </ul>
       </div>
     </div>

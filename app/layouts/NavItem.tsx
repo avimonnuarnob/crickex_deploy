@@ -44,7 +44,7 @@ const NavItem = ({
         padding: isFull ? "10px 23px 10px 23px" : "10px 10px 10px 23px",
       }}
     >
-      <img src={icon} alt="home" className="w-7.5 h-7.5" />
+      <img src={icon} className="w-7.5 h-7.5" />
       <span
         className={classNames("text-base truncate", {
           "font-bold text-white": !isChild,
