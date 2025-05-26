@@ -62,7 +62,13 @@ const Sidebar = ({ isFull, setIsFull }: SidebarProps) => {
           }
         )}
       >
-        <ul>
+        <ul
+          onClick={() => {
+            if (!isFull) {
+              setIsFull(true);
+            }
+          }}
+        >
           <li
             className={classNames({
               "-ml-[9.5px]": !isFull,
