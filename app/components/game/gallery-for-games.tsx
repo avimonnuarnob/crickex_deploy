@@ -227,7 +227,7 @@ export default function GalleryForGames({
 
         <div className="fixed inset-0 overflow-hidden">
           <div className="absolute inset-0 overflow-hidden">
-            <div className="pointer-events-none fixed inset-y-0 right-0 flex max-w-full">
+            <div className="pointer-events-none fixed top-15 bottom-0 right-0 flex max-w-full">
               <DialogPanel
                 transition
                 className="pointer-events-auto relative w-screen max-w-md transform transition duration-300 ease-in-out data-closed:translate-x-full sm:duration-300"
