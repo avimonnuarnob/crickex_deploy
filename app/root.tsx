@@ -32,13 +32,19 @@ export async function clientLoader() {
   const gameProvidersPromise = fetch("https://ai.cloud7hub.uk/game/game-menu/")
     .then((value) => value.json())
     .then((data) => data.data);
+  const socialListPromise = fetch(
+    "https://ai.cloud7hub.uk/domain-wise/admin-social-list/"
+  )
+    .then((value) => value.json())
+    .then((data) => data.data);
 
-  const [countryList, mirrorLinks, defaultReferral, gameProviders] =
+  const [countryList, mirrorLinks, defaultReferral, gameProviders, socialList] =
     await Promise.all([
       countryListPromise,
       mirrorLinksPromise,
       defaultReferralPromise,
       gameProvidersPromise,
+      socialListPromise,
     ]);
 
   return {
@@ -47,6 +53,7 @@ export async function clientLoader() {
     mirrorLinks,
     defaultReferral,
     gameProviders,
+    socialList,
   } as {
     countryList: {
       id: number;
@@ -99,6 +106,23 @@ export async function clientLoader() {
       url_id: number;
     };
     gameProviders: PROVIDERS;
+    socialList: {
+      id: number;
+      social_prefix_id: {
+        id: number;
+        name: string;
+        prefix: string;
+        general_user_show: boolean;
+        admin_show: boolean;
+        agent_show: boolean;
+        social_register: boolean;
+        sort_id: number;
+        logo: string;
+      };
+      admin_user: { username: string; referral_code: string };
+      resource: string;
+      status: boolean;
+    }[];
   };
 }
 

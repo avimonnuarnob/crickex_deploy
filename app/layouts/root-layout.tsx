@@ -1,13 +1,12 @@
-import { Outlet } from "react-router";
+import { Outlet, useRouteLoaderData } from "react-router";
 import type { Route } from "./+types/root-layout";
 import { useState } from "react";
 import classNames from "classnames";
 import Sidebar from "./Sidebar";
 import Topbar from "./Topbar";
+import type { RootLoaderData } from "@/root";
 
-let API_DATA: null | string = null;
-
-export default function RootLayout({ loaderData }: Route.ComponentProps) {
+export default function RootLayout() {
   const [isFull, setIsFull] = useState(false);
 
   return (
@@ -35,6 +34,8 @@ export default function RootLayout({ loaderData }: Route.ComponentProps) {
 }
 
 const Footer = () => {
+  const data = useRouteLoaderData<RootLoaderData>("root");
+
   return (
     <footer className="text-[#555555]">
       <div className="footer-top" style={{ padding: "15px 0 10px" }}>
@@ -57,31 +58,22 @@ const Footer = () => {
         <div className="mb-5.25">
           <h4 className="text-[13px] mb-3.5 font-bold">Social Networks</h4>
           <div className="flex gap-2.75">
-            <img
-              src="https://img.c88rx.com/cx/h5/assets/images/footer/color-black/social/facebook.png?v=1744705193129&source=mcdsrc"
-              width={24}
-              height={24}
-            />
-            <img
-              src="https://img.c88rx.com/cx/h5/assets/images/footer/color-black/social/facebook.png?v=1744705193129&source=mcdsrc"
-              width={24}
-              height={24}
-            />
-            <img
-              src="https://img.c88rx.com/cx/h5/assets/images/footer/color-black/social/facebook.png?v=1744705193129&source=mcdsrc"
-              width={24}
-              height={24}
-            />
-            <img
-              src="https://img.c88rx.com/cx/h5/assets/images/footer/color-black/social/facebook.png?v=1744705193129&source=mcdsrc"
-              width={24}
-              height={24}
-            />
-            <img
-              src="https://img.c88rx.com/cx/h5/assets/images/footer/color-black/social/facebook.png?v=1744705193129&source=mcdsrc"
-              width={24}
-              height={24}
-            />
+            {data?.socialList.map((socialLink) => (
+              <a
+                key={socialLink.id}
+                href={`${socialLink.social_prefix_id.prefix}${socialLink.resource}`}
+                target="_blank"
+              >
+                <img
+                  src={
+                    "https://ai.cloud7hub.uk" + socialLink.social_prefix_id.logo
+                  }
+                  alt={socialLink.social_prefix_id.name}
+                  width={24}
+                  height={24}
+                />
+              </a>
+            ))}
           </div>
         </div>
 
