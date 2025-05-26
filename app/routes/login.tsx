@@ -3,7 +3,7 @@ import { FormTextField } from "@/components/ui/form-inputs";
 import Modal from "@/components/ui/modal/Modal";
 import { loginSchema, type LoginInput } from "@/schema/authSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useState } from "react";
+import { useState, useTransition } from "react";
 import { useForm } from "react-hook-form";
 import { Link, useNavigate } from "react-router";
 import Cookies from "js-cookie";
@@ -15,6 +15,7 @@ export default function LoginModal() {
 
   const [responseError, setError] = useState<null | string>(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [isOpen, setIsOpen] = useState(true);
 
   const {
     control,
@@ -56,10 +57,13 @@ export default function LoginModal() {
   };
   return (
     <Modal
-      onClose={() => {
-        navigate(-1);
+      onClose={async () => {
+        setTimeout(() => {
+          navigate(-1);
+        }, 300);
+        setIsOpen(false);
       }}
-      isOpen={true}
+      isOpen={isOpen}
       title="Login"
       isFullScreen={true}
     >

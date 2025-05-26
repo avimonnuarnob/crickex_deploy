@@ -46,6 +46,7 @@ export default function SignupModal({ matches }: Route.ComponentProps) {
     url_id: number;
   } | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [isOpen, setIsOpen] = useState(true);
 
   const {
     control,
@@ -190,11 +191,14 @@ export default function SignupModal({ matches }: Route.ComponentProps) {
 
   return (
     <Modal
-      onClose={() => {
-        navigate(-1);
+      onClose={async () => {
+        setTimeout(() => {
+          navigate(-1);
+        }, 300);
+        setIsOpen(false);
       }}
+      isOpen={isOpen}
       isFullScreen={true}
-      isOpen={true}
       title="Sign up"
     >
       <>
