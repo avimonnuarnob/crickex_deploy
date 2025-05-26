@@ -36,7 +36,7 @@ export default function GalleryForGames({
   );
   const [pageNumber, setPageNumber] = useState(1);
   const [open, setOpen] = useState(false);
-  const [textFilterInput, setTextFilterInput] = useState("");
+  const [textFilterInput, setTextFilterInput] = useState<string>();
 
   useEffect(() => {
     if (gameFilter.length && vendor) {
@@ -66,7 +66,7 @@ export default function GalleryForGames({
 
   const totalPages =
     Math.floor(
-      (textFilterInput.length
+      (textFilterInput?.length
         ? filteredGames.filter((game) =>
             game.gameName.gameName_enus
               .toLocaleLowerCase()
@@ -75,7 +75,7 @@ export default function GalleryForGames({
         : filteredGames
       ).length / GAMES_PER_PAGE
     ) +
-    ((textFilterInput.length
+    ((textFilterInput?.length
       ? filteredGames.filter((game) =>
           game.gameName.gameName_enus
             .toLocaleLowerCase()
@@ -146,7 +146,7 @@ export default function GalleryForGames({
           gridTemplateColumns: "repeat(auto-fill,minmax(180px,1fr))",
         }}
       >
-        {(textFilterInput.length
+        {(textFilterInput?.length
           ? filteredGames.filter((game) =>
               game.gameName.gameName_enus
                 .toLocaleLowerCase()
@@ -237,8 +237,9 @@ export default function GalleryForGames({
                   onSubmit={(e) => {
                     e.preventDefault();
                     const data = new FormData(e.currentTarget);
-                    const filterText = data.get("filter") as string;
-                    filterText && setTextFilterInput(filterText);
+                    const filterText = data.get("filter")?.toString();
+                    setTextFilterInput(filterText);
+                    setOpen(false);
                   }}
                 >
                   <div className="flex  flex-col">
