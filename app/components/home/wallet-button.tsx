@@ -4,9 +4,12 @@ import Cookies from "js-cookie";
 import { TfiReload } from "react-icons/tfi";
 import classNames from "classnames";
 import { useCurrentUser } from "@/contexts/CurrentUserContext";
+import { useRouteLoaderData } from "react-router";
+import type { RootLoaderData } from "@/root";
 
 export default function WalletButton() {
-  const { userWalletData, setUserWalletData } = useCurrentUser();
+  const data = useRouteLoaderData<RootLoaderData>("root");
+  const { userWalletData, setUserWalletData, userInfo } = useCurrentUser();
   const [isLoading, setIsLoading] = useState(false);
 
   return (
@@ -39,7 +42,14 @@ export default function WalletButton() {
         })}
       />
       <span>Main Wallet</span>
-      <span className="font-bold">${userWalletData?.credit_balance}</span>
+      <span className="font-bold">
+        {
+          data?.currencyList.find(
+            (currency) => currency.currency === userInfo?.currency
+          )?.currency_icon
+        }
+        {userWalletData?.credit_balance}
+      </span>
     </Button>
   );
 }

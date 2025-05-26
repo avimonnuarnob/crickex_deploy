@@ -2,12 +2,14 @@ import { TfiReload } from "react-icons/tfi";
 import promotionsIcon from "@/assets/images/icon-promotion.png";
 import depositIcon from "@/assets/images/icon-deposit-2.png";
 import { useCurrentUser } from "@/contexts/CurrentUserContext";
-import IconButton from "../ui/button/IconButton";
 import Cookies from "js-cookie";
 import { useState } from "react";
 import classNames from "classnames";
+import { useRouteLoaderData } from "react-router";
+import type { RootLoaderData } from "@/root";
 
 export default function UserDashboard() {
+  const data = useRouteLoaderData<RootLoaderData>("root");
   const { userWalletData, setUserWalletData, userInfo } = useCurrentUser();
   const [isLoading, setIsLoading] = useState(false);
 
@@ -20,7 +22,12 @@ export default function UserDashboard() {
           </span>
           <div className="flex justify-between items-center">
             <span className="font-bold">
-              $ {userWalletData?.credit_balance}
+              {
+                data?.currencyList.find(
+                  (currency) => currency.currency === userInfo?.currency
+                )?.currency_icon
+              }{" "}
+              {userWalletData?.credit_balance}
             </span>
             <button
               className="cursor-pointer"
