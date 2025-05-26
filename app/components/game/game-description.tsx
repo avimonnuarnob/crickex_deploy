@@ -84,7 +84,9 @@ export default function GameDescription({
           <div className="loader small"></div>
         </div>
       )}
-      <h3 className="p-2">{game.gameName.gameName_enus}</h3>
+      <h3 className="p-2 whitespace-nowrap truncate">
+        {game.gameName.gameName_enus}
+      </h3>
     </button>
   );
 }

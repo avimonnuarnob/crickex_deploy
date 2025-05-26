@@ -88,8 +88,6 @@ export default function GalleryForGames({
       ? 0
       : 1);
 
-  console.log(totalPages);
-
   return (
     <div>
       <div className="relative overflow-hidden rounded">
