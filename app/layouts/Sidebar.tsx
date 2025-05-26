@@ -1,6 +1,11 @@
 import { navLinks } from "@/constants/navLinks";
 import classNames from "classnames";
-import { useState, type Dispatch, type SetStateAction } from "react";
+import {
+  useState,
+  useTransition,
+  type Dispatch,
+  type SetStateAction,
+} from "react";
 import { FaChevronRight, FaChevronLeft } from "react-icons/fa6";
 import NavItem from "./NavItem";
 import Submenu from "./Submenu";
@@ -17,6 +22,8 @@ type SidebarProps = Readonly<{
 const Sidebar = ({ isFull, setIsFull }: SidebarProps) => {
   const data = useRouteLoaderData<RootLoaderData>("root");
   const [activeDisclosurePanel, setActiveDisclosurePanel] = useState<any>(null);
+
+  const [isPending, startTransition] = useTransition();
 
   function togglePanels(newPanel: any) {
     if (activeDisclosurePanel) {
@@ -37,7 +44,11 @@ const Sidebar = ({ isFull, setIsFull }: SidebarProps) => {
     <div className={classNames("relative flex-none bg-blue-1 flex flex-col")}>
       {isFull ? (
         <button
-          onClick={() => setIsFull((prev) => !prev)}
+          onClick={() => {
+            startTransition(() => {
+              setIsFull((prev) => !prev);
+            });
+          }}
           className="bg-blue-8 absolute z-20 end-0 top-2 translate-x-1/2 cursor-pointer rounded-2xl pl-3 pr-3 py-[7px]"
         >
           <FaChevronLeft className="text-sm text-white ml-0.5" />
@@ -45,7 +56,11 @@ const Sidebar = ({ isFull, setIsFull }: SidebarProps) => {
       ) : (
         <div className="bg-blue-2 flex h-15 w-full items-center justify-center">
           <button
-            onClick={() => setIsFull((prev) => !prev)}
+            onClick={() => {
+              startTransition(() => {
+                setIsFull((prev) => !prev);
+              });
+            }}
             className="bg-blue-8 cursor-pointer rounded-2xl pl-3 pr-3.5 py-[7px]"
           >
             <FaChevronRight className="text-sm text-white" />
