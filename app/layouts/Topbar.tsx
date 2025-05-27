@@ -8,6 +8,8 @@ import { useCurrentUser } from "@/contexts/CurrentUserContext";
 import ProfileButton from "@/components/layout/profile-button";
 import { BsCreditCard2BackFill } from "react-icons/bs";
 
+import siteLogo from "@/assets/images/logo.png";
+
 type TopbarProps = Readonly<{
   isFull: boolean;
 }>;
@@ -60,8 +62,7 @@ const Topbar = ({ isFull }: TopbarProps) => {
                 backgroundSize: "contain",
                 backgroundRepeat: "no-repeat",
                 backgroundPosition: "center",
-                backgroundImage:
-                  'url("https://img.c88rx.com/cx/h5/assets/images/logo.png?v=1744705193129")',
+                backgroundImage: `url(${siteLogo})`,
               }}
             ></div>
             <>

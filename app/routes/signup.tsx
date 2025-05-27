@@ -364,7 +364,7 @@ export default function SignupModal({ matches }: Route.ComponentProps) {
                                   <img
                                     alt={value.country_name}
                                     src={
-                                      "https://img.softtake.net" +
+                                      "https://ai.cloud7hub.uk" +
                                       value.country_flag
                                     }
                                     className="w-5 h-5 shrink-0 rounded-full"
@@ -399,7 +399,7 @@ export default function SignupModal({ matches }: Route.ComponentProps) {
                                   <img
                                     alt={country.country_name}
                                     src={
-                                      "https://img.softtake.net" +
+                                      "https://ai.cloud7hub.uk" +
                                       country.country_flag
                                     }
                                     className="w-5 h-5 shrink-0 rounded-full"

@@ -22,11 +22,14 @@ import sponsor2 from "@/assets/images/sponsor/sponsor2.png";
 import sponsor3 from "@/assets/images/sponsor/sponsor3.png";
 import sponsor4 from "@/assets/images/sponsor/sponsor4.png";
 import sponsor5 from "@/assets/images/sponsor/sponsor5.png";
+import officialPartner from "@/assets/images/sponsor/official-partner-heyvip.png";
 
 import ambassador1 from "@/assets/images/ambassador/ambassadors1.png";
 import ambassador2 from "@/assets/images/ambassador/ambassadors2.png";
 import ambassador3 from "@/assets/images/ambassador/ambassadors3.png";
 import ambassador4 from "@/assets/images/ambassador/ambassadors4.png";
+
+import siteLogo from "@/assets/images/logo-blue.png";
 
 const PAYMENT_METHODS = [
   method1,
@@ -185,7 +188,12 @@ const Footer = () => {
           <div className="flex gap-2">
             {SPONSORS.map((sponser) => (
               <div className="flex gap-2 items-center" key={sponser.id}>
-                <img src={sponser.icon} width={35} height={35} />
+                <img
+                  src={sponser.icon}
+                  width={35}
+                  height={35}
+                  className="opacity-70"
+                />
                 <div className="text-black">
                   <p className="text-xs font-bold leading-3">{sponser.name}</p>
                   <p className="text-xs font-light italic leading-3">
@@ -231,9 +239,10 @@ const Footer = () => {
           <h4 className="text-[13px] mb-3.5 font-bold">Official Partner</h4>
           <div className="flex gap-2">
             <img
-              src="https://img.c88rx.com/cx/h5/assets/images/footer/color-black/official-partner-heyvip.png?v=1744705193129&source=mcdsrc"
+              src={officialPartner}
               width={106}
               height={32}
+              className="opacity-70"
             />
           </div>
         </div>
@@ -259,7 +268,7 @@ const Footer = () => {
 
           <div className="mt-11.5 mb-6.5 text-gray-500 flex gap-5 items-center">
             <img
-              src="https://img.c88rx.com/cx/h5/assets/images/logo-02.png?v=1744705193129"
+              src={siteLogo}
               width={55}
               height={40}
               className="object-contain"
