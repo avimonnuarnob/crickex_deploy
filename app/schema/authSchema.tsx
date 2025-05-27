@@ -20,9 +20,8 @@ export const signUpSchema = z
     password: z
       .string()
       .min(6, "Password must be at least 6 characters")
-      .max(20, "Password must be at most 20 characters")
-      .regex(/^\d+$/, "Password must contain only numbers"),
-    email: z.string(),
+      .max(20, "Password must be at most 20 characters"),
+    email: z.string().email(),
     referral_code: z.string(),
     country: z
       .object({

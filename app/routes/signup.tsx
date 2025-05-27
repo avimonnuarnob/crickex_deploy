@@ -53,6 +53,7 @@ export default function SignupModal({ matches }: Route.ComponentProps) {
     handleSubmit,
     setError,
     clearErrors,
+    trigger,
     formState: { isDirty },
   } = useForm<SignupInput>({
     resolver: zodResolver(signUpSchema),
@@ -325,13 +326,18 @@ export default function SignupModal({ matches }: Route.ComponentProps) {
                     className="lowercase"
                     onBlur={async (e) => {
                       try {
-                        await checkUsername(e.target.value);
-                        clearErrors("username");
-                      } catch (error) {
-                        if (error instanceof Error) {
-                          setError("username", { message: error.message });
+                        const isvalid = await trigger("username");
+                        if (isvalid) {
+                          try {
+                            await checkUsername(e.target.value);
+                            clearErrors("username");
+                          } catch (error) {
+                            if (error instanceof Error) {
+                              setError("username", { message: error.message });
+                            }
+                          }
                         }
-                      }
+                      } catch (error) {}
                     }}
                   />
                 </div>
@@ -426,13 +432,18 @@ export default function SignupModal({ matches }: Route.ComponentProps) {
                     className="lowercase"
                     onBlur={async (e) => {
                       try {
-                        await checkEmail(e.target.value);
-                        clearErrors("email");
-                      } catch (error) {
-                        if (error instanceof Error) {
-                          setError("email", { message: error.message });
+                        const isValid = await trigger("email");
+                        if (isValid) {
+                          try {
+                            await checkEmail(e.target.value);
+                            clearErrors("email");
+                          } catch (error) {
+                            if (error instanceof Error) {
+                              setError("email", { message: error.message });
+                            }
+                          }
                         }
-                      }
+                      } catch (error) {}
                     }}
                   />
                 </div>
