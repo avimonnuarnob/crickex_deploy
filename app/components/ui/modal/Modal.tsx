@@ -58,7 +58,14 @@ const Modal = ({
                     {title}
                   </DialogTitle>
                 </div>
-                <div className="bg-white rounded-b-[10px] overflow-y-auto [&::-webkit-scrollbar]:w-1.25 [&::-webkit-scrollbar-thumb]:bg-gray-300 [&::-webkit-scrollbar-thumb]:rounded">
+                <div
+                  className={classNames(
+                    "bg-white rounded-b-[10px] overflow-y-auto [&::-webkit-scrollbar]:w-1.25 [&::-webkit-scrollbar-thumb]:bg-gray-300 [&::-webkit-scrollbar-thumb]:rounded",
+                    {
+                      "flex-1": isFullScreen,
+                    }
+                  )}
+                >
                   {children}
                 </div>
               </DialogPanel>

@@ -104,7 +104,7 @@ export default function LoginModal() {
                 required
               />
             </div>
-            <div className="mb-1">
+            <div className="mb-2.5">
               <FormTextField
                 control={control}
                 label="Password"
@@ -116,7 +116,7 @@ export default function LoginModal() {
               />
             </div>
             <div className="mb-6.25 text-right">
-              <Link to="/" className="text-blue-1 text-sm">
+              <Link to="/forgot-password/email" className="text-blue-1 text-sm">
                 Forgot password?
               </Link>
             </div>

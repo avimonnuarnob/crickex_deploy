@@ -1,10 +1,4 @@
-import {
-  index,
-  layout,
-  prefix,
-  route,
-  type RouteConfig,
-} from "@react-router/dev/routes";
+import { layout, route, type RouteConfig } from "@react-router/dev/routes";
 
 export default [
   layout("./layouts/root-layout.tsx", [
@@ -21,6 +15,7 @@ export default [
         id: "home-signup",
       }),
       route("member/wallet/deposit", "./routes/deposit.tsx"),
+      route("forgot-password/:medium", "./routes/forgot-password.tsx"),
     ]),
   ]),
 

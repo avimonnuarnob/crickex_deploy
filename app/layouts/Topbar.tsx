@@ -47,6 +47,10 @@ const Topbar = ({ isFull }: TopbarProps) => {
             "left-62.5": isFull,
           }
         )}
+        style={{
+          boxShadow:
+            "0 3.3px 5px #0000004d,0 9.1px 13.8px #00000032,0 22px 33.2px #00000026,0 73px 110px #0000001b",
+        }}
       >
         <div
           className={classNames("mx-auto max-w-[1200px]", {

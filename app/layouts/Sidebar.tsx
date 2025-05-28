@@ -41,7 +41,9 @@ const Sidebar = ({ isFull, setIsFull }: SidebarProps) => {
     });
   }
   return (
-    <div className={classNames("relative flex-none bg-blue-1 flex flex-col")}>
+    <div
+      className={classNames("relative flex-none bg-blue-1 flex flex-col z-100")}
+    >
       {isFull ? (
         <button
           onClick={() => {
