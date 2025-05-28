@@ -12,6 +12,8 @@ import Submenu from "./Submenu";
 import { useRouteLoaderData } from "react-router";
 import type { RootLoaderData } from "@/root";
 
+import { motion } from "motion/react";
+
 import homeIcon from "@/assets/images/icon-home.png";
 
 type SidebarProps = Readonly<{
@@ -53,10 +55,22 @@ const Sidebar = ({ isFull, setIsFull }: SidebarProps) => {
           }}
           className="bg-blue-8 absolute z-20 end-0 top-2 translate-x-1/2 cursor-pointer rounded-2xl pl-3 pr-3 py-[7px]"
         >
-          <FaChevronLeft className="text-sm text-white ml-0.5" />
+          <motion.div
+            animate={{ rotate: 0, opacity: 1, transition: { duration: 0.5 } }}
+            initial={{ rotate: 180, opacity: 0.5 }}
+          >
+            <FaChevronLeft className="text-sm text-white ml-0.5" />
+          </motion.div>
         </button>
       ) : (
-        <div className="bg-blue-2 flex h-15 w-full items-center justify-center">
+        <div
+          className={classNames(
+            "bg-blue-2 flex h-15 w-full items-center justify-center transition duration-500 opacity-0",
+            {
+              "opacity-100": !isFull,
+            }
+          )}
+        >
           <button
             onClick={() => {
               startTransition(() => {
@@ -65,14 +79,25 @@ const Sidebar = ({ isFull, setIsFull }: SidebarProps) => {
             }}
             className="bg-blue-8 cursor-pointer rounded-2xl pl-3 pr-3.5 py-[7px]"
           >
-            <FaChevronRight className="text-sm text-white" />
+            <motion.div
+              animate={{
+                rotate: 0,
+                opacity: 1,
+                transition: {
+                  duration: 0.5,
+                },
+              }}
+              initial={{ opacity: 0, rotate: -180 }}
+            >
+              <FaChevronRight className="text-sm text-white" />
+            </motion.div>
           </button>
         </div>
       )}
 
       <div
         className={classNames(
-          "overflow-x-hidden overflow-y-scroll transition-[width] transition-discrete duration-150 flex-1 [&::-webkit-scrollbar]:hidden border-r-5 border-[#255c93]",
+          "overflow-x-hidden overflow-y-scroll transition-[width] transition-discrete ease-in duration-500 flex-1 [&::-webkit-scrollbar]:hidden border-r-5 border-[#255c93]",
           {
             "w-15.75": !isFull,
             "w-62.5": isFull,
