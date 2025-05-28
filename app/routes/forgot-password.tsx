@@ -38,7 +38,7 @@ const DoItByEmail = () => {
             'url("https://img.c88rx.com/cx/h5/assets/images/member-logo.png?v=1745315485946")',
         }}
       ></div>
-      <div className="p-2">
+      <div className="p-2 flex-1">
         {step === 0 && <EmailFormInput setStep={setStep} setEmail={setEmail} />}
         {step === 1 && <OtpFormInput setStep={setStep} setOtp={setOtp} />}
         {step === 2 && <ConfirmPasswordFromInput email={email} otp={otp} />}
@@ -98,16 +98,12 @@ const EmailFormInput = ({
   };
   return (
     <>
-      {responseMessage && (
-        <p className="text-center bg-red-500 mx-2 py-4 text-white shadow rounded animate-bounce">
-          {responseMessage}
-        </p>
-      )}
       <form
         onSubmit={(e) => {
           e.preventDefault();
           handleSubmit(onSubmit)(e);
         }}
+        className="h-full flex flex-col"
       >
         <div className="mb-1">
           <FormTextField
@@ -118,7 +114,12 @@ const EmailFormInput = ({
             required
           />
         </div>
-        <div className="mb-4.5">
+        <div className="flex-1 flex flex-col justify-end">
+          {responseMessage && (
+            <p className="text-center bg-red-500 my-4 py-4 text-white shadow rounded animate-bounce">
+              {responseMessage}
+            </p>
+          )}
           <Button
             type="submit"
             size="lg"
@@ -162,6 +163,7 @@ const OtpFormInput = ({
           e.preventDefault();
           handleSubmit(onSubmit)(e);
         }}
+        className="h-full flex flex-col"
       >
         <div className="mb-4 overflow-hidden">
           <Controller
@@ -189,7 +191,7 @@ const OtpFormInput = ({
 
           <p className="text-sm font-light py-2">Didn’t receive code?</p>
         </div>
-        <div className="mb-4.5">
+        <div className="flex-1 flex items-end">
           <Button type="submit" size="lg" isBlock isDisabled={!isDirty}>
             Confirm
           </Button>
@@ -255,16 +257,12 @@ const ConfirmPasswordFromInput = ({
   };
   return (
     <>
-      {responseMessage && (
-        <p className="text-center bg-red-500 mx-2 py-4 text-white shadow rounded animate-bounce">
-          {responseMessage}
-        </p>
-      )}
       <form
         onSubmit={(e) => {
           e.preventDefault();
           handleSubmit(onSubmit)(e);
         }}
+        className="h-full flex flex-col"
       >
         <div className="mb-4">
           <FormTextField
@@ -286,7 +284,12 @@ const ConfirmPasswordFromInput = ({
             required
           />
         </div>
-        <div className="mb-4.5">
+        <div className="flex-1 flex flex-col justify-end">
+          {responseMessage && (
+            <p className="text-center bg-red-500 my-4 py-4 text-white shadow rounded animate-bounce">
+              {responseMessage}
+            </p>
+          )}
           <Button
             type="submit"
             size="lg"
@@ -313,7 +316,7 @@ export default function ForgotPassword() {
       }}
       title="Forgot password?"
     >
-      <TabGroup>
+      <TabGroup className="flex flex-col h-full">
         <TabList className={classNames("flex")}>
           {categories.map((category) => (
             <Tab
@@ -325,8 +328,8 @@ export default function ForgotPassword() {
             </Tab>
           ))}
         </TabList>
-        <TabPanels>
-          <TabPanel className="flex-1">
+        <TabPanels className="flex-1 flex flex-col">
+          <TabPanel className="flex-1 flex flex-col">
             <DoItByEmail />
           </TabPanel>
           <TabPanel className="flex-1">
