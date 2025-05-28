@@ -70,10 +70,9 @@ export default function GameType({ loaderData, params }: Route.ComponentProps) {
       <Suspense
         fallback={
           <div className="flex justify-center items-center flex-col h-full">
-            <div className="loader">
+            <div className="list-loading w-10 h-10">
               <span className="sr-only">Loading...</span>
             </div>
-            <span>Loading...</span>
           </div>
         }
       >
