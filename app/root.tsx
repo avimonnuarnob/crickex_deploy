@@ -129,6 +129,8 @@ export async function clientLoader() {
 export type RootLoaderData = Awaited<ReturnType<typeof clientLoader>>;
 
 export default function App() {
+  const data = useRouteLoaderData<RootLoaderData>("root");
+
   useEffect(() => {
     const s1 = document.createElement("script");
     s1.async = true;
@@ -136,8 +138,15 @@ export default function App() {
     s1.setAttribute("crossorigin", "*");
     document.body.appendChild(s1);
   }, []);
+
   return (
     <CurrentUserProvider>
+      <title>{data?.mirrorLinks.web_title}</title>
+      <link
+        rel="icon"
+        type="image/png"
+        href={"https://ai.cloud7hub.uk" + data?.mirrorLinks.favicon}
+      />
       <Outlet />
     </CurrentUserProvider>
   );

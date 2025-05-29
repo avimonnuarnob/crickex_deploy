@@ -9,15 +9,35 @@ import ProfileButton from "@/components/layout/profile-button";
 import { BsCreditCard2BackFill } from "react-icons/bs";
 
 import siteLogo from "@/assets/images/logo.png";
+import { useEffect, useState } from "react";
 
 type TopbarProps = Readonly<{
   isFull: boolean;
 }>;
 
 const Topbar = ({ isFull }: TopbarProps) => {
-  const { isLoggedIn, logoutUser } = useCurrentUser();
+  const { isLoggedIn } = useCurrentUser();
   const navigate = useNavigate();
   const location = useLocation();
+
+  const [shadow, setShadow] = useState(false);
+
+  useEffect(() => {
+    const addShadowEventHandler = () => {
+      if (!shadow) setShadow(true);
+      else return;
+    };
+    const removeShadowEventHandler = () => {
+      setShadow(false);
+    };
+    window.addEventListener("add", addShadowEventHandler);
+    window.addEventListener("remove", removeShadowEventHandler);
+
+    return () => {
+      window.removeEventListener("add", addShadowEventHandler);
+      window.removeEventListener("remove", removeShadowEventHandler);
+    };
+  }, []);
 
   const loginBtnHandler = () => {
     if (location.pathname === "/") {
@@ -41,15 +61,16 @@ const Topbar = ({ isFull }: TopbarProps) => {
     <>
       <div
         className={classNames(
-          "bg-blue-1 fixed z-10 top-0 right-0 border-black transition-[left] transition-discrete ease-in duration-500",
+          "bg-blue-1 fixed z-10 top-0 right-0 border-black transition-[width, box-shadow] transition-discrete ease-in duration-150",
           {
             "left-15.75": !isFull,
             "left-62.5": isFull,
           }
         )}
         style={{
-          boxShadow:
-            "0 3.3px 5px #0000004d,0 9.1px 13.8px #00000032,0 22px 33.2px #00000026,0 73px 110px #0000001b",
+          boxShadow: shadow
+            ? "0 3.3px 5px #0000004d,0 9.1px 13.8px #00000032,0 22px 33.2px #00000026,0 73px 110px #0000001b"
+            : "none",
         }}
       >
         <div

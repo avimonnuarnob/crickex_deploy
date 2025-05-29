@@ -15,6 +15,7 @@ import type { Route } from "./+types/index";
 import type { RootLoaderData } from "@/root";
 import UserDashboard from "@/components/home/user-dashboard";
 import { useCurrentUser } from "@/contexts/CurrentUserContext";
+import { useEffect, useRef } from "react";
 
 export type PROVIDERS = GAMETYPE[];
 
@@ -57,7 +58,7 @@ export default function Home() {
   const { isLoggedIn } = useCurrentUser();
 
   return (
-    <div className="">
+    <>
       <div className="mt-18 py-1">
         <HomeSlider />
         <HomeMarquee />
@@ -71,21 +72,21 @@ export default function Home() {
         </div>
       </div>
       <Outlet />
-    </div>
+    </>
   );
 }
 
-export const links: LinksFunction = () => {
-  return [
-    {
-      rel: "icon",
-      href: "/email.png",
-      type: "image/png",
-    },
-  ];
-};
+// export const links: LinksFunction = () => {
+//   return [
+//     {
+//       rel: "icon",
+//       href: "/email.png",
+//       type: "image/png",
+//     },
+//   ];
+// };
 
-export const meta: MetaFunction = ({ matches }) => {
-  const rootData = matches[0].data as RootLoaderData;
-  return [{ title: rootData?.mirrorLinks?.web_title }];
-};
+// export const meta: MetaFunction = ({ matches }) => {
+//   const rootData = matches[0].data as RootLoaderData;
+//   return [{ title: rootData?.mirrorLinks?.web_title }];
+// };

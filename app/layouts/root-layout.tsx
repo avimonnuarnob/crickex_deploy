@@ -1,6 +1,6 @@
 import { Outlet, useRouteLoaderData } from "react-router";
 import type { Route } from "./+types/root-layout";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import classNames from "classnames";
 import Sidebar from "./Sidebar";
 import Topbar from "./Topbar";
@@ -117,10 +117,35 @@ const AMBASSADORS = [
 export default function RootLayout() {
   const [isFull, setIsFull] = useState(false);
 
+  const ref = useRef<HTMLElement>(null);
+
+  useEffect(() => {
+    const addShadowEvent = new Event("add");
+    const removeShadowEvent = new Event("remove");
+
+    const handleScroll = () => {
+      if (Number(ref.current?.scrollTop) >= 300) {
+        window.dispatchEvent(addShadowEvent);
+      }
+      if (Number(ref.current?.scrollTop) === 0) {
+        window.dispatchEvent(removeShadowEvent);
+      }
+    };
+
+    ref.current?.addEventListener("scroll", handleScroll);
+
+    return () => {
+      ref.current?.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
+
   return (
     <div className="flex h-screen overscroll-y-contain">
       <Sidebar isFull={isFull} setIsFull={setIsFull} />
-      <main className="flex h-full flex-1 flex-col items-center overflow-auto">
+      <main
+        className="flex h-full flex-1 flex-col items-center overflow-auto"
+        ref={ref}
+      >
         <Topbar isFull={isFull} />
         <div className="w-full flex-1">
           <div
