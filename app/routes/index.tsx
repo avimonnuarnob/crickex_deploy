@@ -79,7 +79,7 @@ export const links: LinksFunction = () => {
   return [
     {
       rel: "icon",
-      href: "email.png",
+      href: "/email.png",
       type: "image/png",
     },
   ];

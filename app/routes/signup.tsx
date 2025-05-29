@@ -339,6 +339,11 @@ export default function SignupModal({ matches }: Route.ComponentProps) {
                         }
                       } catch (error) {}
                     }}
+                    onKeyDown={(e) => {
+                      if (e.key === " ") {
+                        e.preventDefault();
+                      } else return;
+                    }}
                   />
                 </div>
                 <div className="mb-4">
@@ -350,6 +355,11 @@ export default function SignupModal({ matches }: Route.ComponentProps) {
                     type="password"
                     placeholder="6-20 characters and Numbers"
                     required
+                    onKeyDown={(e) => {
+                      if (e.key === " ") {
+                        e.preventDefault();
+                      } else return;
+                    }}
                   />
                 </div>
                 <div className="mb-4">
@@ -444,6 +454,11 @@ export default function SignupModal({ matches }: Route.ComponentProps) {
                           }
                         }
                       } catch (error) {}
+                    }}
+                    onKeyDown={(e) => {
+                      if (e.key === " ") {
+                        e.preventDefault();
+                      } else return;
                     }}
                   />
                 </div>

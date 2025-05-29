@@ -102,6 +102,11 @@ export default function LoginModal() {
                 name="username"
                 placeholder="4-15 char, allow numbers, no space"
                 required
+                onKeyDown={(e) => {
+                  if (e.key === " ") {
+                    e.preventDefault();
+                  } else return;
+                }}
               />
             </div>
             <div className="mb-2.5">
@@ -113,6 +118,11 @@ export default function LoginModal() {
                 type="password"
                 placeholder="6-20 characters and Numbers"
                 required
+                onKeyDown={(e) => {
+                  if (e.key === " ") {
+                    e.preventDefault();
+                  } else return;
+                }}
               />
             </div>
             <div className="mb-6.25 text-right">

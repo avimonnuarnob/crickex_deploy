@@ -59,16 +59,13 @@ const Topbar = ({ isFull }: TopbarProps) => {
           })}
         >
           <div className="flex h-15 items-center justify-between py-4">
-            <div
-              style={{
-                width: "123px",
-                height: "60px",
-                backgroundSize: "contain",
-                backgroundRepeat: "no-repeat",
-                backgroundPosition: "center",
-                backgroundImage: `url(${siteLogo})`,
-              }}
-            ></div>
+            <a href="/">
+              <img
+                src={siteLogo}
+                alt="crickex"
+                className="w-30.75 h-15 object-contain cursor-pointer"
+              />
+            </a>
             <>
               {!isLoggedIn && (
                 <div className="flex items-center gap-1.25 justify-between">
