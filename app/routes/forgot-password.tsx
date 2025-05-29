@@ -12,6 +12,8 @@ import { useCallback, useState } from "react";
 import { FormTextField } from "@/components/ui/form-inputs";
 import Button from "@/components/ui/button/Button";
 import { OTPInput, REGEXP_ONLY_DIGITS, type SlotProps } from "input-otp";
+import { GiConfirmed } from "react-icons/gi";
+import { FaRegCircleXmark } from "react-icons/fa6";
 
 const categories = [
   {
@@ -22,7 +24,13 @@ const categories = [
   },
 ];
 
-const DoItByEmail = () => {
+const DoItByEmail = ({
+  setIsSuccessfullRegistration,
+}: {
+  setIsSuccessfullRegistration: React.Dispatch<
+    React.SetStateAction<boolean | undefined>
+  >;
+}) => {
   const [step, setStep] = useState(0);
 
   const [email, setEmail] = useState<string | undefined>();
@@ -41,7 +49,13 @@ const DoItByEmail = () => {
       <div className="p-2 flex-1">
         {step === 0 && <EmailFormInput setStep={setStep} setEmail={setEmail} />}
         {step === 1 && <OtpFormInput setStep={setStep} setOtp={setOtp} />}
-        {step === 2 && <ConfirmPasswordFromInput email={email} otp={otp} />}
+        {step === 2 && (
+          <ConfirmPasswordFromInput
+            setIsSuccessfullRegistration={setIsSuccessfullRegistration}
+            email={email}
+            otp={otp}
+          />
+        )}
       </div>
     </>
   );
@@ -204,9 +218,13 @@ const OtpFormInput = ({
 const ConfirmPasswordFromInput = ({
   email,
   otp,
+  setIsSuccessfullRegistration,
 }: {
   email: string | undefined;
   otp: string | undefined;
+  setIsSuccessfullRegistration: React.Dispatch<
+    React.SetStateAction<boolean | undefined>
+  >;
 }) => {
   const {
     control,
@@ -252,7 +270,7 @@ const ConfirmPasswordFromInput = ({
       setResponseMessage(responseData.errors);
     }
     if (responseData.status === "ok" && responseData.message) {
-      navigate(-1);
+      setIsSuccessfullRegistration(true);
     }
   };
   return (
@@ -307,6 +325,64 @@ const ConfirmPasswordFromInput = ({
 
 export default function ForgotPassword() {
   const navigate = useNavigate();
+  const [isSuccessfulRegistration, setIsSuccessfullRegistration] = useState<
+    boolean | undefined
+  >(undefined);
+
+  if (isSuccessfulRegistration === true) {
+    return (
+      <Modal
+        onClose={() => {
+          // setIsSuccessfullRegistration(undefined);
+          navigate(-1);
+        }}
+        isOpen={isSuccessfulRegistration === true}
+        title="Recovery Confirmation"
+      >
+        <div className="flex flex-col justify-between items-center p-4">
+          <div className="h-[527px] flex flex-col items-center gap-4 mt-4">
+            <GiConfirmed className="text-[66px] text-green-1 mx-auto" />
+            <span>Password recovery was successful</span>
+          </div>
+
+          <Button
+            size="lg"
+            isBlock
+            onClick={() =>
+              navigate(
+                location.pathname.replace(
+                  "forgot-password/email",
+                  "account-login-quick"
+                )
+              )
+            }
+          >
+            Continue to login
+          </Button>
+        </div>
+      </Modal>
+    );
+  }
+
+  if (isSuccessfulRegistration === false) {
+    return (
+      <Modal
+        onClose={() => {
+          // setIsSuccessfullRegistration(undefined);
+          navigate(-1);
+        }}
+        isOpen={isSuccessfulRegistration === false}
+        title="Recovery Confirmation"
+      >
+        <div className="flex flex-col justify-between items-center p-4">
+          <div className="flex flex-col items-center gap-4 mt-4">
+            <FaRegCircleXmark className="text-[66px] text-red-1 mx-auto" />
+            <span>Password recovery failed</span>
+          </div>
+        </div>
+      </Modal>
+    );
+  }
   return (
     <Modal
       isFullScreen={true}
@@ -330,7 +406,9 @@ export default function ForgotPassword() {
         </TabList>
         <TabPanels className="flex-1 flex flex-col">
           <TabPanel className="flex-1 flex flex-col">
-            <DoItByEmail />
+            <DoItByEmail
+              setIsSuccessfullRegistration={setIsSuccessfullRegistration}
+            />
           </TabPanel>
           <TabPanel className="flex-1">
             <p>Hello</p>

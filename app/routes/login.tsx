@@ -60,8 +60,8 @@ export default function LoginModal() {
     <Modal
       onClose={async () => {
         setTimeout(() => {
-          navigate(-1);
-        }, 300);
+          navigate(location.pathname.replace("account-login-quick", ""));
+        }, 200);
         setIsOpen(false);
       }}
       isOpen={isOpen}

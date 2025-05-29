@@ -44,7 +44,7 @@ const Sidebar = ({ isFull, setIsFull }: SidebarProps) => {
   }
   return (
     <div
-      className={classNames("relative flex-none bg-blue-1 flex flex-col z-100")}
+      className={classNames("relative flex-none bg-blue-1 flex flex-col z-20")}
     >
       {isFull ? (
         <button
@@ -56,7 +56,7 @@ const Sidebar = ({ isFull, setIsFull }: SidebarProps) => {
           className="bg-blue-8 absolute z-20 end-0 top-2 translate-x-1/2 cursor-pointer rounded-2xl pl-3 pr-3 py-[7px]"
         >
           <motion.div
-            animate={{ rotate: 0, opacity: 1, transition: { duration: 0.15 } }}
+            animate={{ rotate: 0, opacity: 1, transition: { duration: 0.5 } }}
             initial={{ rotate: 180, opacity: 0.5 }}
           >
             <FaChevronLeft className="text-sm text-white ml-0.5" />
@@ -65,7 +65,7 @@ const Sidebar = ({ isFull, setIsFull }: SidebarProps) => {
       ) : (
         <div
           className={classNames(
-            "bg-blue-2 flex h-15 w-full items-center justify-center transition duration-150 opacity-0",
+            "bg-blue-2 flex h-15 w-full items-center justify-center transition duration-500 opacity-0",
             {
               "opacity-100": !isFull,
             }
@@ -84,7 +84,7 @@ const Sidebar = ({ isFull, setIsFull }: SidebarProps) => {
                 rotate: 0,
                 opacity: 1,
                 transition: {
-                  duration: 0.15,
+                  duration: 0.5,
                 },
               }}
               initial={{ opacity: 0, rotate: -180 }}
@@ -97,7 +97,7 @@ const Sidebar = ({ isFull, setIsFull }: SidebarProps) => {
 
       <div
         className={classNames(
-          "overflow-x-hidden overflow-y-scroll transition-[width] transition-discrete ease-in duration-150 flex-1 [&::-webkit-scrollbar]:hidden border-r-5 border-[#255c93]",
+          "overflow-x-hidden overflow-y-scroll transition-[width] transition-discrete ease-in duration-500 flex-1 [&::-webkit-scrollbar]:hidden border-r-5 border-[#255c93]",
           {
             "w-15.75": !isFull,
             "w-62.5": isFull,

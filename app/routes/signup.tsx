@@ -194,8 +194,8 @@ export default function SignupModal({ matches }: Route.ComponentProps) {
     <Modal
       onClose={async () => {
         setTimeout(() => {
-          navigate(-1);
-        }, 300);
+          navigate(location.pathname.replace("new-register-entry/account", ""));
+        }, 200);
         setIsOpen(false);
       }}
       isOpen={isOpen}
@@ -500,7 +500,13 @@ export default function SignupModal({ matches }: Route.ComponentProps) {
 
             <p className="text-gray-3 text-center text-sm mb-4.5">
               Already a member ?{" "}
-              <Link to="/" className="text-blue-1">
+              <Link
+                to={location.pathname.replace(
+                  "new-register-entry/account",
+                  "account-login-quick"
+                )}
+                className="text-blue-1"
+              >
                 Log In
               </Link>
             </p>
