@@ -2,7 +2,7 @@ import classNames from "classnames";
 import langButton from "@/assets/icon/lang.svg";
 import Button from "@/components/ui/button/Button";
 import IconButton from "@/components/ui/button/IconButton";
-import { useLocation, useNavigate } from "react-router";
+import { Link, useLocation, useNavigate } from "react-router";
 import WalletButton from "@/components/home/wallet-button";
 import { useCurrentUser } from "@/contexts/CurrentUserContext";
 import ProfileButton from "@/components/layout/profile-button";
@@ -74,19 +74,24 @@ const Topbar = ({ isFull }: TopbarProps) => {
         }}
       >
         <div
-          className={classNames("mx-auto max-w-[1200px]", {
+          className={classNames("mx-auto max-w-[1200px] events", {
             "w-[calc(100%-(16px*2))]": !isFull,
             "w-[calc(100%-(16px*3.75))]": isFull,
           })}
         >
           <div className="flex h-15 items-center justify-between py-4">
-            <a href="/">
+            <Link
+              to="/"
+              className={classNames({
+                "pointer-events-none": location.pathname === "/",
+              })}
+            >
               <img
                 src={siteLogo}
                 alt="crickex"
                 className="w-30.75 h-15 object-contain cursor-pointer"
               />
-            </a>
+            </Link>
             <>
               {!isLoggedIn && (
                 <div className="flex items-center gap-1.25 justify-between">

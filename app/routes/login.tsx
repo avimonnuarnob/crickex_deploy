@@ -5,12 +5,13 @@ import { loginSchema, type LoginInput } from "@/schema/authSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState, useTransition } from "react";
 import { useForm } from "react-hook-form";
-import { Link, useNavigate } from "react-router";
+import { Link, useLocation, useNavigate } from "react-router";
 import Cookies from "js-cookie";
 import { useCurrentUser } from "@/contexts/CurrentUserContext";
 
 export default function LoginModal() {
   const navigate = useNavigate();
+  const location = useLocation();
   const { isLoggedIn, loginUser } = useCurrentUser();
 
   const [responseError, setError] = useState<null | string>(null);
@@ -145,7 +146,13 @@ export default function LoginModal() {
 
             <p className="text-gray-3 text-center text-sm mb-1.5">
               Do not have an account?{" "}
-              <Link to="/" className="text-blue-1">
+              <Link
+                to={location.pathname.replace(
+                  "account-login-quick",
+                  "new-register-entry/account"
+                )}
+                className="text-blue-1"
+              >
                 Sign Up
               </Link>
             </p>
