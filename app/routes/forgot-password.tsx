@@ -125,6 +125,7 @@ const EmailFormInput = ({
             label="Email"
             id="email"
             name="email"
+            placeholder="Enter your email"
             required
           />
         </div>
@@ -333,7 +334,6 @@ export default function ForgotPassword() {
     return (
       <Modal
         onClose={() => {
-          // setIsSuccessfullRegistration(undefined);
           navigate(-1);
         }}
         isOpen={isSuccessfulRegistration === true}

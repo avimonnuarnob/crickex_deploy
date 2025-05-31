@@ -60,7 +60,8 @@ export default function LoginModal() {
     <Modal
       onClose={async () => {
         setTimeout(() => {
-          navigate(location.pathname.replace("account-login-quick", ""));
+          const a = location.pathname.replace("/account-login-quick", "");
+          navigate(a ? a + location.hash : "/" + location.hash);
         }, 200);
         setIsOpen(false);
       }}
@@ -127,7 +128,10 @@ export default function LoginModal() {
               />
             </div>
             <div className="mb-6.25 text-right">
-              <Link to="/forgot-password/email" className="text-blue-1 text-sm">
+              <Link
+                to={"forgot-password/email"}
+                className="text-blue-1 text-sm"
+              >
                 Forgot password?
               </Link>
             </div>

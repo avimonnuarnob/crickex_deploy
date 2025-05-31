@@ -194,7 +194,11 @@ export default function SignupModal({ matches }: Route.ComponentProps) {
     <Modal
       onClose={async () => {
         setTimeout(() => {
-          navigate(location.pathname.replace("new-register-entry/account", ""));
+          const a = location.pathname.replace(
+            "/new-register-entry/account",
+            ""
+          );
+          navigate(a ? a + location.hash : "/" + location.hash);
         }, 200);
         setIsOpen(false);
       }}

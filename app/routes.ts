@@ -7,6 +7,13 @@ export default [
       route("new-register-entry/account", "./routes/signup.tsx", {
         id: "game-signup",
       }),
+      route(
+        "account-login-quick/forgot-password/:medium",
+        "./routes/forgot-password.tsx",
+        {
+          id: "game-forgot-password",
+        }
+      ),
     ]),
 
     route("/", "./routes/index.tsx", [
@@ -15,7 +22,13 @@ export default [
         id: "home-signup",
       }),
       route("member/wallet/deposit", "./routes/deposit.tsx"),
-      route("forgot-password/:medium", "./routes/forgot-password.tsx"),
+      route(
+        "account-login-quick/forgot-password/:medium",
+        "./routes/forgot-password.tsx",
+        {
+          id: "home-forgot-password",
+        }
+      ),
     ]),
   ]),
 
