@@ -44,7 +44,7 @@ export const navLinks = [
     text: "Download",
   },
   {
-    href: "#",
+    href: "responsible-gaming",
     icon: responsibleGamingIcon,
     text: "Responsible Gaming",
   },

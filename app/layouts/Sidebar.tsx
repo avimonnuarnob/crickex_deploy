@@ -45,6 +45,9 @@ const Sidebar = ({ isFull, setIsFull }: SidebarProps) => {
   return (
     <div
       className={classNames("relative flex-none bg-blue-1 flex flex-col z-20")}
+      style={{
+        viewTransitionName: "sidebar",
+      }}
     >
       {isFull ? (
         <button
@@ -133,7 +136,7 @@ const Sidebar = ({ isFull, setIsFull }: SidebarProps) => {
               >
                 <Submenu
                   isFull={isFull}
-                  icon={"https://ai.cloud7hub.uk" + gameType.thumbnail}
+                  icon={`/game_type/${gameType.game_type_code}.png`}
                   text={gameType.title}
                   children={gameType.game_provider.map((provider) => ({
                     icon: "https://ai.cloud7hub.uk" + provider.thumbnail,

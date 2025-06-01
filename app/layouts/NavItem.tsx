@@ -33,6 +33,7 @@ const NavItem = ({
 
   return href ? (
     <Link
+      viewTransition
       to={href}
       className={classNames(
         "flex items-center transition-colors cursor-pointer gap-4",

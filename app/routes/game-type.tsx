@@ -6,9 +6,10 @@ import {
   useRouteLoaderData,
 } from "react-router";
 import type { Route } from "./+types/game-type";
-import { Suspense } from "react";
+import { Suspense, useEffect } from "react";
 import GalleryForGames from "@/components/game/gallery-for-games";
 import type { RootLoaderData } from "@/root";
+import { useViewTransitionState } from "react-router";
 
 export type GAMES = GAME[];
 
@@ -52,6 +53,10 @@ export function clientLoader({ params }: Route.ClientLoaderArgs) {
 }
 
 export default function GameType({ loaderData, params }: Route.ComponentProps) {
+  const href = `/`;
+  // Hook provides transition state for specific route
+  const isTransitioning = useViewTransitionState(href);
+
   const { promiseOfGames } = loaderData;
   const data = useRouteLoaderData<RootLoaderData>("root");
   const { pathname, hash } = useLocation();
@@ -65,8 +70,19 @@ export default function GameType({ loaderData, params }: Route.ComponentProps) {
       }
       providersMap.set(provider.provider_code, provider.provider_name);
     });
+
+  useEffect(() => {
+    const root = document.documentElement;
+    root.style.setProperty("--direction", "-1");
+  }, []);
   return (
-    <div className="mt-18 py-1" key={pathname}>
+    <div
+      className="mt-18 py-1"
+      style={{
+        viewTransitionName: isTransitioning ? "page" : "none",
+      }}
+      key={pathname}
+    >
       <Suspense
         fallback={
           <div className="flex justify-center items-center flex-col h-full">

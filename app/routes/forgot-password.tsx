@@ -1,14 +1,10 @@
 import Modal from "@/components/ui/modal/Modal";
-import { useNavigate } from "react-router";
+import { useNavigate, useParams } from "react-router";
 import { Tab, TabGroup, TabList, TabPanel, TabPanels } from "@headlessui/react";
 import classNames from "classnames";
 import { Controller, useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import {
-  forgotPasswordByMailSchema,
-  type forgotPasswordByMailInput,
-} from "@/schema/authSchema";
-import { useCallback, useState } from "react";
+
+import { useState } from "react";
 import { FormTextField } from "@/components/ui/form-inputs";
 import Button from "@/components/ui/button/Button";
 import { OTPInput, REGEXP_ONLY_DIGITS, type SlotProps } from "input-otp";
@@ -326,6 +322,8 @@ const ConfirmPasswordFromInput = ({
 
 export default function ForgotPassword() {
   const navigate = useNavigate();
+  const params = useParams();
+  const [isOpen, setIsOpen] = useState(true);
   const [isSuccessfulRegistration, setIsSuccessfullRegistration] = useState<
     boolean | undefined
   >(undefined);
@@ -386,9 +384,16 @@ export default function ForgotPassword() {
   return (
     <Modal
       isFullScreen={true}
-      isOpen={true}
-      onClose={() => {
-        navigate(-1);
+      isOpen={isOpen}
+      onClose={async () => {
+        setTimeout(() => {
+          const a = location.pathname.replace(
+            `/account-login-quick/forgot-password/${params.medium}`,
+            ""
+          );
+          navigate(a ? a + location.hash : "/" + location.hash);
+        }, 200);
+        setIsOpen(false);
       }}
       title="Forgot password?"
     >

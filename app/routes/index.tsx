@@ -57,9 +57,14 @@ export default function Home() {
   const data = useRouteLoaderData<RootLoaderData>("root");
   const { isLoggedIn } = useCurrentUser();
 
+  useEffect(() => {
+    const root = document.documentElement;
+    root.style.setProperty("--direction", "1");
+  }, []);
+
   return (
     <>
-      <div className="mt-18 py-1">
+      <div className="mt-18 py-1 page-body">
         <HomeSlider />
         <HomeMarquee />
         {isLoggedIn && <UserDashboard />}

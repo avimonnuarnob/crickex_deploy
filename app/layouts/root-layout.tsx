@@ -1,4 +1,4 @@
-import { Outlet, useRouteLoaderData } from "react-router";
+import { Link, Outlet, useRouteLoaderData } from "react-router";
 import type { Route } from "./+types/root-layout";
 import { useEffect, useRef, useState } from "react";
 import classNames from "classnames";
@@ -147,7 +147,7 @@ export default function RootLayout() {
         ref={ref}
       >
         <Topbar isFull={isFull} />
-        <div className="w-full flex-1">
+        <div className="w-full flex-1 relative">
           <div
             className={classNames("mx-auto max-w-[1200px]", {
               "w-[calc(100%-(16px*2))]": !isFull,
@@ -277,17 +277,21 @@ const Footer = () => {
         <div className="footer__nav border-t border-gray-4 pt-6 text-[#005dac]">
           <div className="flex flex-wrap gap-2">
             {[
-              "About Us",
-              "Contact Us",
-              "Terms & Conditions",
-              "FAQ",
-              "Affiliate",
-              "Sponsor",
-              "Crickex Blog",
+              { title: "About Us", href: "#" },
+              { title: "Contact Us", href: "#" },
+              { title: "Terms & Conditions", href: "terms-and-conditions" },
+              { title: "FAQ", href: "#" },
+              { title: "Affiliate", href: "#" },
+              { title: "Sponsor", href: "#" },
+              { title: "Crickex Blog", href: "#" },
             ].map((link, i) => (
-              <a className="border-l-2 px-2 text-[13px]" href="#" key={i}>
-                {link}
-              </a>
+              <Link
+                className="border-l-2 px-2 text-[13px]"
+                to={link.href}
+                key={i}
+              >
+                {link.title}
+              </Link>
             ))}
           </div>
 
