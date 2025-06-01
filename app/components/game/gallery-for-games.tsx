@@ -249,14 +249,14 @@ export default function GalleryForGames({
                 >
                   <div className="flex  flex-col">
                     <div className="">
-                      <DialogTitle className="text-base font-semibold text-gray-900 flex">
+                      <DialogTitle className="text-base font-semibold text-gray-900 flex border-b border-b-[#eeeeee] py-0.5 px-0.75">
                         <IconButton
                           type="button"
                           className="bg-transparent hover:bg-transparent"
                           icon={
                             <FaChevronRight
                               aria-hidden="true"
-                              className="size-6 text-black"
+                              className="size-5.5 text-black"
                             />
                           }
                           onClick={() => setOpen(false)}
@@ -266,7 +266,7 @@ export default function GalleryForGames({
                             defaultValue={textFilterInput}
                             name="filter"
                             placeholder="Search Games"
-                            className="w-full h-full focus:ring-0 focus:outline-0 text-sm font-normal"
+                            className="w-full h-full focus:ring-0 focus:outline-0 text-sm font-normal px-5"
                           />
                         </Field>
 
@@ -276,20 +276,20 @@ export default function GalleryForGames({
                           icon={
                             <FaSearch
                               aria-hidden="true"
-                              className="size-6 text-black "
+                              className="size-5.5 text-black stroke-3"
                             />
                           }
                         ></IconButton>
                       </DialogTitle>
                     </div>
-                    <div className="relative mt-6 flex-1 px-4">
+                    <div className="relative mt-3.75 flex-1 px-3">
                       {/* Your content */}
-                      <p>Providers</p>
-                      <div className="flex flex-wrap gap-2.5 bg-white pt-2 pb-1.5">
+                      <p className="text-sm text-[#0009]">Providers</p>
+                      <div className="flex flex-wrap gap-2.5 bg-white pt-1.25 pb-4">
                         <button
                           type="button"
                           className={classNames(
-                            "bg-[#f5f5f5] px-4 py-2 text-[13px] rounded min-w-[93px] h-[30px] text-center cursor-pointer hover:opacity-[0.7]",
+                            "bg-[#f5f5f5] px-4 py-2 text-[13px] rounded min-w-[132.48px] h-[35px] text-center cursor-pointer hover:opacity-[0.7]",
                             {
                               "bg-[#005dac]! text-white":
                                 gameFilter.length === 0,
@@ -306,7 +306,7 @@ export default function GalleryForGames({
                             type="button"
                             key={provider}
                             className={classNames(
-                              "bg-[#f5f5f5] px-4 py-2 text-[13px] rounded min-w-[93px] h-[30px] text-center cursor-pointer hover:opacity-[0.7]",
+                              "bg-[#f5f5f5] px-4 py-2 text-[13px] rounded min-w-[132.48px] h-[35px]text-center cursor-pointer hover:opacity-[0.7]",
                               {
                                 "bg-[#005dac]! text-white":
                                   gameFilter.includes(provider),
@@ -328,7 +328,7 @@ export default function GalleryForGames({
                           </button>
                         ))}
                       </div>
-                      <Button type="submit" isBlock={true}>
+                      <Button type="submit" isBlock={true} className="h-12.5">
                         Confirm
                       </Button>
                     </div>
