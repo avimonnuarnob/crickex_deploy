@@ -30,9 +30,10 @@ export default function CategoryTab({ providers }: { providers: PROVIDERS }) {
                     } `}
                   >
                     <img
-                      src={"https://ai.cloud7hub.uk" + gameType.thumbnail}
+                      src={`/game_type/${gameType.game_type_code}.png`}
                       className="pt-1.5 w-10 h-10 object-cover"
                     />
+
                     <span className="text-[13px] mt-2.25 mb-0.5">
                       {gameType.title.toUpperCase()}
                     </span>
