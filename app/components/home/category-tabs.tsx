@@ -73,7 +73,10 @@ export default function CategoryTab({ providers }: { providers: PROVIDERS }) {
                           className="bg-white p-2 text-center text-sm font-light flex flex-col items-center cursor-pointer"
                           onClick={() => {
                             navigate(
-                              `/games/${gameType.game_type_code}#vendor=${item.provider_code}`
+                              `/games/${gameType.game_type_code}#vendor=${item.provider_code}`,
+                              {
+                                viewTransition: true,
+                              }
                             );
                           }}
                         >
