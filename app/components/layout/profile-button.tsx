@@ -22,6 +22,7 @@ import inboxIcon from "../../assets/images/icon-inbox.png";
 import referralIcon from "../../assets/images/icon-referral.png";
 import logoutIcon from "../../assets/images/icon-logout.png";
 import { useCurrentUser } from "@/contexts/CurrentUserContext";
+import { useNavigate } from "react-router";
 
 const PROFILE_ITEMS = [
   {
@@ -63,10 +64,13 @@ const PROFILE_ITEMS = [
 
 export default function ProfileButton() {
   const { logoutUser, userInfo } = useCurrentUser();
+  const navigate = useNavigate();
 
   const onClickHandler = (id: string) => {
     if (id === "Log Out") {
       logoutUser();
+    } else if (id === "Deposit") {
+      navigate("/member/wallet/deposit");
     } else return;
   };
   return (

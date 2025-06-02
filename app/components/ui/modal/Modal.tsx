@@ -44,7 +44,7 @@ const Modal = ({
             >
               <DialogPanel
                 className={classNames(
-                  "space-y-4 rounded-[10px] absolute w-full h-full overflow-hidden flex flex-col",
+                  "space-y-4 rounded-[10px] absolute w-full h-full overflow-hidden flex flex-col shadow",
                   {
                     "bg-white": isFullScreen,
                   }
@@ -60,7 +60,7 @@ const Modal = ({
                 </div>
                 <div
                   className={classNames(
-                    "bg-white rounded-b-[10px] overflow-y-auto [&::-webkit-scrollbar]:w-1.25 [&::-webkit-scrollbar-thumb]:bg-gray-300 [&::-webkit-scrollbar-thumb]:rounded",
+                    "bg-[#f5f5f5] rounded-b-[10px] overflow-y-auto [&::-webkit-scrollbar]:w-1.25 [&::-webkit-scrollbar-thumb]:bg-gray-300 [&::-webkit-scrollbar-thumb]:rounded",
                     {
                       "flex-1": isFullScreen,
                     }
