@@ -20,6 +20,7 @@ import type { Route } from "./+types/deposit";
 import { BsCaretDown, BsCheck } from "react-icons/bs";
 import { TfiReload } from "react-icons/tfi";
 import { useCurrentUser } from "@/contexts/CurrentUserContext";
+import { LuThumbsUp } from "react-icons/lu";
 
 export type Gateways = Gateway[];
 
@@ -250,21 +251,62 @@ export default function Deposit({ loaderData }: Route.ComponentProps) {
                     </div>
                   ))}
                 </div>
-                {/* <div
+                <div
                   className="py-2.5 grid gap-2.5"
                   style={{
                     gridTemplateColumns:
                       "repeat(auto-fill,calc((100% - 20px) / 2))",
                   }}
                 >
-                  <button className="w-full bg-blue-600 text-white rounded flex items-center justify-center mb-4">
-                    <div className="bg-white rounded-full p-1 mr-2">
-                      <span className="text-blue-600 text-xs">T</span>
-                    </div>
-                    <span>TRC20</span>
+                  <button className="w-full bg-blue-1 text-white rounded-sm flex items-center justify-center mb-4 h-8.75">
+                    <span className="text-xs">TRC20</span>
                   </button>
-                </div> */}
+                </div>
               </div>
+
+              {selectedPaymentIndex !== null && (
+                <div className="m-2.5 bg-white px-3.75 py-2.5 rounded shadow">
+                  <div className="flex gap-1.25 items-center border-b">
+                    <div className="w-1 h-3.75 bg-[#005dac] rounded"></div>
+                    <span className="font-bold text-[15px] block my-2 flex-1">
+                      Deposit Channel
+                    </span>
+                  </div>
+                  <div
+                    className="py-2.5 grid gap-2.5"
+                    style={{
+                      gridTemplateColumns:
+                        "repeat(auto-fill,calc((100% - 20px) / 2))",
+                    }}
+                  >
+                    <div className={`relative rounded-xs flex items-center`}>
+                      <div
+                        className="absolute z-2"
+                        style={{ top: "5px", left: "-4px" }}
+                      >
+                        <div className="bg-[#76bd6a] text-white text-xs h-3.75 w-5 rounded-xs grid place-items-center">
+                          <LuThumbsUp className="size-3 text-white" />
+                        </div>
+                      </div>
+
+                      <div
+                        className="absolute z-0 rounded-xs"
+                        style={{
+                          width: "20px",
+                          height: "15px",
+                          // transform: "rotate(45deg)",
+                          top: "5px",
+                          left: "-4px",
+                          boxShadow: "2px 2px 3px 0",
+                        }}
+                      ></div>
+                      <button className="w-full z-1 h-8.75 border rounded-xs border-black bg-white flex items-center justify-center overflow-auto">
+                        <span className="text-xs">TRC20</span>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              )}
 
               {selectedPaymentIndex !== null && (
                 <div className="m-2.5 bg-white px-3.75 py-2.5 rounded shadow">
