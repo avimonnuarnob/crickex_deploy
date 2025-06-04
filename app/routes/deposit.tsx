@@ -21,6 +21,8 @@ import { BsCaretDown, BsCheck } from "react-icons/bs";
 import { TfiReload } from "react-icons/tfi";
 import { useCurrentUser } from "@/contexts/CurrentUserContext";
 import { LuThumbsUp } from "react-icons/lu";
+import { IoCloseCircleSharp, IoInformationCircleSharp } from "react-icons/io5";
+import { FaCheckCircle } from "react-icons/fa";
 
 export type Gateways = Gateway[];
 
@@ -107,6 +109,7 @@ export default function Deposit({ loaderData }: Route.ComponentProps) {
     number | null
   >(0);
   const [isLoading, setIsLoading] = useState(false);
+  const [isFocused, setIsFocused] = useState(false);
 
   return (
     <Modal
@@ -129,15 +132,18 @@ export default function Deposit({ loaderData }: Route.ComponentProps) {
               {({ selected }) => (
                 <button
                   className={classNames(
-                    "flex-1 py-1.25 bg-blue-1 text-white text-center focus:outline-none data-selected:bg-blue-3 rounded",
-                    {}
+                    "flex-1 py-0.75 bg-transparent text-white text-center focus:outline-none data-selected:bg-[#2d9eff] rounded",
+                    {
+                      "shadow shadow-[#00197980]": selected,
+                    }
                   )}
                 >
                   <span
                     className={classNames(
-                      "block bg-blue-2 py-1.25 text-[13px] rounded-l",
+                      "block py-1.25 text-[13px] rounded-l",
                       {
-                        "bg-blue-3": selected,
+                        "bg-[#2d9eff]": selected,
+                        "bg-blue-2": !selected,
                       }
                     )}
                   >
@@ -150,8 +156,10 @@ export default function Deposit({ loaderData }: Route.ComponentProps) {
               {({ selected }) => (
                 <button
                   className={classNames(
-                    "flex-1 py-1.25 bg-blue-1 text-white text-center focus:outline-none data-selected:bg-blue-3 rounded",
-                    {}
+                    "flex-1 py-0.75 bg-blue-1 text-white text-center focus:outline-none data-selected:bg-blue-3 rounded",
+                    {
+                      "shadow shadow-[#00197980]": selected,
+                    }
                   )}
                 >
                   <span
@@ -172,15 +180,15 @@ export default function Deposit({ loaderData }: Route.ComponentProps) {
           <TabPanels>
             <TabPanel>
               <div className="m-2.5">
-                <div className="flex items-center justify-between bg-yellow-500 p-2.5 rounded">
-                  <div className="flex items-center gap-2 text-white text-sm">
+                <div className="flex items-center justify-between bg-[#e4b621] p-2.5 rounded">
+                  <div className="flex items-center gap-2 text-white">
                     <PromoIcon />
-                    <span>Select Promotion</span>
+                    <span className="text-sm">Select Promotion</span>
                   </div>
                   <Select
                     name="status"
                     aria-label="Project status"
-                    className="focus:outline-0 text-white"
+                    className="focus:outline-0 text-white font-bold text-xs"
                   >
                     <option value="active">Active</option>
                     <option value="paused">Paused</option>
@@ -190,15 +198,15 @@ export default function Deposit({ loaderData }: Route.ComponentProps) {
                 </div>
               </div>
 
-              <div className="m-2.5 bg-white px-3.75 py-2.5 rounded shadow">
-                <div className="flex gap-1.25 items-center border-b">
+              <div className="m-2.5 bg-white p-2.5 rounded-xs shadow">
+                <div className="flex gap-1.25 items-center border-b border-b-[#cccccc]">
                   <div className="w-1 h-3.75 bg-[#005dac] rounded"></div>
-                  <span className="font-bold text-[15px] block my-2 text-gray-9">
+                  <span className="font-bold text-[15px] block my-2 text-[#555555]">
                     Payment Method
                   </span>
                 </div>
                 <div
-                  className="grid gap-2.5 py-2.5 border-b border-dashed"
+                  className="grid gap-2.5 py-2.5 border-b border-b-[#cccccc] border-dashed"
                   style={{
                     gridTemplateColumns:
                       "repeat(auto-fill,calc((100% - 20px) / 3))",
@@ -207,7 +215,7 @@ export default function Deposit({ loaderData }: Route.ComponentProps) {
                   {gateways.map((gateway, i) => (
                     <div
                       key={gateway.id}
-                      className={`flex items-center ${
+                      className={`flex items-center relative ${
                         selectedPaymentIndex === i
                           ? "border-blue-500"
                           : "border-gray-300"
@@ -237,7 +245,7 @@ export default function Deposit({ loaderData }: Route.ComponentProps) {
                         {/* Triangle with check mark in bottom right corner */}
                         {selectedPaymentIndex === i && (
                           <div
-                            className="absolute bottom-0 right-0 w-5 h-4 bg-blue-1"
+                            className="absolute bottom-0 right-0 w-5 h-4 bg-blue-1 rounded-br-xs"
                             style={{
                               clipPath: "polygon(100% 0, 100% 100%, 0 100%)",
                             }}
@@ -248,6 +256,25 @@ export default function Deposit({ loaderData }: Route.ComponentProps) {
                           </div>
                         )}
                       </button>
+                      <div className="absolute bg-[#d15454] h-5 top-1.25 -right-1 px-0.75 rounded-r-xs">
+                        <span className="leading-0.25 text-base text-white tracking-tighter">
+                          {gateway.gateway_name.gateway_tooltip}
+                        </span>
+
+                        <div
+                          className="absolute bg-[#d15454] w-1 h-2.5 top-0 -left-1"
+                          style={{
+                            clipPath: "polygon(-1% -1%, 101% -1%, 101% 101%)",
+                          }}
+                        ></div>
+
+                        <div
+                          className="absolute bg-[#d15454] w-1 h-2.5 top-2.5 -left-1"
+                          style={{
+                            clipPath: "polygon(100% 0, 0 100%, 100% 100%)",
+                          }}
+                        ></div>
+                      </div>
                     </div>
                   ))}
                 </div>
@@ -266,9 +293,9 @@ export default function Deposit({ loaderData }: Route.ComponentProps) {
 
               {selectedPaymentIndex !== null && (
                 <div className="m-2.5 bg-white px-3.75 py-2.5 rounded shadow">
-                  <div className="flex gap-1.25 items-center border-b">
+                  <div className="flex gap-1.25 items-center border-b border-b-[#cccccc]">
                     <div className="w-1 h-3.75 bg-[#005dac] rounded"></div>
-                    <span className="font-bold text-[15px] block my-2 flex-1">
+                    <span className="font-bold text-[15px] block my-2 flex-1 text-[#555555]">
                       Deposit Channel
                     </span>
                   </div>
@@ -288,7 +315,6 @@ export default function Deposit({ loaderData }: Route.ComponentProps) {
                           <LuThumbsUp className="size-3 text-white" />
                         </div>
                       </div>
-
                       <div
                         className="absolute z-0 rounded-xs"
                         style={{
@@ -300,6 +326,16 @@ export default function Deposit({ loaderData }: Route.ComponentProps) {
                           boxShadow: "2px 2px 3px 0",
                         }}
                       ></div>
+                      <div
+                        className="absolute bottom-0 right-0 w-5 h-4 bg-blue-1 z-2 rounded-br-xs"
+                        style={{
+                          clipPath: "polygon(100% 0, 100% 100%, 0 100%)",
+                        }}
+                      >
+                        <div className="absolute bottom-0 right-0 flex items-center justify-center">
+                          <BsCheck className="size-3 text-white stroke-1" />
+                        </div>
+                      </div>
                       <button className="w-full z-1 h-8.75 border rounded-xs border-black bg-white flex items-center justify-center overflow-auto">
                         <span className="text-xs">TRC20</span>
                       </button>
@@ -310,15 +346,15 @@ export default function Deposit({ loaderData }: Route.ComponentProps) {
 
               {selectedPaymentIndex !== null && (
                 <div className="m-2.5 bg-white px-3.75 py-2.5 rounded shadow">
-                  <div className="flex gap-1.25 items-center border-b">
+                  <div className="flex gap-1.25 items-center border-b border-b-[#cccccc]">
                     <div className="w-1 h-3.75 bg-[#005dac] rounded"></div>
-                    <span className="font-bold text-[15px] block my-2 flex-1">
+                    <span className="font-bold text-[15px] block my-2 flex-1 text-[#555555]">
                       Amount
                     </span>
-                    <span className="font-bold text-[15px] block my-2 self-end">
+                    <span className="font-bold text-[15px] block my-2 self-end text-blue-1">
                       {
                         gateways[selectedPaymentIndex].gateway_name.currency
-                          .currency
+                          .currency_icon
                       }{" "}
                       {parseInt(
                         gateways[selectedPaymentIndex].gateway_name
@@ -327,7 +363,7 @@ export default function Deposit({ loaderData }: Route.ComponentProps) {
                       {"-"}{" "}
                       {
                         gateways[selectedPaymentIndex].gateway_name.currency
-                          .currency
+                          .currency_icon
                       }{" "}
                       {parseInt(
                         gateways[selectedPaymentIndex].gateway_name
@@ -336,42 +372,77 @@ export default function Deposit({ loaderData }: Route.ComponentProps) {
                     </span>
                   </div>
 
-                  <div className="relative my-2.5">
-                    <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-                      <div className="bg-green-500 w-5 h-5 rounded-full p-1 flex justify-center items-center">
-                        <span className="text-white text-center text-xs">
-                          T
-                        </span>
-                      </div>
+                  <div className="py-2.5 grid grid-cols-4 gap-2.5">
+                    {gateways[
+                      selectedPaymentIndex
+                    ].gateway_name.amount_suggestion.map((suggestion) => (
+                      <button
+                        key={suggestion}
+                        className="min-w-1/4 p-2.5 text-xs border border-[#cccccc] text-[#555555] rounded flex items-center justify-center mb-4 bg-white cursor-pointer"
+                        onClick={() =>
+                          setAmount((amount) => +amount + +suggestion + "")
+                        }
+                      >
+                        {amount && "+"}
+                        {parseInt(suggestion)}
+                      </button>
+                    ))}
+                  </div>
+
+                  <div className="relative mb-2.5">
+                    <div className="absolute inset-y-0 left-0 flex items-center pl-2 pointer-events-none">
+                      <span className="text-blue-1 text-center text-xs">
+                        {
+                          gateways[selectedPaymentIndex].gateway_name.currency
+                            .currency_icon
+                        }
+                      </span>
                     </div>
                     <input
-                      type="number"
-                      className="block w-full pl-10 pr-4 py-2 border border-gray-300 rounded"
-                      placeholder="0"
+                      type="text"
+                      className={classNames(
+                        "block w-full pl-2.5 pr-2.5 py-3 bg-gray-1 border-gray-300 text-sm text-right transition-[padding] appearance-none rounded-xs",
+                        { "pr-10 ": isFocused, "text-blue-1": amount }
+                      )}
+                      placeholder="0.00"
                       value={amount}
                       onChange={(e) => setAmount(e.target.value)}
+                      onFocus={() => setIsFocused(true)}
+                      onBlur={() => setIsFocused(false)}
+                      onKeyDown={(e) => {
+                        return isNaN(Number(e.key)) && e.key !== "Backspace"
+                          ? e.preventDefault()
+                          : null;
+                      }}
                     />
+                    <button
+                      className={classNames(
+                        "absolute inset-y-0 right-0 w-10 flex justify-center items-center opacity-0 cursor-pointer",
+                        { "opacity-100": isFocused }
+                      )}
+                      onClick={() => setAmount("")}
+                    >
+                      <IoCloseCircleSharp className="size-4 text-blue-1" />
+                    </button>
+                  </div>
+
+                  <div className="p-2.5 bg-[#EAEFF8] rounded-xs flex gap-2">
+                    <div>
+                      <IoInformationCircleSharp className="size-5 text-[#2d58bb]" />
+                    </div>
+                    <div
+                      className="text-[#2d58bb]"
+                      dangerouslySetInnerHTML={{
+                        __html:
+                          gateways[selectedPaymentIndex].gateway_name
+                            .deposit_des,
+                      }}
+                    ></div>
                   </div>
                 </div>
               )}
 
-              {selectedPaymentIndex !== null && (
-                <div className="m-2.5 grid grid-cols-4 gap-0.5">
-                  {gateways[
-                    selectedPaymentIndex
-                  ].gateway_name.amount_suggestion.map((suggestion) => (
-                    <button
-                      key={suggestion}
-                      className="min-w-1/4 p-2.5 text-xs border border-grey rounded flex items-center justify-center mb-4 bg-white"
-                      onClick={() => setAmount(suggestion)}
-                    >
-                      +{parseInt(suggestion)}
-                    </button>
-                  ))}
-                </div>
-              )}
-
-              <div className="mx-2.5">
+              <div className="m-2.5">
                 <Button
                   disabled
                   className="bg-blue-600 text-white py-3 rounded"
@@ -425,16 +496,15 @@ export default function Deposit({ loaderData }: Route.ComponentProps) {
                   </div>
                 </div>
               </div>
-
-              <div className="m-2.5 bg-white px-3.75 py-2.5 rounded shadow">
-                <div className="flex gap-1.25 items-center border-b">
+              <div className="m-2.5 bg-white p-2.5 rounded-xs shadow">
+                <div className="flex gap-1.25 items-center border-b border-b-[#cccccc]">
                   <div className="w-1 h-3.75 bg-[#005dac] rounded"></div>
-                  <span className="font-bold text-[15px] block my-2 text-gray-9">
+                  <span className="font-bold text-[15px] block my-2 text-[#555555]">
                     Payment Method
                   </span>
                 </div>
                 <div
-                  className="grid gap-2.5 py-2.5 border-b border-dashed"
+                  className="grid gap-2.5 py-2.5"
                   style={{
                     gridTemplateColumns:
                       "repeat(auto-fill,calc((100% - 20px) / 3))",
@@ -443,7 +513,7 @@ export default function Deposit({ loaderData }: Route.ComponentProps) {
                   {gateways.map((gateway, i) => (
                     <div
                       key={gateway.id}
-                      className={`flex items-center ${
+                      className={`flex items-center relative ${
                         selectedPaymentIndex === i
                           ? "border-blue-500"
                           : "border-gray-300"
@@ -473,7 +543,7 @@ export default function Deposit({ loaderData }: Route.ComponentProps) {
                         {/* Triangle with check mark in bottom right corner */}
                         {selectedPaymentIndex === i && (
                           <div
-                            className="absolute bottom-0 right-0 w-5 h-4 bg-blue-1"
+                            className="absolute bottom-0 right-0 w-5 h-4 bg-blue-1 rounded-br-xs"
                             style={{
                               clipPath: "polygon(100% 0, 100% 100%, 0 100%)",
                             }}
@@ -491,15 +561,15 @@ export default function Deposit({ loaderData }: Route.ComponentProps) {
 
               {selectedPaymentIndex !== null && (
                 <div className="m-2.5 bg-white px-3.75 py-2.5 rounded shadow">
-                  <div className="flex gap-1.25 items-center border-b">
+                  <div className="flex gap-1.25 items-center border-b border-b-[#cccccc]">
                     <div className="w-1 h-3.75 bg-[#005dac] rounded"></div>
-                    <span className="font-bold text-[15px] block my-2 flex-1">
+                    <span className="font-bold text-[15px] block my-2 flex-1 text-[#555555]">
                       Amount
                     </span>
-                    <span className="font-bold text-[15px] block my-2 self-end">
+                    <span className="font-bold text-[15px] block my-2 self-end text-blue-1">
                       {
                         gateways[selectedPaymentIndex].gateway_name.currency
-                          .currency
+                          .currency_icon
                       }{" "}
                       {parseInt(
                         gateways[selectedPaymentIndex].gateway_name
@@ -508,7 +578,7 @@ export default function Deposit({ loaderData }: Route.ComponentProps) {
                       {"-"}{" "}
                       {
                         gateways[selectedPaymentIndex].gateway_name.currency
-                          .currency
+                          .currency_icon
                       }{" "}
                       {parseInt(
                         gateways[selectedPaymentIndex].gateway_name
@@ -517,42 +587,69 @@ export default function Deposit({ loaderData }: Route.ComponentProps) {
                     </span>
                   </div>
 
-                  <div className="relative my-2.5">
-                    <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-                      <div className="bg-green-500 w-5 h-5 rounded-full p-1 flex justify-center items-center">
-                        <span className="text-white text-center text-xs">
-                          T
-                        </span>
-                      </div>
-                    </div>
+                  <div className="py-2.5 grid grid-cols-4 gap-2.5">
+                    {gateways[
+                      selectedPaymentIndex
+                    ].gateway_name.agent_amount_suggestion.map((suggestion) => (
+                      <button
+                        key={suggestion}
+                        className="min-w-1/4 p-2.5 text-xs border border-[#cccccc] text-[#555555] rounded flex items-center justify-center mb-4 bg-white cursor-pointer"
+                        onClick={() =>
+                          setAmount((amount) => +amount + +suggestion + "")
+                        }
+                      >
+                        {amount && "+"}
+                        {parseInt(suggestion)}
+                      </button>
+                    ))}
+                  </div>
+
+                  <div className="relative mb-2.5">
                     <input
-                      type="number"
-                      className="block w-full pl-10 pr-4 py-2 border border-gray-300 rounded"
-                      placeholder="0"
+                      type="text"
+                      className={classNames(
+                        "block w-full pl-2.5 pr-2.5 py-3 bg-gray-1 border-gray-300 text-sm text-right transition-[padding] appearance-none rounded-xs",
+                        { "pr-10 ": isFocused, "text-blue-1": amount }
+                      )}
+                      placeholder="0.00"
                       value={amount}
                       onChange={(e) => setAmount(e.target.value)}
+                      onFocus={() => setIsFocused(true)}
+                      onBlur={() => setIsFocused(false)}
+                      onKeyDown={(e) => {
+                        return isNaN(Number(e.key)) && e.key !== "Backspace"
+                          ? e.preventDefault()
+                          : null;
+                      }}
                     />
+                    <button
+                      className={classNames(
+                        "absolute inset-y-0 right-0 w-10 flex justify-center items-center opacity-0 cursor-pointer",
+                        { "opacity-100": isFocused }
+                      )}
+                      onClick={() => setAmount("")}
+                    >
+                      <IoCloseCircleSharp className="size-4 text-blue-1" />
+                    </button>
+                  </div>
+
+                  <div className="p-2.5 bg-[#EAEFF8] rounded-xs flex gap-2">
+                    <div>
+                      <IoInformationCircleSharp className="size-5 text-[#2d58bb]" />
+                    </div>
+                    <div
+                      className="text-[#2d58bb]"
+                      dangerouslySetInnerHTML={{
+                        __html:
+                          gateways[selectedPaymentIndex].gateway_name
+                            .withdraw_des,
+                      }}
+                    ></div>
                   </div>
                 </div>
               )}
 
-              {selectedPaymentIndex !== null && (
-                <div className="m-2.5 grid grid-cols-4 gap-0.5">
-                  {gateways[
-                    selectedPaymentIndex
-                  ].gateway_name.agent_amount_suggestion.map((suggestion) => (
-                    <button
-                      key={suggestion}
-                      className="min-w-1/4 p-2.5 text-xs border border-grey rounded flex items-center justify-center mb-4 bg-white"
-                      onClick={() => setAmount(suggestion)}
-                    >
-                      +{parseInt(suggestion)}
-                    </button>
-                  ))}
-                </div>
-              )}
-
-              <div className="m-2.5 bg-white px-3.75 py-2.5 rounded shadow">
+              {/* <div className="m-2.5 bg-white px-3.75 py-2.5 rounded shadow">
                 <div className="flex gap-1.25 items-center border-b">
                   <div className="w-1 h-3.75 bg-[#005dac] rounded"></div>
                   <span className="font-bold text-[15px] block my-2 text-gray-9">
@@ -580,9 +677,35 @@ export default function Deposit({ loaderData }: Route.ComponentProps) {
                     </div>
                   </DisclosurePanel>
                 </Disclosure>
+              </div> */}
+
+              <div className="m-2.5 bg-white px-3.75 py-2.5 rounded shadow">
+                <div className="flex gap-1.25 items-center border-b border-b-[#cccccc]">
+                  <div className="w-1 h-3.75 bg-[#005dac] rounded"></div>
+                  <span className="font-bold text-[15px] block my-2 text-[#555555]">
+                    Please select phone number
+                  </span>
+                </div>
+                <div className="py-2.5 grid grid-cols-1 gap-2.5">
+                  <button
+                    className="w-full bg-blue-1 text-white flex gap-2 items-center px-2.5 py-2.75 mb-4 rounded"
+                    style={{
+                      backgroundImage:
+                        "url(https://img.c88rx.com/cx/h5/assets/images/player/bg-bankcard.png?v=1749020378117)",
+                      backgroundSize: "cover",
+                      backgroundPosition: "center",
+                      backgroundRepeat: "no-repeat",
+                    }}
+                  >
+                    <FaCheckCircle className="size-6.25 text-[#28b849]" />
+                    <span className="text-xl inline-block">
+                      +880 1866300200
+                    </span>
+                  </button>
+                </div>
               </div>
 
-              <div className="mx-2.5">
+              <div className="m-2.5">
                 <Button
                   disabled
                   className="bg-blue-600 text-white py-3 rounded"
