@@ -285,7 +285,7 @@ export default function GalleryForGames({
                     <div className="relative mt-3.75 flex-1 px-3">
                       {/* Your content */}
                       <p className="text-sm text-[#0009]">Providers</p>
-                      <div className="flex flex-wrap gap-2.5 bg-white pt-1.25 pb-4">
+                      <div className="grid grid-cols-3 gap-2.5 bg-white pt-1.25 pb-4">
                         <button
                           type="button"
                           className={classNames(

@@ -238,7 +238,7 @@ export default function Deposit({ loaderData }: Route.ComponentProps) {
                         </div>
 
                         {/* Text */}
-                        <span className="text-blue-1 font-medium text-xs">
+                        <span className="text-blue-1 font-medium text-xs max-w-full whitespace-nowrap truncate">
                           {gateway.gateway_name.gateway_title}
                         </span>
 
@@ -256,25 +256,34 @@ export default function Deposit({ loaderData }: Route.ComponentProps) {
                           </div>
                         )}
                       </button>
-                      <div className="absolute bg-[#d15454] h-5 top-1.25 -right-1 px-0.75 rounded-r-xs">
-                        <span className="leading-0.25 text-base text-white tracking-tighter">
-                          {gateway.gateway_name.gateway_tooltip}
-                        </span>
 
-                        <div
-                          className="absolute bg-[#d15454] w-1 h-2.5 top-0 -left-1"
-                          style={{
-                            clipPath: "polygon(-1% -1%, 101% -1%, 101% 101%)",
-                          }}
-                        ></div>
+                      {gateway.gateway_name.gateway_tooltip && (
+                        <>
+                          <div
+                            className="absolute bg-[#d15454] min-h-5 top-1.25 -right-1 px-0.75 rounded-r-xs"
+                            title={gateway.gateway_name.gateway_tooltip}
+                          >
+                            <span className="text-xs text-white tracking-tighter whitespace-nowrap truncate">
+                              {gateway.gateway_name.gateway_tooltip}
+                            </span>
 
-                        <div
-                          className="absolute bg-[#d15454] w-1 h-2.5 top-2.5 -left-1"
-                          style={{
-                            clipPath: "polygon(100% 0, 0 100%, 100% 100%)",
-                          }}
-                        ></div>
-                      </div>
+                            <div
+                              className="absolute bg-[#d15454] w-1 h-2.5 top-0 -left-1"
+                              style={{
+                                clipPath:
+                                  "polygon(-1% -1%, 101% -1%, 101% 101%)",
+                              }}
+                            ></div>
+
+                            <div
+                              className="absolute bg-[#d15454] w-1 h-2.5 top-2.5 -left-1"
+                              style={{
+                                clipPath: "polygon(100% 0, 0 100%, 100% 100%)",
+                              }}
+                            ></div>
+                          </div>
+                        </>
+                      )}
                     </div>
                   ))}
                 </div>
@@ -336,8 +345,8 @@ export default function Deposit({ loaderData }: Route.ComponentProps) {
                           <BsCheck className="size-3 text-white stroke-1" />
                         </div>
                       </div>
-                      <button className="w-full z-1 h-8.75 border rounded-xs border-black bg-white flex items-center justify-center overflow-auto">
-                        <span className="text-xs">TRC20</span>
+                      <button className="w-full z-1 h-8.75 border border-[#cccccc] rounded-xs bg-white flex items-center justify-center overflow-auto">
+                        <span className="text-xs text-[#555555]">TRC20</span>
                       </button>
                     </div>
                   </div>
@@ -536,7 +545,7 @@ export default function Deposit({ loaderData }: Route.ComponentProps) {
                         </div>
 
                         {/* Text */}
-                        <span className="text-blue-1 font-medium text-xs">
+                        <span className="text-blue-1 font-medium text-xs max-w-full whitespace-nowrap truncate">
                           {gateway.gateway_name.gateway_title}
                         </span>
 
@@ -633,19 +642,21 @@ export default function Deposit({ loaderData }: Route.ComponentProps) {
                     </button>
                   </div>
 
-                  <div className="p-2.5 bg-[#EAEFF8] rounded-xs flex gap-2">
-                    <div>
-                      <IoInformationCircleSharp className="size-5 text-[#2d58bb]" />
+                  {gateways[selectedPaymentIndex].gateway_name.withdraw_des && (
+                    <div className="p-2.5 bg-[#EAEFF8] rounded-xs flex gap-2">
+                      <div>
+                        <IoInformationCircleSharp className="size-5 text-[#2d58bb]" />
+                      </div>
+                      <div
+                        className="text-[#2d58bb]"
+                        dangerouslySetInnerHTML={{
+                          __html:
+                            gateways[selectedPaymentIndex].gateway_name
+                              .withdraw_des,
+                        }}
+                      ></div>
                     </div>
-                    <div
-                      className="text-[#2d58bb]"
-                      dangerouslySetInnerHTML={{
-                        __html:
-                          gateways[selectedPaymentIndex].gateway_name
-                            .withdraw_des,
-                      }}
-                    ></div>
-                  </div>
+                  )}
                 </div>
               )}
 
