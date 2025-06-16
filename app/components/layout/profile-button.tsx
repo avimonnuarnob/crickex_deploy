@@ -71,6 +71,10 @@ export default function ProfileButton() {
       logoutUser();
     } else if (id === "Deposit") {
       navigate("/member/wallet/deposit");
+    } else if (id === "Personal Info") {
+      navigate("member/new-profile-info");
+    } else if (id === "Transaction Records") {
+      navigate("member/transaction-records");
     } else return;
   };
   return (

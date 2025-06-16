@@ -59,6 +59,12 @@ export default [
           id: "home-forgot-password",
         }
       ),
+      route("member/new-profile-info", "./routes/profile.tsx", {
+        id: "home-profile",
+      }),
+      route("member/transaction-records", "./routes/transaction-records.tsx", {
+        id: "home-transaction-records",
+      }),
     ]),
   ]),
 
