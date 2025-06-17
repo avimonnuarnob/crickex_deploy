@@ -75,6 +75,10 @@ export default function ProfileButton() {
       navigate("member/new-profile-info");
     } else if (id === "Transaction Records") {
       navigate("member/transaction-records");
+    } else if (id === "Reset Password") {
+      navigate("member/change-password");
+    } else if (id === "Inbox") {
+      navigate("member/inbox/notifications");
     } else return;
   };
   return (

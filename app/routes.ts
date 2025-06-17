@@ -65,6 +65,12 @@ export default [
       route("member/transaction-records", "./routes/transaction-records.tsx", {
         id: "home-transaction-records",
       }),
+      route("member/change-password", "./routes/change-password.tsx", {
+        id: "home-change-password",
+      }),
+      route("member/inbox/notifications", "./routes/notifications.tsx", {
+        id: "home-notifications",
+      }),
     ]),
   ]),
 
