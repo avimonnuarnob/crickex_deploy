@@ -6,78 +6,15 @@ import {
   FaPhone,
   FaChevronRight,
   FaPlus,
-  FaMailchimp,
 } from "react-icons/fa";
-import { IoMdClose } from "react-icons/io";
 import { useNavigate } from "react-router";
 import { useCurrentUser } from "@/contexts/CurrentUserContext";
 import { IoMail } from "react-icons/io5";
 import customerIcon from "@/assets/images/icon-customer.png";
-import TransactionRecordsTable from "@/components/transaction/TransactionRecordsTable";
 
-interface PersonalInfoModalProps {
-  isOpen: boolean;
-  onClose: () => void;
-  userData?: {
-    username: string;
-    level: string;
-    dateRegistered: string;
-    giftPoints: number;
-    fullName: string;
-    birthday: string;
-    phoneNumber: string;
-    isPhoneVerified: boolean;
-  };
-}
-
-const placeholderUserData = {
-  username: "Guest User",
-  level: "Basic",
-  dateRegistered: new Date().toISOString().split("T")[0],
-  giftPoints: 0,
-  fullName: "Not Available",
-  birthday: "Not Available",
-  phoneNumber: "Not Available",
-  isPhoneVerified: true,
-};
-
-const transactions = [
-  {
-    id: "1",
-    date: "2025/06/15",
-    type: "Deposit",
-    amount: 30000.0,
-    status: "Processing" as const,
-    time: "19:52:09",
-  },
-  {
-    id: "2",
-    date: "2025/06/15",
-    type: "Deposit",
-    amount: 5000.0,
-    status: "Processing" as const,
-    time: "19:49:18",
-  },
-  {
-    id: "3",
-    date: "2025/06/12",
-    type: "Deposit",
-    amount: 10000.0,
-    status: "Failed" as const,
-    time: "02:39:16",
-  },
-];
-
-const PersonalInfoModal: React.FC<PersonalInfoModalProps> = ({
-  isOpen,
-  onClose,
-  userData,
-}) => {
-  const { userInfo } = useCurrentUser();
-  const displayData = userData || placeholderUserData;
+const PersonalInfoModal: React.FC = () => {
+  const { userInfo, userWalletData } = useCurrentUser();
   const navigate = useNavigate();
-
-  console.log(userInfo);
 
   return (
     <Modal isOpen={true} onClose={() => navigate(-1)} title="Personal Info">
@@ -103,14 +40,14 @@ const PersonalInfoModal: React.FC<PersonalInfoModalProps> = ({
         <div className="pt-8.75 mx-6.5 pb-5 bg-[#6666661A]">
           {/* Username and level */}
           <div className="text-center flex justify-center items-center gap-2.5">
-            <div className="text-gray-700">{displayData.username}</div>
+            <div className="text-gray-700">{userInfo?.username}</div>
             <div className="inline-block bg-gray-400 text-white text-xs px-2 py-0.5 rounded mt-1">
-              {displayData.level}
+              {userInfo?.user_type}
             </div>
           </div>
           {/* Registration date */}
           <div className="text-center text-xs text-gray-500 mt-4.5">
-            Date Registered : {displayData.dateRegistered}
+            Date Registered : {userInfo?.date_joined.split("T")[0]}
           </div>
         </div>
 
@@ -120,7 +57,7 @@ const PersonalInfoModal: React.FC<PersonalInfoModalProps> = ({
             <div className="flex-1 flex items-center">
               <div className="text-sm text-gray-600">Gift Points</div>
               <div className="text-xl font-medium text-blue-500 flex-1 text-center">
-                {displayData.giftPoints}
+                {userWalletData?.coin_balance}
               </div>
             </div>
             <div className="flex items-center">
@@ -140,7 +77,7 @@ const PersonalInfoModal: React.FC<PersonalInfoModalProps> = ({
             <div className="flex-1">
               <div className="text-[#474747] leading-8.75">Full Name</div>
               <div className="text-[#999999] text-sm">
-                {displayData.fullName}
+                {userInfo?.first_name} {userInfo?.last_name}
               </div>
             </div>
           </div>
@@ -152,9 +89,7 @@ const PersonalInfoModal: React.FC<PersonalInfoModalProps> = ({
             </div>
             <div className="flex-1">
               <div className="text-[#474747] leading-8.75">Birthday</div>
-              <div className="text-[#999999] text-sm">
-                {displayData.birthday}
-              </div>
+              <div className="text-[#999999] text-sm">{userInfo?.dob}</div>
             </div>
           </div>
 
@@ -165,15 +100,23 @@ const PersonalInfoModal: React.FC<PersonalInfoModalProps> = ({
             </div>
             <div className="flex-1">
               <div className="flex justify-between">
-                <div className="text-[#474747] leading-8.75">Phone Number</div>
-                {displayData.isPhoneVerified && (
+                <div className="flex items-center gap-2">
+                  <div className="text-[#474747] leading-8.75">
+                    Phone Number
+                  </div>
+                  <span className="text-blue-500 text-[10px] py-0.75 px-1.5 bg-blue-100 rounded">
+                    Default
+                  </span>
+                </div>
+
+                {userInfo?.is_active && (
                   <div className="text-green-500 text-sm grid place-items-center">
                     Verified
                   </div>
                 )}
               </div>
               <div className="text-[#999999] text-sm">
-                {displayData.phoneNumber}
+                {userInfo?.support_contact}
               </div>
 
               <div className="mt-2.5 flex gap-2 items-center">
@@ -191,18 +134,32 @@ const PersonalInfoModal: React.FC<PersonalInfoModalProps> = ({
               <div className="w-8 mt-2">
                 <IoMail className="text-blue-500" />
               </div>
-              <div className="text-[#474747] leading-8.75">Email</div>
+              <div>
+                <div className="flex items-center gap-2">
+                  <div className="text-[#474747] leading-8.75">Email</div>
+                  <span className="text-blue-500 text-[10px] py-0.75 px-1.5 bg-blue-100 rounded">
+                    Default
+                  </span>
+                </div>
+                {userInfo?.email && (
+                  <div className="text-[#999999] text-sm">
+                    {userInfo?.email}
+                  </div>
+                )}
+              </div>
             </div>
 
-            <button
-              className=" rounded px-4 flex items-center justify-center text-white text-sm w-23.75 h-7.5"
-              style={{
-                background: "linear-gradient(to right,#82d856,#5ab72a 50%)",
-                boxShadow: "0 0 2px #50a325,inset 0 0 2px #ffffff80",
-              }}
-            >
-              <span>Add</span>
-            </button>
+            {!userInfo?.email && (
+              <button
+                className=" rounded px-4 flex items-center justify-center text-white text-sm w-23.75 h-7.5"
+                style={{
+                  background: "linear-gradient(to right,#82d856,#5ab72a 50%)",
+                  boxShadow: "0 0 2px #50a325,inset 0 0 2px #ffffff80",
+                }}
+              >
+                <span>Add</span>
+              </button>
+            )}
           </div>
         </div>
 
