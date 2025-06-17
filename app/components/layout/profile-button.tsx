@@ -79,6 +79,8 @@ export default function ProfileButton() {
       navigate("member/change-password");
     } else if (id === "Inbox") {
       navigate("member/inbox/notifications");
+    } else if (id === "Refer Bonus") {
+      navigate("member/common-referral/invite");
     } else return;
   };
   return (

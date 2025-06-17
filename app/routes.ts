@@ -71,6 +71,9 @@ export default [
       route("member/inbox/notifications", "./routes/notifications.tsx", {
         id: "home-notifications",
       }),
+      route("member/common-referral/invite", "./routes/referral.tsx", {
+        id: "home-referral",
+      }),
     ]),
   ]),
 

@@ -11,8 +11,8 @@ import type { Route } from "./+types/root";
 
 import loader from "./assets/loader.webm";
 
-import appStylesHref from "./app.css?url";
 import normalizeStyles from "./normalize.css?url";
+import appStylesHref from "./app.css?url";
 import type { PROVIDERS } from "./routes/index.tsx";
 import CurrentUserProvider from "./contexts/CurrentUserContext";
 import { useEffect } from "react";
