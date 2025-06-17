@@ -1,14 +1,6 @@
+import type { Transaction } from "@/routes/transaction-records";
 import React from "react";
 import { FaCalendarAlt, FaChevronRight, FaFilter } from "react-icons/fa";
-
-interface Transaction {
-  id: string;
-  date: string;
-  type: string;
-  amount: number;
-  status: "Processing" | "Completed" | "Failed";
-  time: string;
-}
 
 interface TransactionRecordsTableProps {
   transactions: Transaction[];
@@ -25,7 +17,7 @@ const TransactionRecordsTable: React.FC<TransactionRecordsTableProps> = ({
 }) => {
   // Group transactions by date
   const groupedTransactions = transactions.reduce((groups, transaction) => {
-    const date = transaction.date;
+    const date = transaction.created_at.split("T")[0];
     if (!groups[date]) {
       groups[date] = [];
     }
@@ -82,7 +74,7 @@ const TransactionRecordsTable: React.FC<TransactionRecordsTableProps> = ({
               </div>
               <div className="col-span-2 flex justify-end items-center">
                 <span className="border text-gray-700 px-0.75 mx-1.75 rounded text-[10px]">
-                  GMT+6
+                  {/* {transaction.created_at.split("T")[1].split("+")[0]} */}
                 </span>
               </div>
             </div>
@@ -98,15 +90,14 @@ const TransactionRecordsTable: React.FC<TransactionRecordsTableProps> = ({
                 }`}
                 onClick={() => onRowClick(transaction)}
               >
-                <div className="p-3 text-center">{transaction.type}</div>
+                <div className="p-3 text-center">
+                  {transaction.transaction_purpose}
+                </div>
                 <div className="p-3 text-center font-medium">
-                  {transaction.amount.toLocaleString("en-US", {
-                    minimumFractionDigits: 2,
-                    maximumFractionDigits: 2,
-                  })}
+                  {transaction.amount.toLocaleString()}
                 </div>
                 <div className="p-3 flex justify-center">
-                  <span
+                  {/* <span
                     className={`px-1.25 py-0.75 rounded text-xs w-full text-center ${
                       transaction.status === "Processing"
                         ? "bg-yellow-400 text-yellow-800"
@@ -118,10 +109,10 @@ const TransactionRecordsTable: React.FC<TransactionRecordsTableProps> = ({
                     {transaction.status === "Failed"
                       ? "Fail"
                       : transaction.status}
-                  </span>
+                  </span> */}
                 </div>
                 <div className="p-3 flex items-center justify-between">
-                  <span>{transaction.time}</span>
+                  <span>{transaction.created_at.split("T")[1]}</span>
                   <FaChevronRight className="text-gray-400" />
                 </div>
               </div>

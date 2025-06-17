@@ -18,6 +18,8 @@ import { Dialog, DialogBackdrop } from "@headlessui/react";
 import { FaAngleLeft } from "react-icons/fa6";
 import Button from "@/components/ui/button/Button";
 import classNames from "classnames";
+import Cookies from "js-cookie";
+import type { Route } from "./+types/transaction-records";
 
 interface PersonalInfoModalProps {
   isOpen: boolean;
@@ -72,13 +74,61 @@ const transactions = [
   },
 ];
 
-const TransactionRecords: React.FC<PersonalInfoModalProps> = ({
-  isOpen,
-  onClose,
-  userData,
-}) => {
-  const { userInfo } = useCurrentUser();
-  const displayData = userData || placeholderUserData;
+export interface Response {
+  status: string;
+  data: Transaction[];
+}
+
+export interface Transaction {
+  id: number;
+  from_user: FromUser;
+  to_user: ToUser;
+  transaction_id: string;
+  reference_id: any;
+  transaction_purpose: string;
+  amount: string;
+  transaction_charge_percentage: string;
+  transaction_charge: string;
+  total_amount: string;
+  from_wallet: string;
+  to_wallet: string;
+  exchange_amount: string;
+  sender_current_balance: string;
+  sender_previous_balance: string;
+  receiver_current_balance: string;
+  receiver_previous_balance: string;
+  created_at: string;
+  updated_at: string;
+  request_origin: number;
+}
+
+export interface FromUser {
+  id: number;
+  username: string;
+  currency: string;
+}
+
+export interface ToUser {
+  id: number;
+  username: string;
+  currency: string;
+}
+
+export async function clientLoader() {
+  const response = await fetch(
+    "https://ai.cloud7hub.uk/wallet/transaction-history/",
+    {
+      headers: {
+        Authorization: `Token ${Cookies.get("userToken")}`,
+      },
+    }
+  );
+  const data = await response.json();
+  return { transactions: data.data as Transaction[] };
+}
+
+const TransactionRecords = ({ loaderData }: Route.ComponentProps) => {
+  const { transactions } = loaderData;
   const navigate = useNavigate();
 
   const [open, setOpen] = useState(false);
@@ -90,7 +140,7 @@ const TransactionRecords: React.FC<PersonalInfoModalProps> = ({
   >([]);
   const [dateFilter, setDateFilter] = useState<
     "Today" | "Yesterday" | "Last 7 days"
-  >();
+  >("Today");
 
   const onStatusFilterUpdate = (
     status: "Processing" | "Completed" | "Failed"
