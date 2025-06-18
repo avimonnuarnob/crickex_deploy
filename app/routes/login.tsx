@@ -52,8 +52,9 @@ export default function LoginModal() {
       setError(responseData.errors);
     }
     if (responseData.status === "ok" && responseData.data) {
+      const a = location.pathname.replace("/account-login-quick", "");
+      navigate(a ? a + location.hash : "/" + location.hash);
       loginUser(responseData.data.token);
-      navigate(-1);
     }
   };
   return (

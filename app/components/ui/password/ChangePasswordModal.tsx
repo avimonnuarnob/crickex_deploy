@@ -6,6 +6,7 @@ import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { IoInformationCircle } from "react-icons/io5";
 import Modal from "@/components/ui/modal/Modal";
 import Button from "@/components/ui/button/Button";
+import { MdError } from "react-icons/md";
 
 const passwordSchema = z
   .object({
@@ -14,8 +15,10 @@ const passwordSchema = z
       .string()
       .min(6, "Password must be at least 6 characters")
       .max(20, "Password must be at most 20 characters")
-      .regex(/[A-Za-z]/, "Password must contain at least one letter")
-      .regex(/[0-9]/, "Password must contain at least one number"),
+      .regex(
+        /^[a-zA-Z0-9]+$/,
+        "Password can only contain letters and numbers, no spaces"
+      ),
     confirmPassword: z.string().min(1, "Please confirm your password"),
   })
   .refine((data) => data.newPassword === data.confirmPassword, {
@@ -141,6 +144,20 @@ const ChangePasswordModal = ({
               </div>
             </div>
 
+            {/* Error Messages */}
+            {(errors.currentPassword ||
+              errors.newPassword ||
+              errors.confirmPassword) && (
+              <div className="text-red-500 text-sm flex items-center gap-2">
+                <MdError className="size-5" />
+                <span>
+                  {errors.currentPassword?.message ||
+                    errors.newPassword?.message ||
+                    errors.confirmPassword?.message}
+                </span>
+              </div>
+            )}
+
             {/* Password Requirements */}
             <div className="bg-blue-50 p-2.5 rounded-md border border-blue-500">
               <div className="flex items-start gap-2">
@@ -161,17 +178,6 @@ const ChangePasswordModal = ({
                 </div>
               </div>
             </div>
-
-            {/* Error Messages */}
-            {(errors.currentPassword ||
-              errors.newPassword ||
-              errors.confirmPassword) && (
-              <div className="text-red-500 text-sm">
-                {errors.currentPassword?.message ||
-                  errors.newPassword?.message ||
-                  errors.confirmPassword?.message}
-              </div>
-            )}
 
             {/* Submit Button */}
             <Button

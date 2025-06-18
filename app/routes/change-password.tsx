@@ -1,27 +1,86 @@
 import { useNavigate } from "react-router";
 import ChangePasswordModal from "@/components/ui/password/ChangePasswordModal";
+import { AnimatePresence, motion } from "motion/react";
+import { RxCross2 } from "react-icons/rx";
+import { useCurrentUser } from "@/contexts/CurrentUserContext";
+import { useState } from "react";
+import Cookies from "js-cookie";
 
 export default function ChangePasswordPage() {
   const navigate = useNavigate();
-  
+  const { logoutUser } = useCurrentUser();
+
+  const [notification, setNotification] = useState<string | null>(null);
+
   const handleSubmit = async (data: any) => {
     try {
       // Implement your password change logic here
-      console.log("Password change data:", data);
-      
-      // Show success message or redirect
-      alert("Password changed successfully");
-      navigate(-1);
+      const response = await fetch(
+        "https://ai.cloud7hub.uk/auth/change-password/",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Token ${Cookies.get("userToken")}`,
+          },
+          body: JSON.stringify({
+            password: data.currentPassword,
+            new_password: data.newPassword,
+          }),
+        }
+      );
+
+      const r = await response.json();
+      if (r.status === "ok") {
+        setNotification(r.message);
+      } else {
+        setNotification(r.errors);
+      }
     } catch (error) {
       console.error("Failed to change password:", error);
     }
   };
 
   return (
-    <ChangePasswordModal
-      isOpen={true}
-      onClose={() => navigate(-1)}
-      onSubmit={handleSubmit}
-    />
+    <>
+      <AnimatePresence>
+        {notification && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 20 }}
+            className="fixed inset-0 z-100 flex items-center justify-center"
+          >
+            <div className="absolute inset-0 bg-black/70" />
+            <div className="relative w-full max-w-md mx-auto bg-white rounded-lg overflow-hidden">
+              <div className="flex justify-between items-center p-4 bg-blue-1 text-white">
+                <span className="text-base font-medium">Notification</span>
+                <button
+                  className="text-white cursor-pointer"
+                  onClick={() => {
+                    logoutUser();
+                    navigate("/account-login-quick");
+                  }}
+                >
+                  <RxCross2 className="size-5" />
+                </button>
+              </div>
+              <div className="p-4 bg-white">
+                <span className="text-xs">
+                  Password reset successFully. Please Login with new password.
+                </span>
+              </div>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+      <ChangePasswordModal
+        isOpen={true}
+        onClose={() => {
+          !notification && navigate(-1);
+        }}
+        onSubmit={handleSubmit}
+      />
+    </>
   );
 }
