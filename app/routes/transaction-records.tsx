@@ -9,7 +9,7 @@ import {
   FaMailchimp,
 } from "react-icons/fa";
 import { IoMdClose } from "react-icons/io";
-import { useNavigate } from "react-router";
+import { Await, useNavigate } from "react-router";
 import { useCurrentUser } from "@/contexts/CurrentUserContext";
 import { IoMail } from "react-icons/io5";
 import customerIcon from "@/assets/images/icon-customer.png";
@@ -20,115 +20,80 @@ import Button from "@/components/ui/button/Button";
 import classNames from "classnames";
 import Cookies from "js-cookie";
 import type { Route } from "./+types/transaction-records";
+import Deposit from "./deposit";
 
-interface PersonalInfoModalProps {
-  isOpen: boolean;
-  onClose: () => void;
-  userData?: {
-    username: string;
-    level: string;
-    dateRegistered: string;
-    giftPoints: number;
-    fullName: string;
-    birthday: string;
-    phoneNumber: string;
-    isPhoneVerified: boolean;
-  };
-}
-
-const placeholderUserData = {
-  username: "Guest User",
-  level: "Basic",
-  dateRegistered: new Date().toISOString().split("T")[0],
-  giftPoints: 0,
-  fullName: "Not Available",
-  birthday: "Not Available",
-  phoneNumber: "Not Available",
-  isPhoneVerified: true,
-};
-
-const transactions = [
-  {
-    id: "1",
-    date: "2025/06/15",
-    type: "Deposit",
-    amount: 30000.0,
-    status: "Processing" as const,
-    time: "19:52:09",
-  },
-  {
-    id: "2",
-    date: "2025/06/15",
-    type: "Deposit",
-    amount: 5000.0,
-    status: "Processing" as const,
-    time: "19:49:18",
-  },
-  {
-    id: "3",
-    date: "2025/06/12",
-    type: "Deposit",
-    amount: 10000.0,
-    status: "Failed" as const,
-    time: "02:39:16",
-  },
-];
-
-export interface Response {
-  status: string;
-  data: Transaction[];
-}
-
-export interface Transaction {
+export interface Deposit {
   id: number;
-  from_user: FromUser;
-  to_user: ToUser;
-  transaction_id: string;
-  reference_id: any;
-  transaction_purpose: string;
+  receiver_id: ReceiverId;
+  agent_id: any;
+  url_id: UrlId;
+  payment_gateway: string;
+  gateway_title: string;
+  payment_unit: string;
   amount: string;
-  transaction_charge_percentage: string;
-  transaction_charge: string;
-  total_amount: string;
-  from_wallet: string;
-  to_wallet: string;
+  payment_batch: any;
+  transaction_id: string;
+  referral: any;
+  given_hash: any;
+  payee_account: string;
+  payer_account: any;
+  deposit_status: string;
+  deposit_type: string;
+  screenshot: any;
+  message: string;
+  gateway_to_agent_currency_rate: string;
+  gateway_to_reciver_currency_rate: string;
   exchange_amount: string;
-  sender_current_balance: string;
-  sender_previous_balance: string;
-  receiver_current_balance: string;
-  receiver_previous_balance: string;
+  agent_exchange_amount: string;
   created_at: string;
   updated_at: string;
-  request_origin: number;
+  type: "Deposit";
 }
-
-export interface FromUser {
+export interface ReceiverId {
   id: number;
   username: string;
   currency: string;
 }
 
-export interface ToUser {
+export interface UrlId {
   id: number;
-  username: string;
-  currency: string;
+  name: string;
+  url: string;
 }
+
+export type Transaction = Deposit;
 
 export async function clientLoader() {
-  const response = await fetch(
-    "https://ai.cloud7hub.uk/wallet/transaction-history/",
-    {
-      headers: {
-        Authorization: `Token ${Cookies.get("userToken")}`,
-      },
-    }
-  );
-  const data = await response.json();
-  return { transactions: data.data as Transaction[] };
+  const deposits = fetch("https://ai.cloud7hub.uk/wallet/deposit/", {
+    headers: {
+      Authorization: `Token ${Cookies.get("userToken")}`,
+    },
+  });
+
+  // const withdrawals = fetch("https://ai.cloud7hub.uk/wallet/withdrawal/", {
+  //   headers: {
+  //     Authorization: `Token ${Cookies.get("userToken")}`,
+  //   },
+  // });
+
+  const data = Promise.all([
+    deposits
+      .then((response) => response.json())
+      .then((data) => data.data)
+      .then(
+        (data) =>
+          data.map((d: Deposit) => ({
+            ...d,
+            type: "Deposit",
+          })) as Promise<Deposit[]>
+      ),
+  ]);
+
+  return { transactionsPromise: data };
 }
 
 const TransactionRecords = ({ loaderData }: Route.ComponentProps) => {
-  const { transactions } = loaderData;
+  const { transactionsPromise } = loaderData;
   const navigate = useNavigate();
 
   const [open, setOpen] = useState(false);
@@ -179,7 +144,7 @@ const TransactionRecords = ({ loaderData }: Route.ComponentProps) => {
         title="Transaction Records"
       >
         <div className="">
-          <TransactionRecordsTable
+          {/* <TransactionRecordsTable
             transactions={transactions}
             onFilterClick={() => {
               console.log(open);
@@ -189,7 +154,39 @@ const TransactionRecords = ({ loaderData }: Route.ComponentProps) => {
               console.log("row clicked");
             }}
             filterPeriod={[...statusFilter, ...paymentTypeFilter, dateFilter]}
-          />
+          /> */}
+
+          <React.Suspense
+            fallback={
+              <div className="flex justify-center items-center flex-col h-full">
+                <div className="list-loading w-10 h-10">
+                  <span className="sr-only">Loading...</span>
+                </div>
+              </div>
+            }
+          >
+            <Await resolve={transactionsPromise}>
+              {([deposits]) => {
+                return (
+                  <TransactionRecordsTable
+                    transactions={[...deposits]}
+                    onFilterClick={() => {
+                      console.log(open);
+                      setOpen(!open);
+                    }}
+                    onRowClick={() => {
+                      console.log("row clicked");
+                    }}
+                    filterPeriod={[
+                      ...statusFilter,
+                      ...paymentTypeFilter,
+                      dateFilter,
+                    ]}
+                  />
+                );
+              }}
+            </Await>
+          </React.Suspense>
 
           <div
             className={classNames(

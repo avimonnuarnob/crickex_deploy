@@ -74,6 +74,9 @@ export default [
       route("member/common-referral/invite", "./routes/referral.tsx", {
         id: "home-referral",
       }),
+      route("member/vip-points-exchange", "./routes/point-exchange.tsx", {
+        id: "home-point-exchange",
+      }),
     ]),
   ]),
 

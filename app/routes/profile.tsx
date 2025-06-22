@@ -7,7 +7,7 @@ import {
   FaChevronRight,
   FaPlus,
 } from "react-icons/fa";
-import { useNavigate } from "react-router";
+import { Link, useNavigate } from "react-router";
 import { useCurrentUser } from "@/contexts/CurrentUserContext";
 import { IoMail } from "react-icons/io5";
 import customerIcon from "@/assets/images/icon-customer.png";
@@ -60,10 +60,14 @@ const PersonalInfoModal: React.FC = () => {
                 {userWalletData?.coin_balance}
               </div>
             </div>
-            <div className="flex items-center">
-              <span className="text-sm text-gray-600 mr-2">My Gift Points</span>
-              <FaChevronRight className="text-gray-400" />
-            </div>
+            <Link to={"/member/vip-points-exchange"}>
+              <div className="flex items-center">
+                <span className="text-sm text-gray-600 mr-2">
+                  My Gift Points
+                </span>
+                <FaChevronRight className="text-gray-400" />
+              </div>
+            </Link>
           </div>
         </div>
 

@@ -27,7 +27,7 @@ export function clientLoader() {
   return referrals as Promise<ReferralData>;
 }
 
-export default function ReferralPage({ loaderData }: Route.ComponentProps) {
+export default function BettingRecords({ loaderData }: Route.ComponentProps) {
   // In a real app, you would fetch this data from your API
   const referralData = {
     invitationCode: "8v2YUL",
@@ -50,14 +50,7 @@ export default function ReferralPage({ loaderData }: Route.ComponentProps) {
       >
         <Await resolve={loaderData}>
           {(value) => {
-            return (
-              <ReferralSection
-                referralData={value}
-                invitationCode={referralData.invitationCode}
-                invitationUrl={referralData.invitationUrl}
-                qrCodeUrl={referralData.qrCodeUrl}
-              />
-            );
+            return <p>Hello</p>;
           }}
         </Await>
       </React.Suspense>
