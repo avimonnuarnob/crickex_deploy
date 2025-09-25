@@ -212,7 +212,7 @@ export default function Deposit({ loaderData }: Route.ComponentProps) {
                       "repeat(auto-fill,calc((100% - 20px) / 3))",
                   }}
                 >
-                  {gateways.map((gateway, i) => (
+                  {gateways?.map((gateway, i) => (
                     <div
                       key={gateway.id}
                       className={`flex items-center relative ${

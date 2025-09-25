@@ -64,7 +64,7 @@ export default function Home() {
 
   return (
     <>
-      <div className="mt-18 py-1 page-body">
+      <div className="py-4 page-body w-full">
         <HomeSlider />
         <HomeMarquee />
         {isLoggedIn && <UserDashboard />}

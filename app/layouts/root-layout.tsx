@@ -29,7 +29,13 @@ import ambassador2 from "@/assets/images/ambassador/ambassadors2.png";
 import ambassador3 from "@/assets/images/ambassador/ambassadors3.png";
 import ambassador4 from "@/assets/images/ambassador/ambassadors4.png";
 
+import homeIcon from "@/assets/images/icon-home.png";
+import promotionIcon from "@/assets/images/icon-promotion.png";
+import depositIcon from "@/assets/images/icon-deposit-2.png";
+import profileIcon from "@/assets/images/icon-profile.png";
+
 import siteLogo from "@/assets/images/logo-blue.png";
+import { useCurrentUser } from "@/contexts/CurrentUserContext";
 
 const PAYMENT_METHODS = [
   method1,
@@ -116,6 +122,7 @@ const AMBASSADORS = [
 ];
 export default function RootLayout() {
   const [isFull, setIsFull] = useState(false);
+  const { isLoggedIn } = useCurrentUser();
 
   const ref = useRef<HTMLElement>(null);
 
@@ -140,27 +147,86 @@ export default function RootLayout() {
   }, []);
 
   return (
-    <div className="flex h-screen overscroll-y-contain">
+    <div className="grid grid-cols-1 sm:grid-cols-[auto_1fr] w-full max-w-full min-h-screen">
       <Sidebar isFull={isFull} setIsFull={setIsFull} />
       <main
-        className="flex h-full flex-1 flex-col items-center overflow-auto"
+        className="relative w-full h-full max-h-full min-h-screen flex flex-col overflow-visible sm:overflow-auto"
         ref={ref}
       >
         <Topbar isFull={isFull} />
-        <div className="w-full flex-1 relative">
-          <div
-            className={classNames("mx-auto max-w-[1200px]", {
-              "w-[calc(100%-(16px*2))]": !isFull,
-              "w-[calc(100%-(16px*4))]": isFull,
-            })}
-          >
+
+        <div className="w-full flex-1 relative overflow-auto">
+          <div className="px-4">
             <Outlet />
           </div>
-
-          <div className="mx-auto max-w-[1200px] px-2.5">
+          <div className="px-2.5">
             <Footer />
           </div>
         </div>
+
+        <>
+          {isLoggedIn ? (
+            <div
+              className="sticky bottom-0 left-0 right-0 w-full bg-black flex sm:hidden items-center [&>*]:flex-1"
+              style={{ boxShadow: "0 0 1.3333333333vw #00000080" }}
+            >
+              <Link to="/" className="w-full h-full">
+                <div className="flex flex-col items-center py-2 gap-1">
+                  <img src={homeIcon} alt="home_logo" className="w-5 h-5" />
+                  <p className="text-white text-sm">Home</p>
+                </div>
+              </Link>
+
+              <div className="flex flex-col items-center py-2 gap-1">
+                <img
+                  src={promotionIcon}
+                  alt="promotion_logo"
+                  className="w-5 h-5"
+                />
+                <p className="text-white text-sm">Promotions</p>
+              </div>
+              <Link to="/member/wallet/deposit" className="w-full h-full">
+                <div className="flex flex-col items-center py-2 gap-1">
+                  <img
+                    src={depositIcon}
+                    alt="deposit_logo"
+                    className="w-5 h-5"
+                  />
+                  <p className="text-white text-sm">Deposit</p>
+                </div>
+              </Link>
+              <Link to="/member/new-profile-info" className="w-full h-full">
+                <div className="flex flex-col items-center justify-center py-2 gap-1">
+                  <img
+                    src={profileIcon}
+                    alt="profile_logo"
+                    className="w-5 h-5"
+                  />
+                  <p className="text-white text-sm">My Account</p>
+                </div>
+              </Link>
+            </div>
+          ) : (
+            <div
+              className="sticky bottom-0 left-0 right-0 w-full bg-background flex sm:hidden items-center [&>*]:flex-1"
+              style={{ boxShadow: "0 0 1.3333333333vw #00000080" }}
+            >
+              <button className="flex flex-col items-center py-3.75 gap-1">
+                <Link
+                  to={"/new-register-entry/account"}
+                  className="w-full h-full"
+                >
+                  <p className="text-foreground font-bold text-sm">Sign Up</p>
+                </Link>
+              </button>
+              <button className="flex flex-col items-center py-3.75 gap-1 bg-blue-1">
+                <Link to={"/account-login-quick"} className="w-full h-full">
+                  <p className="text-white font-bold text-sm">Login</p>
+                </Link>
+              </button>
+            </div>
+          )}
+        </>
       </main>
     </div>
   );
@@ -170,7 +236,7 @@ const Footer = () => {
   const data = useRouteLoaderData<RootLoaderData>("root");
 
   return (
-    <footer className="text-[#555555]">
+    <footer className="text-[#555555] overflow-hidden">
       <div className="footer-top" style={{ padding: "15px 0 10px" }}>
         <div className="mb-5.25">
           <h4 className="text-[13px] mb-3.5 font-bold">Payment Methods</h4>

@@ -44,7 +44,9 @@ const Sidebar = ({ isFull, setIsFull }: SidebarProps) => {
   }
   return (
     <div
-      className={classNames("relative flex-none bg-blue-1 flex flex-col z-20")}
+      className={classNames(
+        "relative flex-none bg-blue-1 hidden sm:flex flex-col z-20"
+      )}
       style={{
         viewTransitionName: "sidebar",
       }}

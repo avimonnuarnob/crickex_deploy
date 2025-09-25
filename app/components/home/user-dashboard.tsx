@@ -14,7 +14,7 @@ export default function UserDashboard() {
   const [isLoading, setIsLoading] = useState(false);
 
   return (
-    <div className="px-3.75 pt-2.5 pb-2.75 bg-blue-2 flex gap-3.5 items-center rounded">
+    <div className="px-3.75 pt-2.5 pb-2.75 bg-blue-2 flex gap-3.5 items-center rounded overflow-auto [&::-webkit-scrollbar]:h-1.5 [&::-webkit-scrollbar-track]:bg-black [&::-webkit-scrollbar-thumb]:bg-white">
       <div className="flex-1 self-start">
         <div className="w-50 text-white">
           <span className="text-[13px] block mt-1 mb-2">

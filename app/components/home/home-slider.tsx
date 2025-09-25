@@ -27,7 +27,7 @@ export default function HomeSlider() {
 
   return (
     <section>
-      <div className="embla relative items-center ">
+      <div className="embla relative items-center">
         <PrevButton
           className="absolute top-1/2 w-4 h-4 text-[#8d8d8d] z-1 -translate-y-1/2 cursor-pointer left-0 xl:-left-7.5"
           onClick={onPrevButtonClick}
