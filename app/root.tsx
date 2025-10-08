@@ -16,6 +16,44 @@ import appStylesHref from "./app.css?url";
 import type { PROVIDERS } from "./routes/index.tsx";
 import CurrentUserProvider from "./contexts/CurrentUserContext";
 import { useEffect } from "react";
+import Toast from "./components/ui/toast/Toast";
+
+export type PROMOTIONLIST = PROMOTION[];
+
+export interface PROMOTION {
+  id: number;
+  currency_title: any[];
+  title: string;
+  sub_title: string;
+  description: string;
+  banner_image?: string;
+  alt_text: string;
+  video_url: any;
+  forward_url?: string;
+  started_at: string;
+  end_at: string;
+  is_active: boolean;
+  slider_show: boolean;
+  promotion_page: boolean;
+  affiliate_page: boolean;
+  deposit_option: boolean;
+  contact_option: boolean;
+  apply_option: boolean;
+  signup: boolean;
+  login: boolean;
+  blog: boolean;
+  landing_page: boolean;
+  welcome_page: boolean;
+  event: boolean;
+  apply_url: any;
+  gift_amount: string;
+  gift_amount_type: string;
+  turnover: string;
+  created_at: string;
+  updated_at: string;
+  url_id?: number;
+  selected_currency: any[];
+}
 
 export async function clientLoader() {
   const countryListPromise = fetch("https://ai.cloud7hub.uk/country/list")
@@ -37,15 +75,27 @@ export async function clientLoader() {
   )
     .then((value) => value.json())
     .then((data) => data.data);
+  const promotionListPromise = fetch(
+    import.meta.env.VITE_API_URL + "/statics/banner-promition/"
+  )
+    .then((value) => value.json())
+    .then((data) => data.data as PROMOTIONLIST);
 
-  const [countryList, mirrorLinks, defaultReferral, gameProviders, socialList] =
-    await Promise.all([
-      countryListPromise,
-      mirrorLinksPromise,
-      defaultReferralPromise,
-      gameProvidersPromise,
-      socialListPromise,
-    ]);
+  const [
+    countryList,
+    mirrorLinks,
+    defaultReferral,
+    gameProviders,
+    socialList,
+    promotionList,
+  ] = await Promise.all([
+    countryListPromise,
+    mirrorLinksPromise,
+    defaultReferralPromise,
+    gameProvidersPromise,
+    socialListPromise,
+    promotionListPromise,
+  ]);
 
   return {
     countryList,
@@ -54,6 +104,7 @@ export async function clientLoader() {
     defaultReferral,
     gameProviders,
     socialList,
+    promotionList,
   } as {
     countryList: {
       id: number;
@@ -123,6 +174,7 @@ export async function clientLoader() {
       resource: string;
       status: boolean;
     }[];
+    promotionList: PROMOTIONLIST;
   };
 }
 
@@ -147,6 +199,7 @@ export default function App() {
         type="image/png"
         href={"https://ai.cloud7hub.uk" + data?.mirrorLinks.favicon}
       />
+      <Toast />
       <Outlet />
     </CurrentUserProvider>
   );

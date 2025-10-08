@@ -28,29 +28,25 @@ const Modal = ({
     <AnimatePresence>
       {isOpen && (
         <Dialog open={isOpen} onClose={onClose} className="relative z-50">
-          <DialogBackdrop className="fixed inset-0 backdrop-blur-xs" />
+          <DialogBackdrop className="fixed inset-0 sm:backdrop-blur-xs" />
 
-          <div className="fixed inset-0 flex w-screen items-center justify-center p-4">
+          <div className="fixed inset-0 flex w-screen justify-center">
             <motion.div
               initial={{ opacity: 0, y: 100 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: 100 }}
               transition={{ duration: 0.2, ease: "easeInOut" }}
-              className="w-[375px] relative"
-              style={{
-                height: "calc(100dvh - 60px)",
-                maxHeight: "700px",
-              }}
+              className="w-full h-[calc(100dvh-60px)] sm:max-w-[375px] sm:h-[calc(100dvh-60px)]! sm:max-h-[700px] relative"
             >
               <DialogPanel
                 className={classNames(
-                  "space-y-4 rounded-[10px] absolute w-full h-full overflow-hidden flex flex-col shadow",
+                  "space-y-4 rounded-none sm:rounded-[10px] absolute w-full h-full overflow-hidden flex flex-col shadow",
                   {
                     "bg-white": isFullScreen,
                   }
                 )}
               >
-                <div className="bg-blue-1 relative mb-0 rounded-t-[10px] p-2.75">
+                <div className="bg-blue-1 relative mb-0 sm:rounded-t-[10px] p-2.75">
                   <CloseButton className="absolute top-1/2 right-2 mb-0 -translate-y-1/2 cursor-pointer">
                     <IoCloseSharp className="text-xl text-white" />
                   </CloseButton>

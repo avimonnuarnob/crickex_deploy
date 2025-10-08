@@ -52,7 +52,7 @@ export default function CategoryTab({ providers }: { providers: PROVIDERS }) {
           {filteredProviders.map((gameType, idx) => (
             <TabPanel
               static={true}
-              className="flex-1 min-w-full"
+              className="flex-1 min-w-full max-h-max"
               key={gameType.id}
             >
               <AnimatePresence>

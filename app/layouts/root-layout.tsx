@@ -150,12 +150,12 @@ export default function RootLayout() {
     <div className="grid grid-cols-1 sm:grid-cols-[auto_1fr] w-full max-w-full min-h-screen">
       <Sidebar isFull={isFull} setIsFull={setIsFull} />
       <main
-        className="relative w-full h-full max-h-full min-h-screen flex flex-col overflow-visible sm:overflow-auto"
+        className="relative flex! flex-col overflow-visible sm:overflow-auto"
         ref={ref}
       >
         <Topbar isFull={isFull} />
 
-        <div className="w-full flex-1 relative overflow-auto">
+        <div className="w-full flex-1 relative overflow-auto h-full">
           <div className="px-4">
             <Outlet />
           </div>

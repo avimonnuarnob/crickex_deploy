@@ -1,18 +1,16 @@
 import Modal from "@/components/ui/modal/Modal";
 import { useNavigate } from "react-router";
-import { Fragment, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 import Button from "@/components/ui/button/Button";
-import { FormTextField } from "@/components/ui/form-inputs";
+import { LuThumbsUp } from "react-icons/lu";
 import {
-  Disclosure,
-  DisclosureButton,
-  DisclosurePanel,
   Select,
   Tab,
   TabGroup,
   TabList,
   TabPanel,
   TabPanels,
+  Transition,
 } from "@headlessui/react";
 import classNames from "classnames";
 import Cookies from "js-cookie";
@@ -20,30 +18,38 @@ import type { Route } from "./+types/deposit";
 import { BsCaretDown, BsCheck } from "react-icons/bs";
 import { TfiReload } from "react-icons/tfi";
 import { useCurrentUser } from "@/contexts/CurrentUserContext";
-import { LuThumbsUp } from "react-icons/lu";
 import { IoCloseCircleSharp, IoInformationCircleSharp } from "react-icons/io5";
 import { FaCheckCircle } from "react-icons/fa";
+import { toast } from "react-toastify";
+import DepositForm from "@/components/banking/deposit-form";
+import WithdrawalForm from "@/components/banking/withdrawal-form";
+import { useSearchParams } from "react-router";
 
 export type Gateways = Gateway[];
-
 export interface Gateway {
   id: number;
   agent: Agent;
   gateway_name: GatewayName;
   transaction_id: any;
   gateway_account: string;
-  gateway_old_account: string;
+  gateway_old_account: any;
   gateway_username: any;
   pm_gateway_url: any;
   gateway_url: any;
   gateway_image: any;
   agent_status: string;
   enable: boolean;
+  gateway_purpose: string;
+  min_w_limit: string;
+  max_w_limit: string;
+  min_d_limit: string;
+  max_d_limit: string;
   use_in_affiliate: boolean;
   use_in_user: boolean;
   use_in_agent: boolean;
   updated_at: string;
-  url_id: number;
+  url_id: any;
+  note: string | null;
 }
 
 export interface Agent {
@@ -51,20 +57,34 @@ export interface Agent {
   id: number;
 }
 
+export interface Category {
+  id: number;
+  name: string;
+}
+
+export interface SupportedMethod {
+  id: number;
+  category: Category;
+  name: string;
+  note: string;
+  logo: string;
+}
+
 export interface GatewayName {
   id: number;
   currency: Currency;
   min_withdrawal_limit: number;
   max_withdrawal_limit: number;
+  supported_method: SupportedMethod[];
   gateway_title: string;
   gateway_name: string;
-  gateway_logo: string;
+  gateway_logo: any;
   gateway_status: boolean;
   gateway_type: string;
   purpose: string;
   withdrawal_type: string;
   deposit_type: string;
-  gateway_tooltip: string;
+  gateway_tooltip?: string;
   min_deposit_limit: string;
   max_deposit_limit: string;
   agent_min_deposit_limit: string;
@@ -74,7 +94,7 @@ export interface GatewayName {
   deposit_des: string;
   withdraw_des: string;
   updated_at: string;
-  url_id: number;
+  url_id: any;
 }
 
 export interface Currency {
@@ -85,6 +105,92 @@ export interface Currency {
   user_currency: boolean;
   created_at: string;
   updated_at: string;
+}
+
+interface User {
+  id: number;
+  username: string;
+  currency: string;
+}
+
+interface UrlId {
+  id: number;
+  name: string;
+  url: string;
+}
+
+export interface UserDeposit {
+  id: number;
+  receiver_id: User;
+  agent_id: any;
+  url_id: UrlId;
+  payment_gateway: string;
+  gateway_title: string;
+  payment_unit: string;
+  amount: string;
+  payment_batch: any;
+  transaction_id: string;
+  referral: any;
+  given_hash: any;
+  payee_account: string;
+  payer_account: any;
+  deposit_status: string;
+  deposit_type: string;
+  screenshot: any;
+  message: string;
+  gateway_to_agent_currency_rate: string;
+  gateway_to_reciver_currency_rate: string;
+  exchange_amount: string;
+  agent_exchange_amount: string;
+  created_at: string;
+  updated_at: string;
+}
+export interface UserWithdrawal {
+  id: number;
+  user_id: User;
+  agent_id: any;
+  url_id: UrlId;
+  payment_gateway: string;
+  gateway_title: string;
+  payment_unit: string;
+  amount: string;
+  transaction_id: string;
+  to_account: string;
+  withdrawal_fee_percentage: string;
+  fee_amount: string;
+  withdrawal_amount: string;
+  withdrawal_type: string;
+  wallet: string;
+  bank_acc_name: any;
+  bank_name: any;
+  bank_branch: any;
+  bank_code: any;
+  account_email: any;
+  bank_country: any;
+  bank_swift_code: any;
+  bank_iban: any;
+  status: string;
+  busy_screenshot: any;
+  busy_reason: any;
+  user_previous_balance: string;
+  user_current_balance: string;
+  user_to_gateway_currency_rate: string;
+  user_to_agent_currency_rate: string;
+  exchange_amount: string;
+  agent_exchange_amount: string;
+  created_at: string;
+  updated_at: string;
+}
+
+export type BankBook = BankEntry[];
+
+export interface BankEntry {
+  id: number;
+  bank_name: string;
+  is_verified: boolean;
+  account_name: string;
+  account_number: string;
+  user: number;
 }
 
 export const clientLoader = async () => {
@@ -102,26 +208,54 @@ export const clientLoader = async () => {
 
 export default function Deposit({ loaderData }: Route.ComponentProps) {
   const { gateways } = loaderData;
-  const { userWalletData, setUserWalletData } = useCurrentUser();
   const navigate = useNavigate();
-  const [amount, setAmount] = useState("");
-  const [selectedPaymentIndex, setSelectedPaymentIndex] = useState<
-    number | null
-  >(0);
-  const [isLoading, setIsLoading] = useState(false);
-  const [isFocused, setIsFocused] = useState(false);
+
+  let [searchParams, setSearchParams] = useSearchParams();
+  const promotion = searchParams.get("promotion");
+
+  const [isModalOpen, setIsModalOpen] = useState(true);
+  const [selectedIndex, setSelectedIndex] = useState(0);
+
+  const depositGateways = gateways.filter(
+    (gateway) =>
+      gateway.use_in_user &&
+      (gateway.gateway_purpose === "deposit" ||
+        gateway.gateway_purpose === "both")
+  );
+  const withdrawalGateways = gateways.filter(
+    (gateway) =>
+      gateway.use_in_user &&
+      (gateway.gateway_purpose === "withdrawal" ||
+        gateway.gateway_purpose === "both")
+  );
+
+  const handleCasheirModal = () => {
+    setIsModalOpen(false);
+
+    setTimeout(() => {
+      const a = location.pathname.replace("/member/wallet/deposit", "");
+      const b = a ? a : "/";
+      setSearchParams((searchParams) => {
+        searchParams.delete("promotion");
+        return searchParams;
+      });
+      navigate(b + "?" + searchParams.toString());
+    }, 500);
+  };
 
   return (
     <Modal
       isFullScreen={true}
-      isOpen={true}
-      onClose={() => {
-        navigate(-1);
-      }}
+      isOpen={isModalOpen}
+      onClose={handleCasheirModal}
       title="Funds"
     >
       <div className="flex flex-col">
-        <TabGroup className="">
+        <TabGroup
+          className=""
+          selectedIndex={selectedIndex}
+          onChange={setSelectedIndex}
+        >
           <TabList
             className="flex bg-blue-1 pb-3 px-3.75 pt-2 text-sm"
             style={{
@@ -178,580 +312,42 @@ export default function Deposit({ loaderData }: Route.ComponentProps) {
           </TabList>
 
           <TabPanels>
-            <TabPanel>
-              <div className="m-2.5">
-                <div className="flex items-center justify-between bg-[#e4b621] p-2.5 rounded">
-                  <div className="flex items-center gap-2 text-white">
-                    <PromoIcon />
-                    <span className="text-sm">Select Promotion</span>
-                  </div>
-                  <Select
-                    name="status"
-                    aria-label="Project status"
-                    className="focus:outline-0 text-white font-bold text-xs"
-                  >
-                    <option value="active">Active</option>
-                    <option value="paused">Paused</option>
-                    <option value="delayed">Delayed</option>
-                    <option value="canceled">Canceled</option>
-                  </Select>
-                </div>
-              </div>
-
-              <div className="m-2.5 bg-white p-2.5 rounded-xs shadow">
-                <div className="flex gap-1.25 items-center border-b border-b-[#cccccc]">
-                  <div className="w-1 h-3.75 bg-[#005dac] rounded"></div>
-                  <span className="font-bold text-[15px] block my-2 text-[#555555]">
-                    Payment Method
-                  </span>
-                </div>
-                <div
-                  className="grid gap-2.5 py-2.5 border-b border-b-[#cccccc] border-dashed"
-                  style={{
-                    gridTemplateColumns:
-                      "repeat(auto-fill,calc((100% - 20px) / 3))",
-                  }}
-                >
-                  {gateways?.map((gateway, i) => (
-                    <div
-                      key={gateway.id}
-                      className={`flex items-center relative ${
-                        selectedPaymentIndex === i
-                          ? "border-blue-500"
-                          : "border-gray-300"
-                      }`}
-                    >
-                      <button
-                        onClick={() => setSelectedPaymentIndex(i)}
-                        className="relative w-full bg-white border-1 border-blue-1 rounded py-1.25 px-2.5 flex flex-col items-center justify-center hover:bg-gray-50 transition-colors group overflow-hidden leading-[35px]"
-                      >
-                        {/* Icon container */}
-                        <div className="rounded-full w-6.25 h-6.25 flex items-center justify-center mb-1.75">
-                          <img
-                            src={
-                              "https://ai.cloud7hub.uk" +
-                              gateway.gateway_name.gateway_logo
-                            }
-                            className="w-full h-full object-cover"
-                            alt={gateway.gateway_name.gateway_name}
-                          />
-                        </div>
-
-                        {/* Text */}
-                        <span className="text-blue-1 font-medium text-xs max-w-full whitespace-nowrap truncate">
-                          {gateway.gateway_name.gateway_title}
-                        </span>
-
-                        {/* Triangle with check mark in bottom right corner */}
-                        {selectedPaymentIndex === i && (
-                          <div
-                            className="absolute bottom-0 right-0 w-5 h-4 bg-blue-1 rounded-br-xs"
-                            style={{
-                              clipPath: "polygon(100% 0, 100% 100%, 0 100%)",
-                            }}
-                          >
-                            <div className="absolute bottom-0 right-0 flex items-center justify-center">
-                              <BsCheck className="size-3 text-white stroke-1" />
-                            </div>
-                          </div>
-                        )}
-                      </button>
-
-                      {gateway.gateway_name.gateway_tooltip && (
-                        <>
-                          <div
-                            className="absolute bg-[#d15454] min-h-5 top-1.25 -right-1 px-0.75 rounded-r-xs"
-                            title={gateway.gateway_name.gateway_tooltip}
-                          >
-                            <span className="text-xs text-white tracking-tighter whitespace-nowrap truncate">
-                              {gateway.gateway_name.gateway_tooltip}
-                            </span>
-
-                            <div
-                              className="absolute bg-[#d15454] w-1 h-2.5 top-0 -left-1"
-                              style={{
-                                clipPath:
-                                  "polygon(-1% -1%, 101% -1%, 101% 101%)",
-                              }}
-                            ></div>
-
-                            <div
-                              className="absolute bg-[#d15454] w-1 h-2.5 top-2.5 -left-1"
-                              style={{
-                                clipPath: "polygon(100% 0, 0 100%, 100% 100%)",
-                              }}
-                            ></div>
-                          </div>
-                        </>
-                      )}
-                    </div>
-                  ))}
-                </div>
-                <div
-                  className="py-2.5 grid gap-2.5"
-                  style={{
-                    gridTemplateColumns:
-                      "repeat(auto-fill,calc((100% - 20px) / 2))",
-                  }}
-                >
-                  <button className="w-full bg-blue-1 text-white rounded-sm flex items-center justify-center mb-4 h-8.75">
-                    <span className="text-xs">TRC20</span>
-                  </button>
-                </div>
-              </div>
-
-              {selectedPaymentIndex !== null && (
-                <div className="m-2.5 bg-white px-3.75 py-2.5 rounded shadow">
-                  <div className="flex gap-1.25 items-center border-b border-b-[#cccccc]">
-                    <div className="w-1 h-3.75 bg-[#005dac] rounded"></div>
-                    <span className="font-bold text-[15px] block my-2 flex-1 text-[#555555]">
-                      Deposit Channel
-                    </span>
-                  </div>
-                  <div
-                    className="py-2.5 grid gap-2.5"
-                    style={{
-                      gridTemplateColumns:
-                        "repeat(auto-fill,calc((100% - 20px) / 2))",
-                    }}
-                  >
-                    <div className={`relative rounded-xs flex items-center`}>
-                      <div
-                        className="absolute z-2"
-                        style={{ top: "5px", left: "-4px" }}
-                      >
-                        <div className="bg-[#76bd6a] text-white text-xs h-3.75 w-5 rounded-xs grid place-items-center">
-                          <LuThumbsUp className="size-3 text-white" />
-                        </div>
-                      </div>
-                      <div
-                        className="absolute z-0 rounded-xs"
-                        style={{
-                          width: "20px",
-                          height: "15px",
-                          // transform: "rotate(45deg)",
-                          top: "5px",
-                          left: "-4px",
-                          boxShadow: "2px 2px 3px 0",
-                        }}
-                      ></div>
-                      <div
-                        className="absolute bottom-0 right-0 w-5 h-4 bg-blue-1 z-2 rounded-br-xs"
-                        style={{
-                          clipPath: "polygon(100% 0, 100% 100%, 0 100%)",
-                        }}
-                      >
-                        <div className="absolute bottom-0 right-0 flex items-center justify-center">
-                          <BsCheck className="size-3 text-white stroke-1" />
-                        </div>
-                      </div>
-                      <button className="w-full z-1 h-8.75 border border-[#cccccc] rounded-xs bg-white flex items-center justify-center overflow-auto">
-                        <span className="text-xs text-[#555555]">TRC20</span>
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              )}
-
-              {selectedPaymentIndex !== null && (
-                <div className="m-2.5 bg-white px-3.75 py-2.5 rounded shadow">
-                  <div className="flex gap-1.25 items-center border-b border-b-[#cccccc]">
-                    <div className="w-1 h-3.75 bg-[#005dac] rounded"></div>
-                    <span className="font-bold text-[15px] block my-2 flex-1 text-[#555555]">
-                      Amount
-                    </span>
-                    <span className="font-bold text-[15px] block my-2 self-end text-blue-1">
-                      {
-                        gateways[selectedPaymentIndex].gateway_name.currency
-                          .currency_icon
-                      }{" "}
-                      {parseInt(
-                        gateways[selectedPaymentIndex].gateway_name
-                          .min_deposit_limit
-                      )}{" "}
-                      {"-"}{" "}
-                      {
-                        gateways[selectedPaymentIndex].gateway_name.currency
-                          .currency_icon
-                      }{" "}
-                      {parseInt(
-                        gateways[selectedPaymentIndex].gateway_name
-                          .max_deposit_limit
-                      )}
-                    </span>
-                  </div>
-
-                  <div className="py-2.5 grid grid-cols-4 gap-2.5">
-                    {gateways[
-                      selectedPaymentIndex
-                    ].gateway_name.amount_suggestion.map((suggestion) => (
-                      <button
-                        key={suggestion}
-                        className="min-w-1/4 p-2.5 text-xs border border-[#cccccc] text-[#555555] rounded flex items-center justify-center mb-4 bg-white cursor-pointer"
-                        onClick={() =>
-                          setAmount((amount) => +amount + +suggestion + "")
-                        }
-                      >
-                        {amount && "+"}
-                        {parseInt(suggestion)}
-                      </button>
-                    ))}
-                  </div>
-
-                  <div className="relative mb-2.5">
-                    <div className="absolute inset-y-0 left-0 flex items-center pl-2 pointer-events-none">
-                      <span className="text-blue-1 text-center text-xs">
-                        {
-                          gateways[selectedPaymentIndex].gateway_name.currency
-                            .currency_icon
-                        }
-                      </span>
-                    </div>
-                    <input
-                      type="text"
-                      className={classNames(
-                        "block w-full pl-2.5 pr-2.5 py-3 bg-gray-1 border-gray-300 text-sm text-right transition-[padding] appearance-none rounded-xs",
-                        { "pr-10 ": isFocused, "text-blue-1": amount }
-                      )}
-                      placeholder="0.00"
-                      value={amount}
-                      onChange={(e) => setAmount(e.target.value)}
-                      onFocus={() => setIsFocused(true)}
-                      onBlur={() => setIsFocused(false)}
-                      onKeyDown={(e) => {
-                        return isNaN(Number(e.key)) && e.key !== "Backspace"
-                          ? e.preventDefault()
-                          : null;
-                      }}
-                    />
-                    <button
-                      className={classNames(
-                        "absolute inset-y-0 right-0 w-10 flex justify-center items-center opacity-0 cursor-pointer",
-                        { "opacity-100": isFocused }
-                      )}
-                      onClick={() => setAmount("")}
-                    >
-                      <IoCloseCircleSharp className="size-4 text-blue-1" />
-                    </button>
-                  </div>
-
-                  <div className="p-2.5 bg-[#EAEFF8] rounded-xs flex gap-2">
-                    <div>
-                      <IoInformationCircleSharp className="size-5 text-[#2d58bb]" />
-                    </div>
-                    <div
-                      className="text-[#2d58bb]"
-                      dangerouslySetInnerHTML={{
-                        __html:
-                          gateways[selectedPaymentIndex].gateway_name
-                            .deposit_des,
-                      }}
-                    ></div>
-                  </div>
-                </div>
-              )}
-
-              <div className="m-2.5">
-                <Button
-                  disabled
-                  className="bg-blue-600 text-white py-3 rounded"
-                  size="lg"
-                  isBlock
-                >
-                  Submit
-                </Button>
-              </div>
-            </TabPanel>
-
-            <TabPanel>
-              <div className="flex flex-col bg-blue-1 px-4.25 py-7.5 pt-0">
-                <div>
-                  <div className="flex gap-1.5 items-center">
-                    <span className="text-white text-xs">Main wallet</span>
-                    <button
-                      className="cursor-pointer"
-                      onClick={async () => {
-                        setIsLoading(true);
-                        const response = await fetch(
-                          "https://ai.cloud7hub.uk/auth/user-balance/",
-                          {
-                            headers: {
-                              Authorization: `Token ${Cookies.get(
-                                "userToken"
-                              )}`,
-                            },
-                          }
-                        );
-
-                        const responseData = await response.json();
-
-                        if (responseData.status === "ok") {
-                          setUserWalletData(responseData.data);
-                          setIsLoading(false);
-                        }
-                      }}
-                    >
-                      <TfiReload
-                        className={classNames("size-3 text-white", {
-                          "animate-spin": isLoading,
-                        })}
-                      />
-                    </button>
-                  </div>
-                  <div className="justify-self-end">
-                    <span className="text-[45px] text-white">
-                      {userWalletData?.credit_balance}
-                    </span>
-                  </div>
-                </div>
-              </div>
-              <div className="m-2.5 bg-white p-2.5 rounded-xs shadow">
-                <div className="flex gap-1.25 items-center border-b border-b-[#cccccc]">
-                  <div className="w-1 h-3.75 bg-[#005dac] rounded"></div>
-                  <span className="font-bold text-[15px] block my-2 text-[#555555]">
-                    Payment Method
-                  </span>
-                </div>
-                <div
-                  className="grid gap-2.5 py-2.5"
-                  style={{
-                    gridTemplateColumns:
-                      "repeat(auto-fill,calc((100% - 20px) / 3))",
-                  }}
-                >
-                  {gateways.map((gateway, i) => (
-                    <div
-                      key={gateway.id}
-                      className={`flex items-center relative ${
-                        selectedPaymentIndex === i
-                          ? "border-blue-500"
-                          : "border-gray-300"
-                      }`}
-                    >
-                      <button
-                        onClick={() => setSelectedPaymentIndex(i)}
-                        className="relative w-full bg-white border-1 border-blue-1 rounded py-1.25 px-2.5 flex flex-col items-center justify-center hover:bg-gray-50 transition-colors group overflow-hidden leading-[35px]"
-                      >
-                        {/* Icon container */}
-                        <div className="rounded-full w-6.25 h-6.25 flex items-center justify-center mb-1.75">
-                          <img
-                            src={
-                              "https://ai.cloud7hub.uk" +
-                              gateway.gateway_name.gateway_logo
-                            }
-                            className="w-full h-full object-cover"
-                            alt={gateway.gateway_name.gateway_name}
-                          />
-                        </div>
-
-                        {/* Text */}
-                        <span className="text-blue-1 font-medium text-xs max-w-full whitespace-nowrap truncate">
-                          {gateway.gateway_name.gateway_title}
-                        </span>
-
-                        {/* Triangle with check mark in bottom right corner */}
-                        {selectedPaymentIndex === i && (
-                          <div
-                            className="absolute bottom-0 right-0 w-5 h-4 bg-blue-1 rounded-br-xs"
-                            style={{
-                              clipPath: "polygon(100% 0, 100% 100%, 0 100%)",
-                            }}
-                          >
-                            <div className="absolute bottom-0 right-0 flex items-center justify-center">
-                              <BsCheck className="size-3 text-white stroke-1" />
-                            </div>
-                          </div>
-                        )}
-                      </button>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              {selectedPaymentIndex !== null && (
-                <div className="m-2.5 bg-white px-3.75 py-2.5 rounded shadow">
-                  <div className="flex gap-1.25 items-center border-b border-b-[#cccccc]">
-                    <div className="w-1 h-3.75 bg-[#005dac] rounded"></div>
-                    <span className="font-bold text-[15px] block my-2 flex-1 text-[#555555]">
-                      Amount
-                    </span>
-                    <span className="font-bold text-[15px] block my-2 self-end text-blue-1">
-                      {
-                        gateways[selectedPaymentIndex].gateway_name.currency
-                          .currency_icon
-                      }{" "}
-                      {parseInt(
-                        gateways[selectedPaymentIndex].gateway_name
-                          .agent_min_deposit_limit
-                      )}{" "}
-                      {"-"}{" "}
-                      {
-                        gateways[selectedPaymentIndex].gateway_name.currency
-                          .currency_icon
-                      }{" "}
-                      {parseInt(
-                        gateways[selectedPaymentIndex].gateway_name
-                          .agent_max_deposit_limit
-                      )}
-                    </span>
-                  </div>
-
-                  <div className="py-2.5 grid grid-cols-4 gap-2.5">
-                    {gateways[
-                      selectedPaymentIndex
-                    ].gateway_name.agent_amount_suggestion.map((suggestion) => (
-                      <button
-                        key={suggestion}
-                        className="min-w-1/4 p-2.5 text-xs border border-[#cccccc] text-[#555555] rounded flex items-center justify-center mb-4 bg-white cursor-pointer"
-                        onClick={() =>
-                          setAmount((amount) => +amount + +suggestion + "")
-                        }
-                      >
-                        {amount && "+"}
-                        {parseInt(suggestion)}
-                      </button>
-                    ))}
-                  </div>
-
-                  <div className="relative mb-2.5">
-                    <input
-                      type="text"
-                      className={classNames(
-                        "block w-full pl-2.5 pr-2.5 py-3 bg-gray-1 border-gray-300 text-sm text-right transition-[padding] appearance-none rounded-xs",
-                        { "pr-10 ": isFocused, "text-blue-1": amount }
-                      )}
-                      placeholder="0.00"
-                      value={amount}
-                      onChange={(e) => setAmount(e.target.value)}
-                      onFocus={() => setIsFocused(true)}
-                      onBlur={() => setIsFocused(false)}
-                      onKeyDown={(e) => {
-                        return isNaN(Number(e.key)) && e.key !== "Backspace"
-                          ? e.preventDefault()
-                          : null;
-                      }}
-                    />
-                    <button
-                      className={classNames(
-                        "absolute inset-y-0 right-0 w-10 flex justify-center items-center opacity-0 cursor-pointer",
-                        { "opacity-100": isFocused }
-                      )}
-                      onClick={() => setAmount("")}
-                    >
-                      <IoCloseCircleSharp className="size-4 text-blue-1" />
-                    </button>
-                  </div>
-
-                  {gateways[selectedPaymentIndex].gateway_name.withdraw_des && (
-                    <div className="p-2.5 bg-[#EAEFF8] rounded-xs flex gap-2">
-                      <div>
-                        <IoInformationCircleSharp className="size-5 text-[#2d58bb]" />
-                      </div>
-                      <div
-                        className="text-[#2d58bb]"
-                        dangerouslySetInnerHTML={{
-                          __html:
-                            gateways[selectedPaymentIndex].gateway_name
-                              .withdraw_des,
-                        }}
-                      ></div>
-                    </div>
-                  )}
-                </div>
-              )}
-
-              {/* <div className="m-2.5 bg-white px-3.75 py-2.5 rounded shadow">
-                <div className="flex gap-1.25 items-center border-b">
-                  <div className="w-1 h-3.75 bg-[#005dac] rounded"></div>
-                  <span className="font-bold text-[15px] block my-2 text-gray-9">
-                    Please select address
-                  </span>
-                </div>
-                <span className="block pt-3.75 pb-5 text-center text-sm text-gray-9">
-                  -- support no more than 3 addresses --
-                </span>
-                <Disclosure as="div" className="rounded overflow-hidden">
-                  <DisclosureButton className="w-full h-11 flex items-center gap-1.5 pl-2.5 pr-7.5 bg-[#6a84cb]">
-                    <AddCardIcon />
-                    <span className="flex-1 text-left text-sm text-white">
-                      Add Address
-                    </span>
-                    <BsCaretDown className="text-white" />
-                  </DisclosureButton>
-                  <DisclosurePanel className="text-gray-500  border border-[#6a84cb] rounded-b">
-                    <div className="m-2.5 px-2.5 py-3.75 group">
-                      <label className="text-xs">Wallet Address</label>
-                      <input
-                        className="box-border w-full h-10 border border-gray-300 rounded px-2.5 text-sm"
-                        placeholder="Wallet Address"
-                      />
-                    </div>
-                  </DisclosurePanel>
-                </Disclosure>
-              </div> */}
-
-              <div className="m-2.5 bg-white px-3.75 py-2.5 rounded shadow">
-                <div className="flex gap-1.25 items-center border-b border-b-[#cccccc]">
-                  <div className="w-1 h-3.75 bg-[#005dac] rounded"></div>
-                  <span className="font-bold text-[15px] block my-2 text-[#555555]">
-                    Please select phone number
-                  </span>
-                </div>
-                <div className="py-2.5 grid grid-cols-1 gap-2.5">
-                  <button
-                    className="w-full bg-blue-1 text-white flex gap-2 items-center px-2.5 py-2.75 mb-4 rounded"
-                    style={{
-                      backgroundImage:
-                        "url(https://img.c88rx.com/cx/h5/assets/images/player/bg-bankcard.png?v=1749020378117)",
-                      backgroundSize: "cover",
-                      backgroundPosition: "center",
-                      backgroundRepeat: "no-repeat",
-                    }}
-                  >
-                    <FaCheckCircle className="size-6.25 text-[#28b849]" />
-                    <span className="text-xl inline-block">
-                      +880 1866300200
-                    </span>
-                  </button>
-                </div>
-              </div>
-
-              <div className="m-2.5">
-                <Button
-                  disabled
-                  className="bg-blue-600 text-white py-3 rounded"
-                  size="lg"
-                  isBlock
-                >
-                  Submit
-                </Button>
-              </div>
-            </TabPanel>
+            <Transition
+              show={selectedIndex === 0}
+              enter="transition-transform duration-300"
+              enterFrom="-translate-x-full"
+              enterTo="translate-x-0"
+              leave="transition-transform duration-300"
+              leaveFrom="translate-x-0"
+              leaveTo="-translate-x-full"
+            >
+              <TabPanel static>
+                <DepositForm
+                  gateways={depositGateways}
+                  parentCallback={handleCasheirModal}
+                  selectedPromotion={promotion ?? undefined}
+                />
+              </TabPanel>
+            </Transition>
+            <Transition
+              show={selectedIndex === 1}
+              enter="transition-transform delay-200 duration-300"
+              enterFrom="translate-y-full opacity-0"
+              enterTo="translate-y-0 opacity-100"
+              leave="transition-transform delay-200 duration-300"
+              leaveFrom="translate-y-0 opacity-100"
+              leaveTo="-translate-y-full opacity-0"
+            >
+              <TabPanel static>
+                <WithdrawalForm
+                  gateways={withdrawalGateways}
+                  parentCallback={handleCasheirModal}
+                />
+              </TabPanel>
+            </Transition>
           </TabPanels>
         </TabGroup>
       </div>
     </Modal>
   );
 }
-
-const PromoIcon = (props: any) => (
-  <svg xmlns="http://www.w3.org/2000/svg" width={20} height={20} {...props}>
-    <title>{"icon-set/icon-selectpromotion"}</title>
-    <path
-      fill="#FFF"
-      fillRule="nonzero"
-      d="M8.389.653a1.676 1.676 0 0 1 2.654 0l.525.688c.42.55 1.147.783 1.815.58l.836-.249c1.054-.319 2.13.448 2.147 1.538l.012.858a1.644 1.644 0 0 0 1.122 1.52l.823.278c1.046.357 1.454 1.6.82 2.49l-.5.705a1.614 1.614 0 0 0 0 1.882l.495.704a1.629 1.629 0 0 1-.82 2.491l-.822.278a1.639 1.639 0 0 0-1.122 1.52l-.013.858c-.016 1.09-1.092 1.857-2.146 1.538l-.832-.249a1.673 1.673 0 0 0-1.815.58l-.516.684c-.664.87-1.991.87-2.655 0l-.525-.688a1.673 1.673 0 0 0-1.815-.58l-.832.253c-1.054.32-2.13-.448-2.146-1.538l-.013-.857a1.644 1.644 0 0 0-1.121-1.521l-.824-.278c-1.046-.356-1.453-1.6-.819-2.49l.5-.705a1.614 1.614 0 0 0 0-1.882l-.5-.704a1.629 1.629 0 0 1 .82-2.49l.823-.279a1.639 1.639 0 0 0 1.121-1.52l.013-.858c.017-1.09 1.092-1.857 2.146-1.538l.832.249a1.673 1.673 0 0 0 1.815-.58Zm1.648 4.057a.269.269 0 0 0-.496 0L8.207 7.867l-3.415.293a.27.27 0 0 0-.153.472l2.59 2.244-.776 3.339a.269.269 0 0 0 .401.29l2.935-1.77 2.935 1.77a.269.269 0 0 0 .4-.29l-.776-3.339 2.59-2.244a.27.27 0 0 0-.153-.471l-3.415-.294Z"
-    />
-  </svg>
-);
-
-const AddCardIcon = (props: any) => (
-  <svg xmlns="http://www.w3.org/2000/svg" width={31} height={25} {...props}>
-    <title>{"icon-add-card"}</title>
-    <path
-      fill="#FFF"
-      fillRule="nonzero"
-      d="M25.543 15.217a4.891 4.891 0 1 1 0 9.783 4.891 4.891 0 0 1 0-9.783Zm0 2.174c-.3 0-.543.244-.543.544v1.63h-1.63a.543.543 0 0 0 0 1.087H25v1.63a.543.543 0 1 0 1.087 0v-1.63h1.63a.543.543 0 1 0 0-1.087h-1.63v-1.63c0-.3-.243-.544-.544-.544ZM27.717 0c.9 0 1.63.73 1.63 1.63V15.5a5.973 5.973 0 0 0-9.754 4.065H1.63c-.9 0-1.63-.73-1.63-1.63V1.63C0 .73.73 0 1.63 0h26.087ZM10.165 12.842a2.717 2.717 0 0 0-3.65-.333 2.693 2.693 0 0 0-1.624-.553 2.717 2.717 0 0 0 0 5.435 2.693 2.693 0 0 0 1.625-.552 2.717 2.717 0 0 0 3.649-3.997Zm-5.274.201a1.63 1.63 0 1 1 0 3.261 1.63 1.63 0 0 1 0-3.26Zm14.13 0h-5.434c-.3 0-.544.244-.544.544v2.174c0 .3.244.543.544.543h5.435c.3 0 .543-.243.543-.543v-2.174c0-.3-.243-.544-.543-.544Zm-11.956.288a1.823 1.823 0 0 1 2.03.042c.596.424.836 1.16.595 1.825-.24.666-.907 1.112-1.654 1.106a1.798 1.798 0 0 1-.97-.288 2.49 2.49 0 0 0 0-2.685Zm11.413.8v1.086H14.13V14.13h4.348Zm4.348-5.435h-2.174v1.087h2.174V8.696Zm4.348 0H25v1.087h2.174V8.696Zm-8.696 0h-2.174v1.087h2.174V8.696Zm-4.348 0h-2.173v1.087h2.173V8.696ZM7.065 2.174h-3.26c-.901 0-1.631.73-1.631 1.63v2.174c0 .9.73 1.63 1.63 1.63h3.261c.9 0 1.63-.73 1.63-1.63V3.804c0-.9-.73-1.63-1.63-1.63Zm.544 3.26v.544c0 .3-.244.544-.544.544h-.543V5.435h1.087ZM5.435 3.262v3.26h-1.63a.543.543 0 0 1-.544-.543V3.804c0-.3.243-.543.543-.543h1.63Zm21.739 0h-1.087v2.174h1.087V3.26ZM25 3.26h-1.087v2.174H25V3.26Zm-2.174 0H21.74v2.174h1.087V3.26Zm-2.174 0h-1.087v2.174h1.087V3.26Zm-2.174 0h-1.087v2.174h1.087V3.26Zm-2.174 0h-1.087v2.174h1.087V3.26Zm-9.239 0c.3 0 .544.243.544.543v.544H6.522V3.26h.543Z"
-    />
-  </svg>
-);
