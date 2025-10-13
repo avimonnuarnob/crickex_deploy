@@ -45,7 +45,7 @@ const Sidebar = ({ isFull, setIsFull }: SidebarProps) => {
   return (
     <div
       className={classNames(
-        "relative flex-none bg-blue-1 hidden sm:flex flex-col z-20"
+        "relative flex-none bg-blue-1 hidden sm:flex flex-col z-20 max-h-dvh"
       )}
       style={{
         viewTransitionName: "sidebar",
@@ -102,7 +102,7 @@ const Sidebar = ({ isFull, setIsFull }: SidebarProps) => {
 
       <div
         className={classNames(
-          "overflow-x-hidden overflow-y-scroll transition-[width] transition-discrete ease-in duration-500 flex-1 [&::-webkit-scrollbar]:hidden border-r-5 border-[#255c93]",
+          "overflow-x-hidden overflow-y-scroll transition-[width] transition-discrete ease-in duration-500 flex-1",
           {
             "w-15.75": !isFull,
             "w-62.5": isFull,

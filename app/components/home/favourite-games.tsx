@@ -43,7 +43,7 @@ const matches = [
 
 export default function FavouriteGames() {
   return (
-    <div className="w-full">
+    <div className="w-full px-2 sm:px-0">
       <div className="flex py-2 gap-1 items-center">
         <div className="w-1 h-4 bg-[#005dac] rounded"></div>
         <span className="font-bold">Favourites</span>

@@ -147,16 +147,16 @@ export default function RootLayout() {
   }, []);
 
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-[auto_1fr] w-full max-w-full min-h-screen">
+    <div className="grid grid-cols-1 sm:grid-cols-[auto_1fr] min-h-screen max-w-full max-h-screen">
       <Sidebar isFull={isFull} setIsFull={setIsFull} />
       <main
-        className="relative flex! flex-col overflow-visible sm:overflow-auto"
+        className="relative flex! flex-col min-w-0 min-h-0 max-h-dvh overflow-auto overscroll-none"
         ref={ref}
       >
         <Topbar isFull={isFull} />
 
-        <div className="w-full flex-1 relative overflow-auto h-full">
-          <div className="px-4">
+        <div className="w-full flex-1 relative max-w-[1200px] mx-auto">
+          <div className="px-0 sm:px-4 xl:px-0">
             <Outlet />
           </div>
           <div className="px-2.5">
@@ -208,10 +208,20 @@ export default function RootLayout() {
             </div>
           ) : (
             <div
-              className="sticky bottom-0 left-0 right-0 w-full bg-background flex sm:hidden items-center [&>*]:flex-1"
+              className="sticky bottom-0 left-0 right-0 w-full bg-background flex sm:hidden items-center [&>*]:h-full min-h-15"
               style={{ boxShadow: "0 0 1.3333333333vw #00000080" }}
             >
-              <button className="flex flex-col items-center py-3.75 gap-1">
+              <button className="flex-2 bg-[#d7e3f0] px-1.25">
+                <div className="flex items-center justify-center gap-1.25">
+                  <img src="/BD.png" alt="bd_logo" className="w-7 h-7" />
+                  <div className="text-left font-bold text-[#333333]">
+                    <p className="text-sm">
+                      BDT <br /> English
+                    </p>
+                  </div>
+                </div>
+              </button>
+              <button className="flex-3 flex flex-col items-center py-3.75 gap-1">
                 <Link
                   to={"/new-register-entry/account"}
                   className="w-full h-full"
@@ -219,7 +229,7 @@ export default function RootLayout() {
                   <p className="text-foreground font-bold text-sm">Sign Up</p>
                 </Link>
               </button>
-              <button className="flex flex-col items-center py-3.75 gap-1 bg-blue-1">
+              <button className="flex-3 flex flex-col items-center py-3.75 gap-1 bg-blue-1">
                 <Link to={"/account-login-quick"} className="w-full h-full">
                   <p className="text-white font-bold text-sm">Login</p>
                 </Link>
@@ -276,14 +286,12 @@ const Footer = () => {
 
         <div className="mb-5">
           <h4 className="text-[13px] mb-4.5 font-bold">Sponsor</h4>
-          <div className="flex gap-2">
+          <div className="grid grid-cols-2 sm:flex gap-2">
             {SPONSORS.map((sponser) => (
               <div className="flex gap-2 items-center" key={sponser.id}>
                 <img
                   src={sponser.icon}
-                  width={35}
-                  height={35}
-                  className="opacity-70"
+                  className="w-10 h-10 sm:w-8.75 sm:h-8.75 -z-1 relative"
                 />
                 <div className="text-black">
                   <p className="text-xs font-bold leading-3">{sponser.name}</p>
@@ -301,7 +309,7 @@ const Footer = () => {
 
         <div className="mb-5">
           <h4 className="text-[13px] mb-3.5 font-bold">Brand Ambassador</h4>
-          <div className="flex gap-2">
+          <div className="grid grid-cols-2 sm:flex gap-2">
             {AMBASSADORS.map((ambassador) => (
               <div className="" key={ambassador.id}>
                 <img

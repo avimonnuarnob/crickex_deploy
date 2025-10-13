@@ -26,20 +26,20 @@ export default function HomeSlider() {
     useDotButton(emblaApi);
 
   return (
-    <section>
+    <section className="border-2 sm:border-0 border-blue-1">
       <div className="embla relative items-center w-full h-full">
         <PrevButton
-          className="absolute top-1/2 w-4 h-4 text-[#8d8d8d] z-1 -translate-y-1/2 cursor-pointer left-0"
+          className="absolute top-1/2 w-4 h-4 text-[#8d8d8d] z-1 -translate-y-1/2 cursor-pointer left-0 xl:-left-7.5"
           onClick={onPrevButtonClick}
           disabled={prevBtnDisabled}
         />
         <div
-          className="embla__viewport flex-1 rounded overflow-hidden"
+          className="embla__viewport flex-1 sm:rounded overflow-hidden"
           ref={emblaRef}
         >
           <div className="embla__container">
             {SLIDES.map((index) => (
-              <div className="embla__slide md:h-[300px]" key={index}>
+              <div className="embla__slide h-[145px] md:h-[300px]" key={index}>
                 <div className="embla__slide__number h-full">
                   <img
                     className="object-cover h-full w-full"
@@ -53,10 +53,10 @@ export default function HomeSlider() {
         <NextButton
           onClick={onNextButtonClick}
           disabled={nextBtnDisabled}
-          className="absolute top-1/2 w-4 h-4 z-1 text-[#8d8d8d] -translate-y-1/2 cursor-pointer right-0"
+          className="absolute top-1/2 w-4 h-4 z-1 text-[#8d8d8d] -translate-y-1/2 cursor-pointer right-0 xl:-right-7.5"
         />
       </div>
-      <div className="embla__dots flex gap-1.5 justify-center pt-3.75 pb-2.75">
+      <div className="embla__dots flex gap-1.5 justify-center pt-2.75 sm:pt-3.75 pb-2.75 bg-blue-1 sm:bg-transparent">
         {scrollSnaps.map((_, index) => (
           <DotButton
             key={index}

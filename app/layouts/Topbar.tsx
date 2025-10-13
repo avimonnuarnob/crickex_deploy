@@ -15,16 +15,18 @@ import { BsCreditCard2BackFill } from "react-icons/bs";
 
 import homeIcon from "@/assets/images/icon-home.png";
 import promotionsIcon from "@/assets/images/icon-promotion.png";
-import referralIcon from "@/assets/images/icon-referral.png";
+import referralIcon from "@/assets/images/icon-referral-alt.png";
 import sponsorshipIcon from "@/assets/images/icon-sponsorship.png";
 import leaderboardIcon from "@/assets/images/icon-leaderboard.png";
-import telegramIcon from "@/assets/images/icon-telegram.png";
+import telegramIcon from "@/assets/images/icon-telegram-alt.png";
 import responsibleGamingIcon from "@/assets/images/icon-responsible-gaming.png";
 import affiliateIcon from "@/assets/images/icon-affiliate.png";
 import crickexBlogIcon from "@/assets/images/icon-crickex-blog.png";
 import downloadIcon from "@/assets/images/icon-download.png";
 import aboutUsIcon from "@/assets/images/icon-about-us.png";
 import faqIcon from "@/assets/images/icon-faq.png";
+
+import customerHeaderIcon from "@/assets/icon/icon-customer-header.svg";
 
 import siteLogo from "@/assets/images/logo.png";
 import { useEffect, useRef, useState, useTransition } from "react";
@@ -37,6 +39,7 @@ import {
 } from "@headlessui/react";
 import type { RootLoaderData } from "@/root";
 import type { GAMEPROVIDER } from "@/routes/index.tsx";
+import { RiMobileDownloadLine } from "react-icons/ri";
 
 type TopbarProps = Readonly<{
   isFull: boolean;
@@ -96,6 +99,7 @@ const Topbar = ({ isFull }: TopbarProps) => {
   return (
     <>
       <div
+        id="topbar"
         className={classNames(
           "bg-blue-1 sticky top-0 z-10 border-black transition-[width, box-shadow] transition-discrete ease-in duration-500 w-full"
         )}
@@ -105,30 +109,62 @@ const Topbar = ({ isFull }: TopbarProps) => {
             : "none",
         }}
       >
-        <div className={classNames("px-4", {})}>
-          <div className="flex h-15 items-center justify-between py-4">
+        <div className={classNames("", {})}>
+          <div className="flex h-[13.3vw] sm:h-auto items-center justify-between max-w-[1200px] mx-auto relative">
             <button
-              className="w-5 sm:hidden"
+              className="w-[5vw] sm:hidden ml-4!"
               onClick={() => setSidebarOpen(true)}
             >
               <ul className="flex flex-col gap-0.75">
                 <li className="w-full h-0.5 rounded bg-background"></li>
-                <li className="w-11/12 h-0.5 rounded bg-background"></li>
                 <li className="w-10/12 h-0.5 rounded bg-background"></li>
+                <li className="w-9/12 h-0.5 rounded bg-background"></li>
               </ul>
             </button>
             <Link
               to="/"
-              className={classNames({
-                "pointer-events-none": location.pathname === "/",
-              })}
+              className={classNames(
+                "absolute sm:static inset-0 left-1/2 -translate-x-1/2 sm:translate-x-0 w-[40vw] max-w-32.5 sm:h-15",
+                {
+                  "pointer-events-none": location.pathname === "/",
+                }
+              )}
             >
               <img
                 src={siteLogo}
                 alt="crickex"
-                className="w-30.75 h-15 object-contain cursor-pointer"
+                className="w-[70%] h-full object-contain cursor-pointer mx-auto"
               />
             </Link>
+            <div className="flex gap-2 items-center mr-1">
+              {isLoggedIn && (
+                <div className="flex flex-col sm:hidden items-center justify-between text-white font-semibold">
+                  <IconButton
+                    color="link"
+                    icon={
+                      <RiMobileDownloadLine className="text-white size-[5.5vw]" />
+                    }
+                    className="p-0!"
+                  />
+                  <span className="text-[3.2vw]">App</span>
+                </div>
+              )}
+
+              <div className="flex flex-col sm:hidden items-center justify-between text-white font-semibold">
+                <IconButton
+                  color="link"
+                  icon={
+                    <img
+                      src={customerHeaderIcon}
+                      alt="customer"
+                      className="size-[5.5vw]"
+                    />
+                  }
+                  className="p-0!"
+                />
+                <span className="text-[3.2vw]">Live Chat</span>
+              </div>
+            </div>
             <>
               {!isLoggedIn && (
                 <div className="hidden sm:flex items-center gap-1.25 justify-between">

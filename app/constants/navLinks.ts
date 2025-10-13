@@ -17,7 +17,7 @@ import faqIcon from "@/assets/images/icon-faq.png";
 
 export const navLinks = [
   {
-    href: "#",
+    href: "/promotion",
     icon: promotionIcon,
     text: "Promotions",
   },

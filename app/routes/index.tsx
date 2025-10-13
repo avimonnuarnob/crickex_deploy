@@ -64,11 +64,15 @@ export default function Home() {
 
   return (
     <>
-      <div className="py-4 page-body w-full">
+      <div className="py-0 sm:py-4 page-body">
         <HomeSlider />
         <HomeMarquee />
         {isLoggedIn && <UserDashboard />}
-        {data?.gameProviders && <CategoryTab providers={data?.gameProviders} />}
+        <div className="transition-all">
+          {data?.gameProviders && (
+            <CategoryTab providers={data?.gameProviders} />
+          )}
+        </div>
         <div className="py-2.75">
           <FavouriteGames />
         </div>

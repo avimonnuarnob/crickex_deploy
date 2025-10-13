@@ -46,6 +46,22 @@ export default [
       ),
     ]),
 
+    route("/promotion", "./routes/promotion.tsx", [
+      route("account-login-quick", "./routes/login.tsx", {
+        id: "promotion-login",
+      }),
+      route("new-register-entry/account", "./routes/signup.tsx", {
+        id: "promotion-signup",
+      }),
+      route(
+        "account-login-quick/forgot-password/:medium",
+        "./routes/forgot-password.tsx",
+        {
+          id: "promotion-forgot-password",
+        }
+      ),
+    ]),
+
     route("/", "./routes/index.tsx", [
       route("account-login-quick", "./routes/login.tsx", { id: "home-login" }),
       route("new-register-entry/account", "./routes/signup.tsx", {

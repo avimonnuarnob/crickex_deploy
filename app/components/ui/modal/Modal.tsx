@@ -36,7 +36,10 @@ const Modal = ({
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: 100 }}
               transition={{ duration: 0.2, ease: "easeInOut" }}
-              className="w-full h-[calc(100dvh-60px)] sm:max-w-[375px] sm:h-[calc(100dvh-60px)]! sm:max-h-[700px] relative"
+              className="w-full h-full sm:max-w-[375px] relative sm:my-auto max-h-[700px]"
+              // style={{
+              //   height: "calc(100dvh - 60px)",
+              // }}
             >
               <DialogPanel
                 className={classNames(
