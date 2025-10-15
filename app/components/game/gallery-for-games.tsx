@@ -20,7 +20,7 @@ import { FaSearch } from "react-icons/fa";
 
 import noGameImage from "@/assets/images/img-no-game.png";
 
-const GAMES_PER_PAGE = 20;
+const GAMES_PER_PAGE = 40;
 
 export default function GalleryForGames({
   games,
@@ -81,8 +81,8 @@ export default function GalleryForGames({
 
   return (
     <div>
-      <div className="relative overflow-hidden rounded">
-        <div className="flex gap-2.5 bg-white px-2 pt-2 pb-1.5 overflow-x-scroll [&::-webkit-scrollbar]:h-1.5 [&::-webkit-scrollbar-thumb]:bg-gray-300 [&::-webkit-scrollbar-thumb]:rounded">
+      <div className="relative overflow-hidden sm:rounded">
+        <div className="flex gap-2.5 bg-white px-2 pt-2 pb-1.5 overflow-x-scroll [&::-webkit-scrollbar]:h-1.5 [&::-webkit-scrollbar-thumb]:bg-gray-300 [&::-webkit-scrollbar-thumb]:rounded pr-14.5">
           <button
             className={classNames(
               "bg-[#f5f5f5] px-4 py-2 text-[13px] rounded min-w-[93px] h-[30px] text-center cursor-pointer hover:opacity-[0.7]",
@@ -98,7 +98,7 @@ export default function GalleryForGames({
             <button
               key={provider}
               className={classNames(
-                "bg-[#f5f5f5] px-4 py-2 text-[13px] rounded min-w-[93px] h-[30px] text-center cursor-pointer hover:opacity-[0.7]",
+                "bg-[#f5f5f5] px-4 py-2 text-[13px] sm:rounded min-w-[93px] h-[30px] text-center cursor-pointer hover:opacity-[0.7]",
                 { "bg-[#005dac]! text-white": gameFilter.includes(provider) }
               )}
               onClick={() => {
@@ -115,9 +115,12 @@ export default function GalleryForGames({
             </button>
           ))}
           <IconButton
-            className="absolute right-0 top-0 bottom-0 aspect-square rounded-none"
+            className="absolute right-0 top-0 bottom-0 aspect-square rounded-none bg-white sm:bg-blue-1 border-l border-gray-1"
             icon={
-              <FaSearch aria-hidden="true" className=" text-white size-4" />
+              <FaSearch
+                aria-hidden="true"
+                className="text-black sm:text-white size-4"
+              />
             }
             onClick={() => setOpen(true)}
           ></IconButton>
@@ -132,12 +135,7 @@ export default function GalleryForGames({
       </div>
 
       {gamesToShow.length ? (
-        <div
-          className="grid gap-x-2.5 gap-y-5 mx-2"
-          style={{
-            gridTemplateColumns: "repeat(auto-fill,minmax(180px,1fr))",
-          }}
-        >
+        <div className="grid gap-x-2.5 gap-y-5 mx-2 grid-cols-2 sm:grid-cols-[repeat(auto-fill,minmax(180px,1fr))]">
           {gamesToShow.slice(0, pageNumber * GAMES_PER_PAGE).map((game, i) => (
             <GameDescription
               key={game.gameName.gameName_enus}
@@ -183,7 +181,7 @@ export default function GalleryForGames({
               </Button>
             </div>
 
-            <div className="w-96 bg-gray-200 rounded-full h-1.25 dark:bg-gray-700 mx-auto mt-6">
+            <div className="w-10/12 max-w-96 bg-gray-200 rounded-full h-1.25 dark:bg-gray-700 mx-auto mt-6">
               <div
                 className="bg-blue-600 h-1.25 rounded-full"
                 style={{ width: `${(pageNumber / totalPages) * 100}%` }}
@@ -232,7 +230,7 @@ export default function GalleryForGames({
 
         <div className="fixed inset-0 overflow-hidden">
           <div className="absolute inset-0 overflow-hidden">
-            <div className="pointer-events-none fixed top-15 bottom-0 right-0 flex max-w-full">
+            <div className="pointer-events-none fixed top-0 sm:top-15 bottom-0 right-0 flex max-w-full">
               <DialogPanel
                 transition
                 className="pointer-events-auto relative w-screen max-w-md transform transition duration-300 ease-in-out data-closed:translate-x-full sm:duration-300"
@@ -289,7 +287,7 @@ export default function GalleryForGames({
                         <button
                           type="button"
                           className={classNames(
-                            "bg-[#f5f5f5] px-4 py-2 text-[13px] rounded min-w-[132.48px] h-[35px] text-center cursor-pointer hover:opacity-[0.7]",
+                            "bg-[#f5f5f5] px-4 py-2 text-[13px] rounded max-w-[132.48px] h-[35px] text-center cursor-pointer hover:opacity-[0.7]",
                             {
                               "bg-[#005dac]! text-white":
                                 gameFilter.length === 0,
@@ -306,7 +304,7 @@ export default function GalleryForGames({
                             type="button"
                             key={provider}
                             className={classNames(
-                              "bg-[#f5f5f5] px-4 py-2 text-[13px] rounded min-w-[132.48px] h-[35px]text-center cursor-pointer hover:opacity-[0.7]",
+                              "bg-[#f5f5f5] px-4 py-2 text-[13px] rounded max-w-[132.48px] h-[35px]text-center cursor-pointer hover:opacity-[0.7]",
                               {
                                 "bg-[#005dac]! text-white":
                                   gameFilter.includes(provider),

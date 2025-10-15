@@ -69,8 +69,11 @@ const Topbar = ({ isFull }: TopbarProps) => {
     const removeShadowEventHandler = () => {
       setShadow(false);
     };
-    window.addEventListener("add", addShadowEventHandler);
-    window.addEventListener("remove", removeShadowEventHandler);
+
+    if (window.screen.width >= 768) {
+      window.addEventListener("add", addShadowEventHandler);
+      window.addEventListener("remove", removeShadowEventHandler);
+    }
 
     return () => {
       window.removeEventListener("add", addShadowEventHandler);
@@ -234,13 +237,13 @@ const Topbar = ({ isFull }: TopbarProps) => {
           className="fixed inset-0 transition-opacity duration-300 ease-in-out data-closed:opacity-0 bg-black/50"
         />
 
-        <div className="fixed inset-0 w-1/2 overflow-hidden">
-          <div className="fixed top-0 bottom-0 left-0 w-1/2 flex">
-            <DialogPanel
-              ref={dialogPanelRef}
-              transition
-              className="pointer-events-auto relative w-full transform transition duration-200 ease-in-out data-closed:-translate-x-full sm:duration-300 bg-white overflow-auto"
-            >
+        <div className="fixed top-0 bottom-0 left-0 flex overflow-hidden">
+          <DialogPanel
+            transition
+            ref={dialogPanelRef}
+            className="pointer-events-auto flex transform transition duration-200 ease-in-out data-closed:-translate-x-full sm:duration-300"
+          >
+            <div className="z-1 bg-white overflow-auto overscroll-none">
               <div>
                 <Link to="/">
                   <div className="flex items-center gap-3 p-2.75 text-foreground">
@@ -409,12 +412,11 @@ const Topbar = ({ isFull }: TopbarProps) => {
                   </div>
                 </Link>
               </div>
-            </DialogPanel>
+            </div>
             <div
               className={classNames(
-                "absolute top-0 left-full bottom-0 right-0 min-w-1/2 bg-transparent transition-transform -translate-x-full duration-300 ease-in-out overflow-auto -z-1",
+                "h-full bg-gray-1 transition-transform -translate-x-full duration-300 ease-in-out overscroll-none overflow-auto",
                 {
-                  "bg-background!": activeGameTypeProviders,
                   "translate-x-0": reveal,
                   "-translate-x-full": !reveal,
                 }
@@ -423,7 +425,18 @@ const Topbar = ({ isFull }: TopbarProps) => {
               {activeGameTypeProviders?.map((provider) => (
                 <div
                   key={provider.id}
-                  className="py-5.5 flex flex-col justify-center items-center border-b border-gray-4 mx-1"
+                  className="py-5.5 flex flex-col justify-center items-center border-b border-gray-4 mx-1 min-w-[23.5vw]"
+                  onClick={() => {
+                    setSidebarOpen(false);
+                    setActiveGameTypeProviders(null);
+                    setActiveGameType(null);
+                    navigate(
+                      `/games/${activeGameType}#vendor=${provider.provider_code}`,
+                      {
+                        viewTransition: true,
+                      }
+                    );
+                  }}
                 >
                   <img
                     src={"https://ai.cloud7hub.uk" + provider.thumbnail}
@@ -434,7 +447,7 @@ const Topbar = ({ isFull }: TopbarProps) => {
                 </div>
               ))}
             </div>
-          </div>
+          </DialogPanel>
         </div>
       </Dialog>
     </>

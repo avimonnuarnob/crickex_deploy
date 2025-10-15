@@ -1,12 +1,13 @@
-import { TfiReload } from "react-icons/tfi";
 import promotionsIcon from "@/assets/images/icon-promotion.png";
 import depositIcon from "@/assets/images/icon-deposit-2.png";
+import refreshIcon from "@/assets/icon/refresh.svg";
 import { useCurrentUser } from "@/contexts/CurrentUserContext";
 import Cookies from "js-cookie";
 import { useState } from "react";
 import classNames from "classnames";
 import { useRouteLoaderData } from "react-router";
 import type { RootLoaderData } from "@/root";
+import { Link } from "react-router";
 
 export default function UserDashboard() {
   const data = useRouteLoaderData<RootLoaderData>("root");
@@ -50,8 +51,10 @@ export default function UserDashboard() {
                 }
               }}
             >
-              <TfiReload
-                className={classNames({
+              <img
+                src={refreshIcon}
+                alt="refresh"
+                className={classNames("size-3.5", {
                   "animate-spin": isLoading,
                 })}
               />
@@ -61,22 +64,22 @@ export default function UserDashboard() {
       </div>
       <div className="w-0.25 h-7.5 bg-[#fff3]"></div>
       <div className="flex gap-3.75 text-xs text-white">
-        <div>
+        <Link to="/promotion">
           <img
             src={promotionsIcon}
             alt="promo_icon"
             className="w-7.5 h-7.5 mx-auto mt-1 mb-1.25"
           />
           <span>Promotions</span>
-        </div>
-        <div>
+        </Link>
+        <Link to="member/wallet/deposit">
           <img
             src={depositIcon}
             alt="deposit_icon"
             className="w-7.5 h-7.5 mx-auto mt-1 mb-1.25"
           />
           <span>Deposit</span>
-        </div>
+        </Link>
       </div>
     </div>
   );

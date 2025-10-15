@@ -11,6 +11,7 @@ import { Link, useNavigate } from "react-router";
 import { useCurrentUser } from "@/contexts/CurrentUserContext";
 import { IoMail } from "react-icons/io5";
 import customerIcon from "@/assets/images/icon-customer.png";
+import memberIcon from "@/assets/icon/member.svg";
 
 const PersonalInfoModal: React.FC = () => {
   const { userInfo, userWalletData } = useCurrentUser();
@@ -32,7 +33,12 @@ const PersonalInfoModal: React.FC = () => {
           {/* Profile avatar */}
           <div className="absolute left-1/2 transform -translate-x-1/2 -bottom-5">
             <div className="w-20 h-20 rounded-full bg-gray-100 flex items-center justify-center shadow">
-              <FaUser className="text-gray-400 text-4xl" />
+              {/* <FaUser className="text-gray-400 text-4xl" /> */}
+              <img
+                src={memberIcon}
+                alt="Member Icon"
+                className="w-full h-full"
+              />
             </div>
           </div>
         </div>

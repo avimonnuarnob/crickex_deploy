@@ -5,6 +5,8 @@ import Cookies from "js-cookie";
 import { useState, type Dispatch, type SetStateAction } from "react";
 import { useLocation, useNavigate } from "react-router";
 
+import heartIcon from "@/assets/icon/icon-heart.svg";
+
 export default function GameDescription({
   game,
   setIsModalOpen,
@@ -60,7 +62,7 @@ export default function GameDescription({
     <button
       // overflow hidden somehow getting overwritten by normalize css file. maybe tailwind has less precedence over normalize css.
       className={classNames(
-        "w-[180px] rounded-md overflow-hidden! bg-white cursor-pointer",
+        "w-full h-full rounded-md overflow-hidden! bg-white cursor-pointer",
         {
           "animate-pulse": isLoading,
         }
@@ -68,25 +70,32 @@ export default function GameDescription({
       onClick={() => onClickHandler(game)}
     >
       {shouldShowSection ? (
-        <img
-          src={
-            game.imgFileName.startsWith("/")
-              ? "https://img.softtake.net" + game.imgFileName
-              : game.imgFileName
-          }
-          alt={game.gameName.gameName_enus}
-          className="w-full h-[120px]"
-          decoding="async"
-          loading="lazy"
-        />
+        <div className="w-full h-full max-h-[120px] rounded-md">
+          <img
+            src={
+              game.imgFileName.startsWith("/")
+                ? "https://img.softtake.net" + game.imgFileName
+                : game.imgFileName
+            }
+            alt={game.gameName.gameName_enus}
+            className="w-full h-full"
+            decoding="async"
+            loading="lazy"
+          />
+        </div>
       ) : (
         <div className="w-full h-[120px] flex justify-center items-center">
           <div className="loader small"></div>
         </div>
       )}
-      <h3 className="p-2 whitespace-nowrap truncate">
-        {game.gameName.gameName_enus}
-      </h3>
+      <div className="flex p-2 items-center">
+        <h3 className="text-left whitespace-nowrap truncate flex-1">
+          {game.gameName.gameName_enus}
+        </h3>
+        <button>
+          <img src={heartIcon} alt="heart" className="w-5 h-5" />
+        </button>
+      </div>
     </button>
   );
 }

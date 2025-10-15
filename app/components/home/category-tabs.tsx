@@ -45,7 +45,7 @@ export default function CategoryTab({ providers }: { providers: PROVIDERS }) {
             } else {
               setIsFixedTabList(true);
               tabList?.style.setProperty("position", "fixed");
-              tabList?.style.setProperty("top", `${topBarHeight - 1}px`);
+              tabList?.style.setProperty("top", `${topBarHeight - 2}px`);
               tabList?.style.setProperty("width", `${topBarWidth}px`);
             }
           });
@@ -71,15 +71,33 @@ export default function CategoryTab({ providers }: { providers: PROVIDERS }) {
           className={`flex bg-[#004179] text-white sm:rounded overflow-x-scroll [&::-webkit-scrollbar]:h-0 z-10 sm:static`}
         >
           {filteredProviders.map((gameType) => (
-            <Tab key={gameType.id} className="data-selected:outline-none">
+            <Tab
+              key={gameType.id}
+              className="data-selected:outline-none"
+              onClick={() => {
+                const e = document.getElementById("tabPanels");
+                const main = document.getElementById("main");
+                console.log(document.body.offsetHeight);
+                if (e && isFixedTabList) {
+                  main?.scrollTo({
+                    top: e.offsetTop,
+                    left: 0,
+                    behavior: "smooth",
+                  });
+                }
+              }}
+            >
               {({ selected }) => (
                 <div
-                  className={`flex flex-col data items-center justify-center w-[77.27px] ${
+                  className={`relative flex flex-col data items-center justify-center w-[77.27px] ${
                     isFixedTabList ? "h-[48.73px]" : "h-[101.99px]"
                   } sm:w-22.5 sm:h-19 font-bold transition-[height] duration-300 relative ${
                     selected && "bg-[#005dac]"
                   } `}
                 >
+                  {isFixedTabList && (
+                    <div className="absolute inset-0" onClick={() => {}} />
+                  )}
                   {isFixedTabList ? null : (
                     <img
                       src={`/game_type/${gameType.game_type_code}.png`}
@@ -107,13 +125,16 @@ export default function CategoryTab({ providers }: { providers: PROVIDERS }) {
                 className={`flex-1 min-w-full ${
                   idx === selectedIndex ? "max-h-max" : "max-h-0"
                 }`}
-                key={gameType.id}
+                key={gameType.game_type_code + gameType.id}
               >
                 <AnimatePresence>
                   <motion.div
                     animate={{ x: selectedIndex * -100 + "%" }}
                     transition={{ duration: 0 }}
-                    className="flex pt-2.75 pb-2 gap-1.25 items-center"
+                    className={classNames("flex pb-2 gap-1.25 items-center", {
+                      "pt-2.75": !isFixedTabList,
+                      "pt-15": isFixedTabList,
+                    })}
                   >
                     <div className="w-1 h-3.75 bg-[#005dac] rounded"></div>
                     <span className="font-bold text-[15px]">
@@ -124,7 +145,7 @@ export default function CategoryTab({ providers }: { providers: PROVIDERS }) {
                     animate={{ x: selectedIndex * -100 + "%" }}
                     transition={{ duration: 0.3 }}
                   >
-                    <div className="grid grid-cols-4 md:grid-cols-8 gap-1 rounded overflow-hidden pb-2.75">
+                    <div className="grid grid-cols-4 md:grid-cols-8 gap-[.5333333333vw] sm:gap-1 sm:rounded overflow-hidden pb-2.75">
                       {gameType.game_provider.map((item) => (
                         <div
                           key={item.id}

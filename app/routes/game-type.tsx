@@ -77,7 +77,7 @@ export default function GameType({ loaderData, params }: Route.ComponentProps) {
   }, []);
   return (
     <div
-      className="mt-18 py-1"
+      className="sm:py-4"
       style={{
         viewTransitionName: isTransitioning ? "page" : "none",
       }}

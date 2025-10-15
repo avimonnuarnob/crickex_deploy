@@ -32,7 +32,7 @@ import ambassador4 from "@/assets/images/ambassador/ambassadors4.png";
 import homeIcon from "@/assets/images/icon-home.png";
 import promotionIcon from "@/assets/images/icon-promotion.png";
 import depositIcon from "@/assets/images/icon-deposit-2.png";
-import profileIcon from "@/assets/images/icon-profile.png";
+import profileIcon from "@/assets/icon/icon-profile.svg";
 
 import siteLogo from "@/assets/images/logo-blue.png";
 import { useCurrentUser } from "@/contexts/CurrentUserContext";
@@ -150,6 +150,7 @@ export default function RootLayout() {
     <div className="grid grid-cols-1 sm:grid-cols-[auto_1fr] min-h-screen max-w-full max-h-screen">
       <Sidebar isFull={isFull} setIsFull={setIsFull} />
       <main
+        id="main"
         className="relative flex! flex-col min-w-0 min-h-0 max-h-dvh overflow-auto overscroll-none"
         ref={ref}
       >
@@ -208,7 +209,7 @@ export default function RootLayout() {
             </div>
           ) : (
             <div
-              className="sticky bottom-0 left-0 right-0 w-full bg-background flex sm:hidden items-center [&>*]:h-full min-h-15"
+              className="sticky bottom-0 left-0 right-0 w-full bg-background flex sm:hidden items-center [&>*]:h-full min-h-[13.33vw]"
               style={{ boxShadow: "0 0 1.3333333333vw #00000080" }}
             >
               <button className="flex-2 bg-[#d7e3f0] px-1.25">
@@ -224,13 +225,16 @@ export default function RootLayout() {
               <button className="flex-3 flex flex-col items-center py-3.75 gap-1">
                 <Link
                   to={"/new-register-entry/account"}
-                  className="w-full h-full"
+                  className="w-full h-full flex items-center justify-center"
                 >
                   <p className="text-foreground font-bold text-sm">Sign Up</p>
                 </Link>
               </button>
               <button className="flex-3 flex flex-col items-center py-3.75 gap-1 bg-blue-1">
-                <Link to={"/account-login-quick"} className="w-full h-full">
+                <Link
+                  to={"/account-login-quick"}
+                  className="w-full h-full flex items-center justify-center"
+                >
                   <p className="text-white font-bold text-sm">Login</p>
                 </Link>
               </button>
