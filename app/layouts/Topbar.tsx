@@ -136,7 +136,7 @@ const Topbar = ({ isFull }: TopbarProps) => {
               <img
                 src={siteLogo}
                 alt="crickex"
-                className="w-[70%] h-full object-contain cursor-pointer mx-auto"
+                className="w-[70%] sm:w-full h-full object-contain cursor-pointer mx-auto"
               />
             </Link>
             <div className="flex gap-2 items-center mr-1">
@@ -245,7 +245,7 @@ const Topbar = ({ isFull }: TopbarProps) => {
           >
             <div className="z-1 bg-white overflow-auto overscroll-none">
               <div>
-                <Link to="/">
+                <Link to="/" onClick={() => setSidebarOpen(false)}>
                   <div className="flex items-center gap-3 p-2.75 text-foreground">
                     <img
                       src={homeIcon}
@@ -256,7 +256,7 @@ const Topbar = ({ isFull }: TopbarProps) => {
                   </div>
                 </Link>
 
-                <Link to="/">
+                <Link to="/promotion">
                   <div className="flex items-center gap-3 p-2.75 text-foreground">
                     <img
                       src={promotionsIcon}

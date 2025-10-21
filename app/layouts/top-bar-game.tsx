@@ -1,35 +1,18 @@
 import classNames from "classnames";
-import langButton from "@/assets/icon/lang.svg";
-import Button from "@/components/ui/button/Button";
-import IconButton from "@/components/ui/button/IconButton";
 import { useLocation, useNavigate, useParams } from "react-router";
-import { useState } from "react";
-import Cookies from "js-cookie";
-import WalletButton from "@/components/home/wallet-button";
-
-import { BsArrowReturnLeft } from "react-icons/bs";
+import { useRef } from "react";
+import { IoMdCloseCircleOutline } from "react-icons/io";
 
 type TopbarProps = Readonly<{
   isFull: boolean;
 }>;
 
 const TopbarGame = ({ isFull }: TopbarProps) => {
-  const { ptype, pcode } = useParams();
-  const [isUserLoggedIn, setIsUserLoggedIn] = useState<string | undefined>(
-    Cookies.get("userToken")
-  );
   const navigate = useNavigate();
   const location = useLocation();
 
-  const redirect = location.state.redirect;
-
-  const loginBtnHandler = () => {
-    navigate("/account-login-quick");
-  };
-
-  const signupBtnHandler = () => {
-    navigate("/new-register-entry/account");
-  };
+  const parentRouteRef = useRef(location.state.from);
+  const pageNumberRef = useRef(location.state.page);
 
   return (
     <>
@@ -44,68 +27,27 @@ const TopbarGame = ({ isFull }: TopbarProps) => {
             "w-[calc(100%-(16px*3.75))]": isFull,
           })}
         >
-          <div className="flex h-15 items-center justify-between py-4">
-            <IconButton
-              className="bg-blue-7"
-              icon={<BsArrowReturnLeft className="text-xs" />}
-              onClick={() => {
-                if (redirect === "/") {
-                  navigate("/");
-                } else {
-                  navigate(`/games/${ptype}#vendor=${pcode}`);
-                }
-              }}
-            ></IconButton>
-
-            <div className="flex items-center gap-[5px] justify-between">
-              {!isUserLoggedIn && (
-                <>
-                  <Button
-                    className="bg-blue-3 text-xs w-[105px] h-[34px]"
-                    onClick={loginBtnHandler}
-                    // href={UnProtectedRoute.Login}
-                  >
-                    Login
-                  </Button>
-                  <Button
-                    className="text-xs w-[105px] h-[34px]"
-                    color="green"
-                    onClick={signupBtnHandler}
-                    // href={UnProtectedRoute.Signup}
-                  >
-                    Sign up
-                  </Button>
-                </>
-              )}
-
-              {isUserLoggedIn && (
-                <>
-                  <Button
-                    className="bg-blue-3 text-xs w-[105px] h-[34px]"
-                    onClick={() => {
-                      Cookies.remove("userToken");
-                      setIsUserLoggedIn(undefined);
-                      navigate("/");
-                      // window.location.reload();
-                    }}
-                    // href={UnProtectedRoute.Login}
-                  >
-                    Logout
-                  </Button>
-                  <WalletButton />
-                </>
-              )}
-
-              <div className="ml-3 grow-0">
-                <IconButton
-                  color="link"
-                  icon={
-                    <img src={langButton} height={24} width={24} alt="lang" />
-                  }
-                  className="!p-0"
-                />
-              </div>
+          <div className="flex h-7.5 items-center justify-between py-4">
+            <div>
+              <img
+                src="/license.png"
+                alt="licecnse_ny_softtake"
+                className="w-20 border"
+              />
             </div>
+
+            <button
+              onClick={() => {
+                navigate(parentRouteRef.current, {
+                  state: pageNumberRef.current
+                    ? { page: pageNumberRef.current }
+                    : null,
+                  replace: true,
+                });
+              }}
+            >
+              <IoMdCloseCircleOutline className="size-6 text-white cursor-pointer" />
+            </button>
           </div>
         </div>
       </div>

@@ -1,6 +1,6 @@
 import type { GAMES } from "@/routes/game-type";
 import classNames from "classnames";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useLocation, useNavigate } from "react-router";
 import Modal from "@/components/ui/modal/Modal";
 import Button from "@/components/ui/button/Button";
@@ -30,16 +30,24 @@ export default function GalleryForGames({
   providersMap: Map<string, string>;
 }) {
   const navigate = useNavigate();
-  const { hash } = useLocation();
+  const { hash, state } = useLocation();
   const vendor = hash.replace("#vendor=", "");
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [gameFilter, setGameFilter] = useState<string[]>(() =>
     vendor ? [vendor] : []
   );
-  const [pageNumber, setPageNumber] = useState(1);
+  const [pageNumber, setPageNumber] = useState(
+    state?.page ? Number(state.page) : 1
+  );
   const [open, setOpen] = useState(false);
   const [textFilterInput, setTextFilterInput] = useState<string>();
+
+  const gettersRef = useRef<() => number | null>(null);
+  gettersRef.current = () => {
+    return pageNumber;
+  };
+  const callGetters = useCallback(() => gettersRef.current?.(), []);
 
   useEffect(() => {
     if (gameFilter.length && vendor) {
@@ -85,7 +93,7 @@ export default function GalleryForGames({
         <div className="flex gap-2.5 bg-white px-2 pt-2 pb-1.5 overflow-x-scroll [&::-webkit-scrollbar]:h-1.5 [&::-webkit-scrollbar-thumb]:bg-gray-300 [&::-webkit-scrollbar-thumb]:rounded pr-14.5">
           <button
             className={classNames(
-              "bg-[#f5f5f5] px-4 py-2 text-[13px] rounded min-w-[93px] h-[30px] text-center cursor-pointer hover:opacity-[0.7]",
+              "bg-[#f5f5f5] px-4 py-2 text-[13px] rounded w-[93px] h-[30px] text-center cursor-pointer hover:opacity-[0.7]",
               { "bg-[#005dac]! text-white": gameFilter.length === 0 }
             )}
             onClick={() => {
@@ -98,7 +106,7 @@ export default function GalleryForGames({
             <button
               key={provider}
               className={classNames(
-                "bg-[#f5f5f5] px-4 py-2 text-[13px] sm:rounded min-w-[93px] h-[30px] text-center cursor-pointer hover:opacity-[0.7]",
+                "bg-[#f5f5f5] px-4 py-2 text-[13px] rounded min-w-[93px] h-[30px] text-center cursor-pointer hover:opacity-[0.7] truncate!",
                 { "bg-[#005dac]! text-white": gameFilter.includes(provider) }
               )}
               onClick={() => {
@@ -141,6 +149,7 @@ export default function GalleryForGames({
               key={game.gameName.gameName_enus}
               game={game}
               setIsModalOpen={setIsModalOpen}
+              callGetters={callGetters}
             />
           ))}
         </div>
@@ -304,7 +313,7 @@ export default function GalleryForGames({
                             type="button"
                             key={provider}
                             className={classNames(
-                              "bg-[#f5f5f5] px-4 py-2 text-[13px] rounded max-w-[132.48px] h-[35px]text-center cursor-pointer hover:opacity-[0.7]",
+                              "bg-[#f5f5f5] px-4 py-2 text-[13px] rounded max-w-[132.48px] h-[35px] text-center cursor-pointer hover:opacity-[0.7] whitespace-nowrap text-ellipsis",
                               {
                                 "bg-[#005dac]! text-white":
                                   gameFilter.includes(provider),

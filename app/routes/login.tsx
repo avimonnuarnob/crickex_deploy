@@ -59,7 +59,7 @@ export default function LoginModal() {
   };
   return (
     <Modal
-      onClose={async () => {
+      onClose={() => {
         setTimeout(() => {
           const a = location.pathname.replace("/account-login-quick", "");
           navigate(a ? a + location.hash : "/" + location.hash);

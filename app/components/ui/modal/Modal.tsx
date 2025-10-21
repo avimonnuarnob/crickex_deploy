@@ -36,7 +36,7 @@ const Modal = ({
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: 100 }}
               transition={{ duration: 0.2, ease: "easeInOut" }}
-              className="w-full h-full sm:max-w-[375px] relative sm:my-auto max-h-[700px]"
+              className="w-full h-full sm:max-w-[375px] relative sm:my-auto sm:max-h-[700px]"
               // style={{
               //   height: "calc(100dvh - 60px)",
               // }}
@@ -49,14 +49,16 @@ const Modal = ({
                   }
                 )}
               >
-                <div className="bg-blue-1 relative mb-0 sm:rounded-t-[10px] p-2.75">
-                  <CloseButton className="absolute top-1/2 right-2 mb-0 -translate-y-1/2 cursor-pointer">
-                    <IoCloseSharp className="text-xl text-white" />
-                  </CloseButton>
-                  <DialogTitle className="mb-0 text-center text-lg text-white">
-                    {title}
-                  </DialogTitle>
-                </div>
+                {title && (
+                  <div className="bg-blue-1 relative mb-0 sm:rounded-t-[10px] p-2.75">
+                    <CloseButton className="absolute top-1/2 right-2 mb-0 -translate-y-1/2 cursor-pointer">
+                      <IoCloseSharp className="text-xl text-white" />
+                    </CloseButton>
+                    <DialogTitle className="mb-0 text-center text-lg text-white">
+                      {title}
+                    </DialogTitle>
+                  </div>
+                )}
                 <div
                   className={classNames(
                     "bg-[#f5f5f5] rounded-b-[10px] overflow-y-auto [&::-webkit-scrollbar]:w-1.25 [&::-webkit-scrollbar-thumb]:bg-gray-300 [&::-webkit-scrollbar-thumb]:rounded",

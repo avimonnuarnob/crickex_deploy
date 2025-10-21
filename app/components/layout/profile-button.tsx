@@ -7,7 +7,7 @@ import {
   MenuSection,
 } from "@headlessui/react";
 import IconButton from "../ui/button/IconButton";
-import { CgProfile } from "react-icons/cg";
+// import infoIcon from "../../assets/icon/icon-info.svg";
 import React from "react";
 import { TfiReload } from "react-icons/tfi";
 
@@ -86,10 +86,11 @@ export default function ProfileButton() {
   return (
     <Menu>
       <MenuButton as={React.Fragment}>
-        <IconButton
-          color="link"
-          icon={<CgProfile className="size-7.5 text-white" />}
-          className="p-0!"
+        <div
+          className="p-0! bg-white w-7.5 h-7.5 cursor-pointer"
+          style={{
+            maskImage: "url(/icon-info.svg)",
+          }}
         />
       </MenuButton>
       <MenuItems
@@ -114,7 +115,6 @@ export default function ProfileButton() {
                 icon={<TfiReload className="size-2.5 text-blue-1 stroke-2" />}
                 onClick={(e) => {
                   e.preventDefault();
-                  console.log("hello");
                 }}
               ></IconButton>
             </div>

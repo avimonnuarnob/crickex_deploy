@@ -97,6 +97,7 @@ const TransactionRecords = ({ loaderData }: Route.ComponentProps) => {
   const navigate = useNavigate();
 
   const [open, setOpen] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(true);
   const [statusFilter, setStatusFilter] = useState<
     ("Processing" | "Completed" | "Failed")[]
   >([]);
@@ -135,12 +136,20 @@ const TransactionRecords = ({ loaderData }: Route.ComponentProps) => {
     setDateFilter(date);
   };
 
+  const handleTransactionRecordsModal = () => {
+    setTimeout(() => {
+      const a = location.pathname.replace("/member/transaction-records", "");
+      navigate(a ? a + location.hash : "/" + location.hash);
+    }, 200);
+    setIsModalOpen(false);
+  };
+
   return (
     <>
       <Modal
-        isOpen={true}
+        isOpen={isModalOpen}
         isFullScreen={true}
-        onClose={() => navigate(-1)}
+        onClose={handleTransactionRecordsModal}
         title="Transaction Records"
       >
         <div className="">

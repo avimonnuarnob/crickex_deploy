@@ -11,8 +11,6 @@ export default function CategoryTab({ providers }: { providers: PROVIDERS }) {
 
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [isFixedTabList, setIsFixedTabList] = useState(false);
-  const [topBarHeight, setTopBarHeight] = useState(0);
-  const [topBarWidth, setTopBarWidth] = useState(0);
 
   const handleTabChange = (index: number) => {
     setSelectedIndex(index);
@@ -59,6 +57,48 @@ export default function CategoryTab({ providers }: { providers: PROVIDERS }) {
     };
   }, []);
 
+  useEffect(() => {
+    const touchableElement = document.getElementById("touchPanel");
+    let touchstartX = 0;
+    let touchstartY = 0;
+    let touchendX = 0;
+    let touchendY = 0;
+
+    function handleGesture() {
+      if (touchendX < touchstartX) {
+        console.log("Swiped Left");
+        if (selectedIndex > 0) {
+          setSelectedIndex((state) => state - 1);
+        }
+      }
+
+      if (touchendX > touchstartX) {
+        console.log("Swiped Right");
+        if (selectedIndex < filteredProviders.length - 1) {
+          setSelectedIndex((state) => state + 1);
+        }
+      }
+    }
+
+    const touchEndhandler = (event: any) => {
+      touchendX = event.changedTouches[0].screenX;
+      touchendY = event.changedTouches[0].screenY;
+      handleGesture();
+    };
+    const touchStartHandler = (event: any) => {
+      touchstartX = event.changedTouches[0].screenX;
+      touchstartY = event.changedTouches[0].screenY;
+    };
+
+    touchableElement?.addEventListener("touchstart", touchStartHandler);
+    touchableElement?.addEventListener("touchend", touchEndhandler);
+
+    return () => {
+      touchableElement?.removeEventListener("touchstart", touchStartHandler);
+      touchableElement?.removeEventListener("touchend", touchEndhandler);
+    };
+  }, []);
+
   return (
     <div className="w-full">
       <TabGroup
@@ -77,7 +117,6 @@ export default function CategoryTab({ providers }: { providers: PROVIDERS }) {
               onClick={() => {
                 const e = document.getElementById("tabPanels");
                 const main = document.getElementById("main");
-                console.log(document.body.offsetHeight);
                 if (e && isFixedTabList) {
                   main?.scrollTo({
                     top: e.offsetTop,
@@ -117,7 +156,7 @@ export default function CategoryTab({ providers }: { providers: PROVIDERS }) {
           ))}
         </TabList>
         <div className="px-2 sm:px-0">
-          <TabPanels className="flex overflow-hidden">
+          <TabPanels id="touchPanel" className="flex overflow-hidden">
             {filteredProviders.map((gameType, idx) => (
               <TabPanel
                 id="tabPanels"

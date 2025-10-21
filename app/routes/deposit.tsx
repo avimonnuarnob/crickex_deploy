@@ -1,6 +1,6 @@
 import Modal from "@/components/ui/modal/Modal";
-import { useNavigate } from "react-router";
-import { Fragment, useEffect, useState } from "react";
+import { Await, useNavigate } from "react-router";
+import React, { Fragment, useEffect, useState } from "react";
 import Button from "@/components/ui/button/Button";
 import { LuThumbsUp } from "react-icons/lu";
 import {
@@ -194,20 +194,21 @@ export interface BankEntry {
 }
 
 export const clientLoader = async () => {
-  const response = await fetch(
+  const promiseOfGateways = fetch(
     "https://ai.cloud7hub.uk/payment/domain-wise/live-gateway/list/",
     {
       headers: {
         Authorization: `Token ${Cookies.get("userToken")}`,
       },
     }
-  );
-  const data = await response.json();
-  return { gateways: data.data as Gateways };
+  )
+    .then((response) => response.json())
+    .then((data) => data.data as Gateways);
+  return { promiseOfGateways };
 };
 
 export default function Deposit({ loaderData }: Route.ComponentProps) {
-  const { gateways } = loaderData;
+  const { promiseOfGateways } = loaderData;
   const navigate = useNavigate();
 
   let [searchParams, setSearchParams] = useSearchParams();
@@ -215,19 +216,6 @@ export default function Deposit({ loaderData }: Route.ComponentProps) {
 
   const [isModalOpen, setIsModalOpen] = useState(true);
   const [selectedIndex, setSelectedIndex] = useState(0);
-
-  const depositGateways = gateways.filter(
-    (gateway) =>
-      gateway.use_in_user &&
-      (gateway.gateway_purpose === "deposit" ||
-        gateway.gateway_purpose === "both")
-  );
-  const withdrawalGateways = gateways.filter(
-    (gateway) =>
-      gateway.use_in_user &&
-      (gateway.gateway_purpose === "withdrawal" ||
-        gateway.gateway_purpose === "both")
-  );
 
   const handleCasheirModal = () => {
     setIsModalOpen(false);
@@ -251,102 +239,128 @@ export default function Deposit({ loaderData }: Route.ComponentProps) {
       title="Funds"
     >
       <div className="flex flex-col">
-        <TabGroup
-          className=""
-          selectedIndex={selectedIndex}
-          onChange={setSelectedIndex}
+        <React.Suspense
+          fallback={
+            <div className="flex justify-center items-center flex-col h-full">
+              <div className="list-loading w-10 h-10">
+                <span className="sr-only">Loading...</span>
+              </div>
+            </div>
+          }
         >
-          <TabList
-            className="flex bg-blue-1 pb-3 px-3.75 pt-2 text-sm"
-            style={{
-              boxShadow: "0 1px 3px #0000004d",
-            }}
-          >
-            <Tab as={Fragment}>
-              {({ selected }) => (
-                <button
-                  className={classNames(
-                    "flex-1 py-0.75 bg-transparent text-white text-center focus:outline-none data-selected:bg-[#2d9eff] rounded",
-                    {
-                      "shadow shadow-[#00197980]": selected,
-                    }
-                  )}
+          <Await resolve={promiseOfGateways}>
+            {(gateways) => {
+              return (
+                <TabGroup
+                  className=""
+                  selectedIndex={selectedIndex}
+                  onChange={setSelectedIndex}
                 >
-                  <span
-                    className={classNames(
-                      "block py-1.25 text-[13px] rounded-l",
-                      {
-                        "bg-[#2d9eff]": selected,
-                        "bg-blue-2": !selected,
-                      }
-                    )}
+                  <TabList
+                    className="flex bg-blue-1 pb-3 px-3.75 pt-2 text-sm"
+                    style={{
+                      boxShadow: "0 1px 3px #0000004d",
+                    }}
                   >
-                    Deposit
-                  </span>
-                </button>
-              )}
-            </Tab>
-            <Tab as={Fragment}>
-              {({ selected }) => (
-                <button
-                  className={classNames(
-                    "flex-1 py-0.75 bg-blue-1 text-white text-center focus:outline-none data-selected:bg-blue-3 rounded",
-                    {
-                      "shadow shadow-[#00197980]": selected,
-                    }
-                  )}
-                >
-                  <span
-                    className={classNames(
-                      "block bg-blue-2 py-1.25 text-[13px] rounded-r",
-                      {
-                        "bg-blue-3": selected,
-                      }
-                    )}
-                  >
-                    Withdrawal
-                  </span>
-                </button>
-              )}
-            </Tab>
-          </TabList>
+                    <Tab as={Fragment}>
+                      {({ selected }) => (
+                        <button
+                          className={classNames(
+                            "flex-1 py-0.75 bg-transparent text-white text-center focus:outline-none data-selected:bg-[#2d9eff] rounded",
+                            {
+                              "shadow shadow-[#00197980]": selected,
+                            }
+                          )}
+                        >
+                          <span
+                            className={classNames(
+                              "block py-1.25 text-[13px] rounded-l",
+                              {
+                                "bg-[#2d9eff]": selected,
+                                "bg-blue-2": !selected,
+                              }
+                            )}
+                          >
+                            Deposit
+                          </span>
+                        </button>
+                      )}
+                    </Tab>
+                    <Tab as={Fragment}>
+                      {({ selected }) => (
+                        <button
+                          className={classNames(
+                            "flex-1 py-0.75 bg-blue-1 text-white text-center focus:outline-none data-selected:bg-blue-3 rounded",
+                            {
+                              "shadow shadow-[#00197980]": selected,
+                            }
+                          )}
+                        >
+                          <span
+                            className={classNames(
+                              "block bg-blue-2 py-1.25 text-[13px] rounded-r",
+                              {
+                                "bg-blue-3": selected,
+                              }
+                            )}
+                          >
+                            Withdrawal
+                          </span>
+                        </button>
+                      )}
+                    </Tab>
+                  </TabList>
 
-          <TabPanels>
-            <Transition
-              show={selectedIndex === 0}
-              enter="transition-transform duration-300"
-              enterFrom="-translate-x-full"
-              enterTo="translate-x-0"
-              leave="transition-transform duration-300"
-              leaveFrom="translate-x-0"
-              leaveTo="-translate-x-full"
-            >
-              <TabPanel static>
-                <DepositForm
-                  gateways={depositGateways}
-                  parentCallback={handleCasheirModal}
-                  selectedPromotion={promotion ?? undefined}
-                />
-              </TabPanel>
-            </Transition>
-            <Transition
-              show={selectedIndex === 1}
-              enter="transition-transform delay-200 duration-300"
-              enterFrom="translate-y-full opacity-0"
-              enterTo="translate-y-0 opacity-100"
-              leave="transition-transform delay-200 duration-300"
-              leaveFrom="translate-y-0 opacity-100"
-              leaveTo="-translate-y-full opacity-0"
-            >
-              <TabPanel static>
-                <WithdrawalForm
-                  gateways={withdrawalGateways}
-                  parentCallback={handleCasheirModal}
-                />
-              </TabPanel>
-            </Transition>
-          </TabPanels>
-        </TabGroup>
+                  <TabPanels>
+                    <Transition
+                      show={selectedIndex === 0}
+                      enter="transition-transform duration-300"
+                      enterFrom="-translate-x-full"
+                      enterTo="translate-x-0"
+                      leave="transition-transform duration-300"
+                      leaveFrom="translate-x-0"
+                      leaveTo="-translate-x-full"
+                    >
+                      <TabPanel static>
+                        <DepositForm
+                          gateways={gateways.filter(
+                            (gateway) =>
+                              gateway.use_in_user &&
+                              (gateway.gateway_purpose === "deposit" ||
+                                gateway.gateway_purpose === "both")
+                          )}
+                          parentCallback={handleCasheirModal}
+                          selectedPromotion={promotion ?? undefined}
+                        />
+                      </TabPanel>
+                    </Transition>
+                    <Transition
+                      show={selectedIndex === 1}
+                      enter="transition-transform delay-200 duration-300"
+                      enterFrom="translate-y-full opacity-0"
+                      enterTo="translate-y-0 opacity-100"
+                      leave="transition-transform delay-200 duration-300"
+                      leaveFrom="translate-y-0 opacity-100"
+                      leaveTo="-translate-y-full opacity-0"
+                    >
+                      <TabPanel static>
+                        <WithdrawalForm
+                          gateways={gateways.filter(
+                            (gateway) =>
+                              gateway.use_in_user &&
+                              (gateway.gateway_purpose === "withdrawal" ||
+                                gateway.gateway_purpose === "both")
+                          )}
+                          parentCallback={handleCasheirModal}
+                        />
+                      </TabPanel>
+                    </Transition>
+                  </TabPanels>
+                </TabGroup>
+              );
+            }}
+          </Await>
+        </React.Suspense>
       </div>
     </Modal>
   );

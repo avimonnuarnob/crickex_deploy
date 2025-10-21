@@ -19,6 +19,7 @@ import { useEffect } from "react";
 import Toast from "./components/ui/toast/Toast";
 
 export type PROMOTIONLIST = PROMOTION[];
+export type LINKS = LINK[];
 
 export interface PROMOTION {
   id: number;
@@ -55,6 +56,16 @@ export interface PROMOTION {
   selected_currency: any[];
 }
 
+export interface LINK {
+  id: number;
+  title: string;
+  description: string;
+  created_at: string;
+  updated_at: string;
+  page_name: number;
+  url_id: number;
+}
+
 export async function clientLoader() {
   const countryListPromise = fetch("https://ai.cloud7hub.uk/country/list")
     .then((value) => value.json())
@@ -81,6 +92,12 @@ export async function clientLoader() {
     .then((value) => value.json())
     .then((data) => data.data as PROMOTIONLIST);
 
+  const LinksPromise = fetch(
+    import.meta.env.VITE_API_URL + "/statics/page-content/"
+  )
+    .then((value) => value.json())
+    .then((data) => data.data as LINKS);
+
   const [
     countryList,
     mirrorLinks,
@@ -88,6 +105,7 @@ export async function clientLoader() {
     gameProviders,
     socialList,
     promotionList,
+    links,
   ] = await Promise.all([
     countryListPromise,
     mirrorLinksPromise,
@@ -95,6 +113,7 @@ export async function clientLoader() {
     gameProvidersPromise,
     socialListPromise,
     promotionListPromise,
+    LinksPromise,
   ]);
 
   return {
@@ -105,6 +124,7 @@ export async function clientLoader() {
     gameProviders,
     socialList,
     promotionList,
+    links,
   } as {
     countryList: {
       id: number;
@@ -175,6 +195,7 @@ export async function clientLoader() {
       status: boolean;
     }[];
     promotionList: PROMOTIONLIST;
+    links: LINKS;
   };
 }
 

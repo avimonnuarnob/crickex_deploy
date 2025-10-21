@@ -115,8 +115,7 @@ export default function DepositForm({
               deposit.deposit_status === "in review"
           );
           if (pendingDeposit) {
-            setPendingDeposit(pendingDeposit);
-            setSelectedIndex(3);
+            setIsActivated(true);
           } else {
             setIsActivated(true);
           }

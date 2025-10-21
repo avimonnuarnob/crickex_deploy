@@ -7,11 +7,13 @@ import {
   usePrevNextButtons,
 } from "./home-slider-arrow-buttons";
 import { DotButton, useDotButton } from "./home-slider-dots";
-
-const SLIDE_COUNT = 11;
-const SLIDES = Array.from(Array(SLIDE_COUNT).keys());
+import { useRouteLoaderData } from "react-router";
+import type { PROMOTION, RootLoaderData } from "@/root";
+import Modal from "../ui/modal/Modal";
+import { useState } from "react";
 
 export default function HomeSlider() {
+  const data = useRouteLoaderData<RootLoaderData>("root");
   const [emblaRef, emblaApi] = useEmblaCarousel({ loop: true }, [
     Autoplay({ playOnInit: true, delay: 3000 }),
   ]);
@@ -24,6 +26,9 @@ export default function HomeSlider() {
 
   const { selectedIndex, scrollSnaps, onDotButtonClick } =
     useDotButton(emblaApi);
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedPromotion, setSelectedPromotion] = useState<PROMOTION>();
 
   return (
     <section className="border-x-2 sm:border-0 border-blue-1">
@@ -38,16 +43,54 @@ export default function HomeSlider() {
           ref={emblaRef}
         >
           <div className="embla__container">
-            {SLIDES.map((index) => (
-              <div className="embla__slide h-[145px] md:h-[300px]" key={index}>
-                <div className="embla__slide__number h-full">
-                  <img
-                    className="object-cover h-full w-full"
-                    src="https://img.c88rx.com/upload/announcement/image_218805.jpg"
-                  />
+            {data?.promotionList
+              .filter((promotion) => promotion.slider_show)
+              .map((promotion, index) => (
+                <div
+                  className="embla__slide h-[40vw] sm:max-h-[145px] md:max-h-[300px]"
+                  key={index}
+                >
+                  <div className="embla__slide__number h-full">
+                    {promotion.forward_url ? (
+                      <a
+                        href={promotion.forward_url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="cursor-zoom-in"
+                      >
+                        <img
+                          className="h-full w-full"
+                          src={
+                            import.meta.env.VITE_API_URL +
+                            promotion.banner_image
+                          }
+                        />
+                      </a>
+                    ) : (
+                      <button
+                        className={`h-full w-full
+                          ${
+                            promotion.description
+                              ? "cursor-zoom-in pointer-events-auto"
+                              : "pointer-events-none"
+                          }`}
+                        onClick={() => {
+                          setIsModalOpen(true);
+                          setSelectedPromotion(promotion);
+                        }}
+                      >
+                        <img
+                          className="h-full w-full"
+                          src={
+                            import.meta.env.VITE_API_URL +
+                            promotion.banner_image
+                          }
+                        />
+                      </button>
+                    )}
+                  </div>
                 </div>
-              </div>
-            ))}
+              ))}
           </div>
         </div>
         <NextButton
@@ -65,6 +108,29 @@ export default function HomeSlider() {
           />
         ))}
       </div>
+      <Modal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        title={selectedPromotion?.title ?? ""}
+        isFullScreen
+      >
+        <div className="p-2">
+          <img
+            src={import.meta.env.VITE_API_URL + selectedPromotion?.banner_image}
+            alt={selectedPromotion?.alt_text}
+            className="w-full h-30"
+          />
+          <p className="my-2 font-bold">{selectedPromotion?.sub_title}</p>
+          {selectedPromotion?.description && (
+            <div
+              className="bg-foreground-400 text-sm"
+              dangerouslySetInnerHTML={{
+                __html: selectedPromotion.description,
+              }}
+            ></div>
+          )}
+        </div>
+      </Modal>
     </section>
   );
 }

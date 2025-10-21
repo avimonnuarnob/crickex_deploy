@@ -24,7 +24,7 @@ export async function clientLoader({ params }: Route.ClientLoaderArgs) {
 export default function GameLauncher({ loaderData }: Route.ComponentProps) {
   const { gamebox } = loaderData;
   return (
-    <div className="mt-14.75">
+    <div className="mt-7.5">
       <React.Suspense
         fallback={
           <div className="flex justify-center items-center flex-col h-full">
@@ -43,13 +43,13 @@ export default function GameLauncher({ loaderData }: Route.ComponentProps) {
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ ease: "linear" }}
                   style={{
-                    height: "calc(100vh - 59px)",
+                    height: "calc(100vh - 30px)",
                     overflow: "hidden",
                     background: "#d9d9d9",
                   }}
                 >
                   <iframe
-                    src={value.data.gameUrl}
+                    src={value.data?.gameUrl}
                     allowFullScreen={true}
                     allow="autoplay"
                     style={{

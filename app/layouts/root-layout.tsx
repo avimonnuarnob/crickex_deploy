@@ -29,13 +29,14 @@ import ambassador2 from "@/assets/images/ambassador/ambassadors2.png";
 import ambassador3 from "@/assets/images/ambassador/ambassadors3.png";
 import ambassador4 from "@/assets/images/ambassador/ambassadors4.png";
 
-import homeIcon from "@/assets/images/icon-home.png";
-import promotionIcon from "@/assets/images/icon-promotion.png";
-import depositIcon from "@/assets/images/icon-deposit-2.png";
+import homeIcon from "@/assets/icon/toolbar-icon-home.svg";
+import promotionIcon from "@/assets/icon/toolbar-icon-promotion.svg";
+import depositIcon from "@/assets/icon/toolbar-icon-deposit.svg";
 import profileIcon from "@/assets/icon/icon-profile.svg";
 
 import siteLogo from "@/assets/images/logo-blue.png";
 import { useCurrentUser } from "@/contexts/CurrentUserContext";
+import MobileProfileButton from "@/components/layout/mobile-profile-button";
 
 const PAYMENT_METHODS = [
   method1,
@@ -122,6 +123,7 @@ const AMBASSADORS = [
 ];
 export default function RootLayout() {
   const [isFull, setIsFull] = useState(false);
+  const [isProfileOpen, setIsProfileOpen] = useState(false);
   const { isLoggedIn } = useCurrentUser();
 
   const ref = useRef<HTMLElement>(null);
@@ -177,15 +179,16 @@ export default function RootLayout() {
                   <p className="text-white text-sm">Home</p>
                 </div>
               </Link>
-
-              <div className="flex flex-col items-center py-2 gap-1">
-                <img
-                  src={promotionIcon}
-                  alt="promotion_logo"
-                  className="w-5 h-5"
-                />
-                <p className="text-white text-sm">Promotions</p>
-              </div>
+              <Link to="/promotion" className="w-full h-full">
+                <div className="flex flex-col items-center py-2 gap-1">
+                  <img
+                    src={promotionIcon}
+                    alt="promotion_logo"
+                    className="w-5 h-5"
+                  />
+                  <p className="text-white text-sm">Promotions</p>
+                </div>
+              </Link>
               <Link to="/member/wallet/deposit" className="w-full h-full">
                 <div className="flex flex-col items-center py-2 gap-1">
                   <img
@@ -196,16 +199,22 @@ export default function RootLayout() {
                   <p className="text-white text-sm">Deposit</p>
                 </div>
               </Link>
-              <Link to="/member/new-profile-info" className="w-full h-full">
-                <div className="flex flex-col items-center justify-center py-2 gap-1">
+              <MobileProfileButton
+                isOpen={isProfileOpen}
+                onClose={() => setIsProfileOpen(false)}
+              >
+                <button
+                  className="flex flex-col items-center justify-center py-2 gap-1"
+                  onClick={() => setIsProfileOpen(true)}
+                >
                   <img
                     src={profileIcon}
                     alt="profile_logo"
                     className="w-5 h-5"
                   />
                   <p className="text-white text-sm">My Account</p>
-                </div>
-              </Link>
+                </button>
+              </MobileProfileButton>
             </div>
           ) : (
             <div
@@ -354,18 +363,10 @@ const Footer = () => {
       <div className="footer-bottom">
         <div className="footer__nav border-t border-gray-4 pt-6 text-[#005dac]">
           <div className="flex flex-wrap gap-2">
-            {[
-              { title: "About Us", href: "#" },
-              { title: "Contact Us", href: "#" },
-              { title: "Terms & Conditions", href: "terms-and-conditions" },
-              { title: "FAQ", href: "#" },
-              { title: "Affiliate", href: "#" },
-              { title: "Sponsor", href: "#" },
-              { title: "Crickex Blog", href: "#" },
-            ].map((link, i) => (
+            {data?.links.map((link, i) => (
               <Link
                 className="border-l-2 px-2 text-[13px]"
-                to={link.href}
+                to={`/static-page/${link.title.toLowerCase()}`}
                 key={i}
               >
                 {link.title}

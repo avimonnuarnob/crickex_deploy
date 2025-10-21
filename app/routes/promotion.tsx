@@ -38,7 +38,7 @@ export default function Promotion({ params }: Route.ComponentProps) {
   }, []);
   return (
     <div
-      className="py-4"
+      className="py-2 px-2 sm:py-4 sm:px-0"
       style={{
         viewTransitionName: isTransitioning ? "page" : "none",
       }}

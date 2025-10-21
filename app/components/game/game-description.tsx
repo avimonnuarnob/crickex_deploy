@@ -10,9 +10,11 @@ import heartIcon from "@/assets/icon/icon-heart.svg";
 export default function GameDescription({
   game,
   setIsModalOpen,
+  callGetters,
 }: {
   game: GAME;
   setIsModalOpen: Dispatch<SetStateAction<boolean>>;
+  callGetters?: () => any;
 }) {
   const [shouldShowSection] = useImageLoaded(
     game.imgFileName.startsWith("/")
@@ -34,7 +36,10 @@ export default function GameDescription({
           `/open-game/${game.p_code}/${game.p_type}/${game.g_code}/${game.operator}`,
           {
             state: {
-              redirect: location.pathname,
+              from: location.search
+                ? location.pathname + location.search
+                : location.pathname,
+              page: callGetters?.(),
             },
           }
         );
@@ -62,7 +67,7 @@ export default function GameDescription({
     <button
       // overflow hidden somehow getting overwritten by normalize css file. maybe tailwind has less precedence over normalize css.
       className={classNames(
-        "w-full h-full rounded-md overflow-hidden! bg-white cursor-pointer",
+        "w-full h-full rounded-[3px] overflow-hidden! bg-white cursor-pointer",
         {
           "animate-pulse": isLoading,
         }

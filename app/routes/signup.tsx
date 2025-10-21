@@ -198,7 +198,9 @@ export default function SignupModal({ matches }: Route.ComponentProps) {
             "/new-register-entry/account",
             ""
           );
-          navigate(a ? a + location.hash : "/" + location.hash);
+          navigate(a ? a + location.hash : "/" + location.hash, {
+            replace: true,
+          });
         }, 200);
         setIsOpen(false);
       }}

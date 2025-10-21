@@ -60,6 +60,9 @@ export default [
           id: "promotion-forgot-password",
         }
       ),
+      route("member/wallet/deposit", "./routes/deposit.tsx", {
+        id: "promotion-deposit",
+      }),
     ]),
 
     route("/", "./routes/index.tsx", [
@@ -93,6 +96,22 @@ export default [
       route("member/vip-points-exchange", "./routes/point-exchange.tsx", {
         id: "home-point-exchange",
       }),
+    ]),
+
+    route("/static-page/:page", "./routes/static-page.tsx", [
+      route("account-login-quick", "./routes/login.tsx", {
+        id: "static-page-login",
+      }),
+      route("new-register-entry/account", "./routes/signup.tsx", {
+        id: "static-page-signup",
+      }),
+      route(
+        "account-login-quick/forgot-password/:medium",
+        "./routes/forgot-password.tsx",
+        {
+          id: "static-page-forgot-password",
+        }
+      ),
     ]),
   ]),
 

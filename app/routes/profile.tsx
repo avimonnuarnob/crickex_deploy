@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import Modal from "@/components/ui/modal/Modal";
 import {
   FaUser,
@@ -17,8 +17,22 @@ const PersonalInfoModal: React.FC = () => {
   const { userInfo, userWalletData } = useCurrentUser();
   const navigate = useNavigate();
 
+  const [isModalOpen, setIsModalOpen] = useState(true);
+
+  const handlePersonalInfoModal = () => {
+    setTimeout(() => {
+      const a = location.pathname.replace("/member/new-profile-info", "");
+      navigate(a ? a + location.hash : "/" + location.hash);
+    }, 200);
+    setIsModalOpen(false);
+  };
+
   return (
-    <Modal isOpen={true} onClose={() => navigate(-1)} title="Personal Info">
+    <Modal
+      isOpen={isModalOpen}
+      onClose={handlePersonalInfoModal}
+      title="Personal Info"
+    >
       <div className="flex flex-col bg-white">
         {/* Profile header with background image */}
         <div className="relative px-5 pt-5 pr-5">
