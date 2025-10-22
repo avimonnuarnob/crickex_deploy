@@ -67,22 +67,28 @@ export interface LINK {
 }
 
 export async function clientLoader() {
-  const countryListPromise = fetch("https://ai.cloud7hub.uk/country/list")
-    .then((value) => value.json())
-    .then((data) => data.data);
-  const mirrorLinksPromise = fetch("https://ai.cloud7hub.uk/mirror-links/")
-    .then((value) => value.json())
-    .then((data) => data.data);
-  const defaultReferralPromise = fetch(
-    "https://ai.cloud7hub.uk/referral/default/"
+  const countryListPromise = fetch(
+    import.meta.env.VITE_API_URL + "/country/list"
   )
     .then((value) => value.json())
     .then((data) => data.data);
-  const gameProvidersPromise = fetch("https://ai.cloud7hub.uk/game/game-menu/")
+  const mirrorLinksPromise = fetch(
+    import.meta.env.VITE_API_URL + "/mirror-links/"
+  )
+    .then((value) => value.json())
+    .then((data) => data.data);
+  const defaultReferralPromise = fetch(
+    import.meta.env.VITE_API_URL + "/referral/default/"
+  )
+    .then((value) => value.json())
+    .then((data) => data.data);
+  const gameProvidersPromise = fetch(
+    import.meta.env.VITE_API_URL + "/game/game-menu/"
+  )
     .then((value) => value.json())
     .then((data) => data.data);
   const socialListPromise = fetch(
-    "https://ai.cloud7hub.uk/domain-wise/admin-social-list/"
+    import.meta.env.VITE_API_URL + "/domain-wise/admin-social-list/"
   )
     .then((value) => value.json())
     .then((data) => data.data);
@@ -218,7 +224,7 @@ export default function App() {
       <link
         rel="icon"
         type="image/png"
-        href={"https://ai.cloud7hub.uk" + data?.mirrorLinks.favicon}
+        href={import.meta.env.VITE_API_URL + "" + data?.mirrorLinks.favicon}
       />
       <Toast />
       <Outlet />

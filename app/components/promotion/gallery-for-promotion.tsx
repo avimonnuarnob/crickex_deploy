@@ -119,10 +119,13 @@ export default function GalleryForPromotion() {
                   </Button>
                 )}
                 {!isLoggedIn && (
-                  <Link to="new-register-entry/account">
+                  <Link
+                    to="new-register-entry/account"
+                    className="w-1/2 sm:w-30 h-[8vw] sm:h-9"
+                  >
                     <Button
                       color="green"
-                      className="w-1/2 sm:w-30 h-[8vw] sm:h-9 bg-primary-button text-white rounded py-2.5"
+                      className="w-full bg-primary-button text-white rounded py-2.5"
                     >
                       Register Now
                     </Button>

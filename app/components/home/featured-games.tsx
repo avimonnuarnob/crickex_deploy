@@ -21,7 +21,7 @@ export default function FeaturedGames() {
   };
 
   useEffect(() => {
-    fetch(`https://ai.cloud7hub.uk/game/getGameListByType/HT/`)
+    fetch(import.meta.env.VITE_API_URL + `/game/getGameListByType/HT/`)
       .then((response) => response.json())
       .then((d) =>
         setGamesData([

@@ -8,8 +8,9 @@ export async function clientLoader({ params }: Route.ClientLoaderArgs) {
   const { pcode, ptype, gcode, operator } = params;
 
   const gamebox = fetch(
-    `https://ai.cloud7hub.uk/game/launchGame/${pcode}/${ptype}/?game_id=${gcode}&operator=${operator}`,
-    // `https://ai.cloud7hub.uk/game/launchGame/BCON/SL/?game_id=420013999&operator=bcon`,
+    import.meta.env.VITE_API_URL +
+      `/game/launchGame/${pcode}/${ptype}/?game_id=${gcode}&operator=${operator}`,
+    // import.meta.env.VITE_API_URL + `/game/launchGame/BCON/SL/?game_id=420013999&operator=bcon`,
     {
       method: "GET",
       headers: {

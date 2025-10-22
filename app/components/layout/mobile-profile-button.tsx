@@ -22,6 +22,8 @@ import telegramIcon from "@/assets/images/icon-telegram.png";
 import { IoExitOutline } from "react-icons/io5";
 import { IoMdClose } from "react-icons/io";
 import { Link } from "react-router";
+import { useRouteLoaderData } from "react-router";
+import type { RootLoaderData } from "@/root";
 export default function MobileProfileButton({
   isOpen,
   onClose,
@@ -31,6 +33,7 @@ export default function MobileProfileButton({
   onClose: () => void;
   children: React.ReactNode;
 }) {
+  const data = useRouteLoaderData<RootLoaderData>("root");
   const { userInfo, setUserWalletData, userWalletData, logoutUser } =
     useCurrentUser();
   const [showBalance, setShowBalance] = useState(false);
@@ -87,7 +90,7 @@ export default function MobileProfileButton({
                     try {
                       e.target.dataset.fetching = "true";
                       const response = await fetch(
-                        "https://ai.cloud7hub.uk/auth/user-balance/",
+                        import.meta.env.VITE_API_URL + "/auth/user-balance/",
                         {
                           headers: {
                             Authorization: `Token ${Cookies.get("userToken")}`,
@@ -136,7 +139,12 @@ export default function MobileProfileButton({
                   }`}
                 >
                   <span>
-                    {userInfo?.currency} {userWalletData?.credit_balance}
+                    {
+                      data?.currencyList.find(
+                        (currency) => currency.currency === userInfo?.currency
+                      )?.currency_icon
+                    }{" "}
+                    {userWalletData?.credit_balance}
                   </span>
                 </div>
                 <div

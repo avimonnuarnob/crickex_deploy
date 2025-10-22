@@ -64,13 +64,13 @@ export interface UrlId {
 export type Transaction = Deposit;
 
 export async function clientLoader() {
-  const deposits = fetch("https://ai.cloud7hub.uk/wallet/deposit/", {
+  const deposits = fetch(import.meta.env.VITE_API_URL + "/wallet/deposit/", {
     headers: {
       Authorization: `Token ${Cookies.get("userToken")}`,
     },
   });
 
-  // const withdrawals = fetch("https://ai.cloud7hub.uk/wallet/withdrawal/", {
+  // const withdrawals = fetch(import.meta.env.VITE_API_URL + "/wallet/withdrawal/", {
   //   headers: {
   //     Authorization: `Token ${Cookies.get("userToken")}`,
   //   },

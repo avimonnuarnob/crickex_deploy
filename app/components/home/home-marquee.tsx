@@ -5,7 +5,7 @@ export default function HomeMarquee() {
   useEffect(() => {
     const getAnnouncementData = async () => {
       const response = await fetch(
-        "https://ai.cloud7hub.uk/statics/announcements/"
+        import.meta.env.VITE_API_URL + "/statics/announcements/"
       );
       const responseData = await response.json();
       setData(responseData.data);

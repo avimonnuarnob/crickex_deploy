@@ -12,6 +12,7 @@ import { useCurrentUser } from "@/contexts/CurrentUserContext";
 import { IoMail } from "react-icons/io5";
 import customerIcon from "@/assets/images/icon-customer.png";
 import memberIcon from "@/assets/icon/member.svg";
+import Button from "@/components/ui/button/Button";
 
 const PersonalInfoModal: React.FC = () => {
   const { userInfo, userWalletData } = useCurrentUser();
@@ -118,72 +119,66 @@ const PersonalInfoModal: React.FC = () => {
           </div>
 
           {/* Phone Number */}
-          <div className="flex  mt-4 pt-4 border-t border-t-[#6666661a]">
-            <div className="w-8 mt-2">
-              <FaPhone className="text-blue-500" />
-            </div>
-            <div className="flex-1">
-              <div className="flex justify-between">
-                <div className="flex items-center gap-2">
-                  <div className="text-[#474747] leading-8.75">
-                    Phone Number
+          <div className="flex justify-between items-center mt-4 pt-4 border-t border-t-[#6666661a]">
+            <div className="flex">
+              <div className="w-8 mt-2">
+                <FaPhone className="text-blue-500" />
+              </div>
+              <div className="flex-1">
+                <div className="flex justify-between">
+                  <div className="flex items-center gap-2">
+                    <div className="text-[#474747] leading-8.75">
+                      Phone Number
+                    </div>
                   </div>
-                  <span className="text-blue-500 text-[10px] py-0.75 px-1.5 bg-blue-100 rounded">
-                    Default
-                  </span>
+
+                  {!userInfo?.contact && <Button color="green">Add</Button>}
                 </div>
-
-                {userInfo?.is_active && (
-                  <div className="text-green-500 text-sm grid place-items-center">
-                    Verified
-                  </div>
-                )}
-              </div>
-              <div className="text-[#999999] text-sm">
-                {userInfo?.support_contact}
-              </div>
-
-              <div className="mt-2.5 flex gap-2 items-center">
-                <button className="border border-dotted border-gray-300 rounded-lg px-4 py-2 flex items-center text-gray-600">
-                  <FaPlus className=" text-gray-500" />
-                </button>
-                <span className="text-xs text-[#999999]">Add</span>
+                <div className="text-[#999999] text-sm">
+                  {userInfo?.contact}
+                </div>
               </div>
             </div>
+            {userInfo?.contact ? null : (
+              <div>
+                <Button
+                  color="green"
+                  className="w-[25.3333333333vw] h-[8vw] sm:w-[95px] sm:h-[30px]"
+                >
+                  Add
+                </Button>
+              </div>
+            )}
           </div>
 
           {/* Email section */}
-          <div className="flex justify-between mt-4 pt-4 border-t border-t-[#6666661a]">
+          <div className="flex justify-between items-center mt-4 pt-4 border-t border-t-[#6666661a]">
             <div className="flex">
               <div className="w-8 mt-2">
                 <IoMail className="text-blue-500" />
               </div>
-              <div>
-                <div className="flex items-center gap-2">
-                  <div className="text-[#474747] leading-8.75">Email</div>
-                  <span className="text-blue-500 text-[10px] py-0.75 px-1.5 bg-blue-100 rounded">
-                    Default
-                  </span>
-                </div>
-                {userInfo?.email && (
-                  <div className="text-[#999999] text-sm">
-                    {userInfo?.email}
+              <div className="flex">
+                <div>
+                  <div className="flex items-center gap-2">
+                    <div className="text-[#474747] leading-8.75">Email</div>
                   </div>
-                )}
+                  {userInfo?.email && (
+                    <div className="text-[#999999] text-sm">
+                      {userInfo?.email}
+                    </div>
+                  )}
+                </div>
               </div>
             </div>
 
-            {!userInfo?.email && (
-              <button
-                className=" rounded px-4 flex items-center justify-center text-white text-sm w-23.75 h-7.5"
-                style={{
-                  background: "linear-gradient(to right,#82d856,#5ab72a 50%)",
-                  boxShadow: "0 0 2px #50a325,inset 0 0 2px #ffffff80",
-                }}
+            <Link to="/member/new-profile-verify-phone">
+              <Button
+                color="green"
+                className="w-[25.3333333333vw] h-[8vw] sm:w-[95px] sm:h-[30px]"
               >
-                <span>Add</span>
-              </button>
-            )}
+                Add
+              </Button>
+            </Link>
           </div>
         </div>
 

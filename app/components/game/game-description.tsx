@@ -46,7 +46,8 @@ export default function GameDescription({
       } else {
         setIsLoading(true);
         await fetch(
-          `https://ai.cloud7hub.uk/game/launchGame/${game.p_code}/${game.p_type}/?game_id=${game.g_code}&operator=${game.operator}`,
+          import.meta.env.VITE_API_URL +
+            `/game/launchGame/${game.p_code}/${game.p_type}/?game_id=${game.g_code}&operator=${game.operator}`,
           {
             method: "GET",
             headers: {

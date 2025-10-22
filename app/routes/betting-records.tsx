@@ -15,7 +15,7 @@ export interface ReferralData {
 
 export function clientLoader() {
   const referrals = fetch(
-    "https://ai.cloud7hub.uk/referral/user/referral-history/",
+    import.meta.env.VITE_API_URL + "/referral/user/referral-history/",
     {
       headers: {
         Authorization: `Token ${Cookies.get("userToken")}`,

@@ -32,16 +32,19 @@ export default function LoginModal() {
 
   const onSubmit = async (data: LoginInput) => {
     setIsLoading(true);
-    const respose = await fetch("https://ai.cloud7hub.uk/auth/user/login/", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        username: data.username.toLowerCase(),
-        password: data.password,
-      }),
-    });
+    const respose = await fetch(
+      import.meta.env.VITE_API_URL + "/auth/user/login/",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          username: data.username.toLowerCase(),
+          password: data.password,
+        }),
+      }
+    );
     const responseData = (await respose.json()) as {
       status: "failed" | "ok";
       errors?: string;

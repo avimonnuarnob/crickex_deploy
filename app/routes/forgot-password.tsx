@@ -81,7 +81,7 @@ const EmailFormInput = ({
   const onSubmit = async (data: { email: string }) => {
     setIsLoading(true);
     const respose = await fetch(
-      "https://ai.cloud7hub.uk/auth/forgot-password/",
+      import.meta.env.VITE_API_URL + "/auth/forgot-password/",
       {
         method: "POST",
         headers: {
@@ -246,17 +246,20 @@ const ConfirmPasswordFromInput = ({
     confirm_password: string;
   }) => {
     setIsLoading(true);
-    const respose = await fetch("https://ai.cloud7hub.uk/auth/set-password/", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        password: data.password,
-        email,
-        otp,
-      }),
-    });
+    const respose = await fetch(
+      import.meta.env.VITE_API_URL + "/auth/set-password/",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          password: data.password,
+          email,
+          otp,
+        }),
+      }
+    );
     const responseData = (await respose.json()) as {
       status: "failed" | "ok";
       errors?: string;

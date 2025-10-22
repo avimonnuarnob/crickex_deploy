@@ -81,6 +81,13 @@ export default [
       route("member/new-profile-info", "./routes/profile.tsx", {
         id: "home-profile",
       }),
+      route(
+        "member/new-profile-verify-phone",
+        "./routes/profile-phone-verify.tsx",
+        {
+          id: "home-profile-verify-phone",
+        }
+      ),
       route("member/transaction-records", "./routes/transaction-records.tsx", {
         id: "home-transaction-records",
       }),

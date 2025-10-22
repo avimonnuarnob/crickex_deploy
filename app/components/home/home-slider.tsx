@@ -34,7 +34,7 @@ export default function HomeSlider() {
     <section className="border-x-2 sm:border-0 border-blue-1">
       <div className="embla relative items-center w-full h-full">
         <PrevButton
-          className="absolute top-1/2 w-4 h-4 text-[#8d8d8d] z-1 -translate-y-1/2 cursor-pointer left-0 xl:-left-7.5"
+          className="absolute top-1/2 w-4 h-4 text-[#8d8d8d] z-1 -translate-y-1/2 cursor-pointer left-0 xl:-left-7.5 hidden sm:block"
           onClick={onPrevButtonClick}
           disabled={prevBtnDisabled}
         />
@@ -96,7 +96,7 @@ export default function HomeSlider() {
         <NextButton
           onClick={onNextButtonClick}
           disabled={nextBtnDisabled}
-          className="absolute top-1/2 w-4 h-4 z-1 text-[#8d8d8d] -translate-y-1/2 cursor-pointer right-0 xl:-right-7.5"
+          className="absolute top-1/2 w-4 h-4 z-1 text-[#8d8d8d] -translate-y-1/2 cursor-pointer right-0 xl:-right-7.5 hidden sm:block"
         />
       </div>
       <div className="embla__dots flex gap-1.5 justify-center pt-2.75 sm:pt-3.75 pb-2.75 bg-blue-1 sm:bg-transparent">

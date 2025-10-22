@@ -195,7 +195,7 @@ export interface BankEntry {
 
 export const clientLoader = async () => {
   const promiseOfGateways = fetch(
-    "https://ai.cloud7hub.uk/payment/domain-wise/live-gateway/list/",
+    import.meta.env.VITE_API_URL + "/payment/domain-wise/live-gateway/list/",
     {
       headers: {
         Authorization: `Token ${Cookies.get("userToken")}`,

@@ -286,7 +286,9 @@ const Footer = () => {
               >
                 <img
                   src={
-                    "https://ai.cloud7hub.uk" + socialLink.social_prefix_id.logo
+                    import.meta.env.VITE_API_URL +
+                    "" +
+                    socialLink.social_prefix_id.logo
                   }
                   alt={socialLink.social_prefix_id.name}
                   width={24}

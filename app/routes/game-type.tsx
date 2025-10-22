@@ -41,7 +41,7 @@ export function clientLoader({ params }: Route.ClientLoaderArgs) {
     return { promiseOfGames };
   }
   const promiseOfGames = fetch(
-    `https://ai.cloud7hub.uk/game/getGameListByType/${params.gametype}/`
+    import.meta.env.VITE_API_URL + `/game/getGameListByType/${params.gametype}/`
   )
     .then((response) => response.json())
     .then((d) => {

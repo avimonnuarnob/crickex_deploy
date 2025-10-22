@@ -7,7 +7,7 @@ type checkapiData = {
 };
 
 export async function checkUsername(username: string): Promise<checkapiData> {
-  const url = "https://ai.cloud7hub.uk/isvalid-username/";
+  const url = import.meta.env.VITE_API_URL + "/isvalid-username/";
   const response = await fetch(url, {
     method: "POST",
     headers: {
@@ -31,7 +31,7 @@ export async function checkUsername(username: string): Promise<checkapiData> {
 }
 
 export async function checkEmail(email: string): Promise<checkapiData> {
-  const url = "https://ai.cloud7hub.uk/isvalid-email/";
+  const url = import.meta.env.VITE_API_URL + "/isvalid-email/";
   const response = await fetch(url, {
     method: "POST",
     headers: {

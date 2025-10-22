@@ -11,6 +11,7 @@ interface CurrentUserContextType {
   isLoggedIn: Boolean;
   userInfo?: UserProfile;
   userWalletData?: UserWallet;
+  setUserInfo: Dispatch<SetStateAction<UserProfile | undefined>>;
   setUserWalletData: Dispatch<SetStateAction<UserWallet | undefined>>;
   loginUser: (token: string) => void;
   logoutUser: () => void;
@@ -81,7 +82,7 @@ const CurrentUserProvider: React.FC<{ children: React.ReactNode }> = ({
   useEffect(() => {
     const getUserInfo = async () => {
       const response = await fetch(
-        "https://ai.cloud7hub.uk/auth/user/profile/",
+        import.meta.env.VITE_API_URL + "/auth/user/profile/",
         {
           headers: {
             Authorization: `Token ${user}`,
@@ -101,7 +102,7 @@ const CurrentUserProvider: React.FC<{ children: React.ReactNode }> = ({
   useEffect(() => {
     async function getWalletData() {
       const response = await fetch(
-        "https://ai.cloud7hub.uk/auth/user-balance/",
+        import.meta.env.VITE_API_URL + "/auth/user-balance/",
         {
           headers: {
             Authorization: `token ${user}`,
@@ -137,6 +138,7 @@ const CurrentUserProvider: React.FC<{ children: React.ReactNode }> = ({
         isLoggedIn: Boolean(user),
         userInfo,
         userWalletData,
+        setUserInfo,
         setUserWalletData,
         loginUser,
         logoutUser,

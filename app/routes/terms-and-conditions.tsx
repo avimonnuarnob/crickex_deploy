@@ -4,7 +4,7 @@ import React from "react";
 import type { Route } from "./+types/terms-and-conditions";
 
 export async function clientLoader() {
-  return fetch("https://ai.cloud7hub.uk/statics/terms-and-condition/")
+  return fetch(import.meta.env.VITE_API_URL + "/statics/terms-and-condition/")
     .then((response) => response.json())
     .then((data) => data.data);
 }

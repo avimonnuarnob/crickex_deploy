@@ -229,7 +229,7 @@ export default function DepositForm({
                       {/* Icon container */}
                       <div className="rounded-full w-6.25 h-6.25 flex items-center justify-center mb-1.75">
                         <img
-                          src={"https://ai.cloud7hub.uk" + method.logo}
+                          src={import.meta.env.VITE_API_URL + "" + method.logo}
                           className="w-full h-full object-cover"
                           alt={method.name}
                         />

@@ -16,7 +16,7 @@ export default function ChangePasswordPage() {
     try {
       // Implement your password change logic here
       const response = await fetch(
-        "https://ai.cloud7hub.uk/auth/change-password/",
+        import.meta.env.VITE_API_URL + "/auth/change-password/",
         {
           method: "POST",
           headers: {

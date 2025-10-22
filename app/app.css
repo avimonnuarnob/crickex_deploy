@@ -328,6 +328,27 @@ body {
   animation: slide-left-right 1s linear infinite;
 }
 
+.PhoneInputCountry {
+  /* flex: 0 0 28%; */
+  border-right: 1px solid #ccc;
+  padding-right: 10px;
+}
+
+.PhoneInputInput {
+  padding-left: 10px;
+}
+
+.PhoneInputCountryIcon {
+  width: 20px !important;
+  height: 20px !important;
+  border-radius: 100%;
+  overflow: hidden;
+}
+
+.PhoneInputCountryIconImg {
+  object-fit: cover;
+}
+
 @keyframes slide-right-left {
   0% {
     transform: translate(0);

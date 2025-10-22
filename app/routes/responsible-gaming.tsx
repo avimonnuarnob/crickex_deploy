@@ -4,7 +4,7 @@ import React from "react";
 import type { Route } from "./+types/responsible-gaming";
 
 export async function clientLoader() {
-  return fetch("https://ai.cloud7hub.uk/statics/privacy-and-policy/")
+  return fetch(import.meta.env.VITE_API_URL + "/statics/privacy-and-policy/")
     .then((response) => response.json())
     .then((data) => data.data);
 }

@@ -439,7 +439,7 @@ const Topbar = ({ isFull }: TopbarProps) => {
                   }}
                 >
                   <img
-                    src={"https://ai.cloud7hub.uk" + provider.thumbnail}
+                    src={import.meta.env.VITE_API_URL + "" + provider.thumbnail}
                     alt={provider.title}
                     className="w-11 h-11"
                   ></img>

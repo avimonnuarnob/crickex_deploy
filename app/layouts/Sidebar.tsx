@@ -141,7 +141,8 @@ const Sidebar = ({ isFull, setIsFull }: SidebarProps) => {
                   icon={`/game_type/${gameType.game_type_code}.png`}
                   text={gameType.title}
                   children={gameType.game_provider.map((provider) => ({
-                    icon: "https://ai.cloud7hub.uk" + provider.thumbnail,
+                    icon:
+                      import.meta.env.VITE_API_URL + "" + provider.thumbnail,
                     text: provider.title,
                     href: `/games/${gameType.game_type_code}#vendor=${provider.provider_code}`,
                   }))}

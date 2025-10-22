@@ -68,16 +68,19 @@ export default function SignupModal({ matches }: Route.ComponentProps) {
 
   const loginBtnHandler = async () => {
     setIsLoading(true);
-    const respose = await fetch("https://ai.cloud7hub.uk/auth/user/login/", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        username: responseData?.username.toLowerCase(),
-        password: responseData?.password,
-      }),
-    });
+    const respose = await fetch(
+      import.meta.env.VITE_API_URL + "/auth/user/login/",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          username: responseData?.username.toLowerCase(),
+          password: responseData?.password,
+        }),
+      }
+    );
     const r = (await respose.json()) as {
       status: "failed" | "ok";
       errors?: string;
@@ -94,7 +97,7 @@ export default function SignupModal({ matches }: Route.ComponentProps) {
     setIsLoading(true);
     if (responseData && secondSubmission) {
       const response = await fetch(
-        "https://ai.cloud7hub.uk/auth/user/register-confirm/",
+        import.meta.env.VITE_API_URL + "/auth/user/register-confirm/",
         {
           method: "POST",
           headers: {
@@ -116,7 +119,7 @@ export default function SignupModal({ matches }: Route.ComponentProps) {
       }
     } else {
       const response = await fetch(
-        "https://ai.cloud7hub.uk/auth/user/register/",
+        import.meta.env.VITE_API_URL + "/auth/user/register/",
         {
           method: "POST",
           headers: {
@@ -386,7 +389,8 @@ export default function SignupModal({ matches }: Route.ComponentProps) {
                                   <img
                                     alt={value.country_name}
                                     src={
-                                      "https://ai.cloud7hub.uk" +
+                                      import.meta.env.VITE_API_URL +
+                                      "" +
                                       value.country_flag
                                     }
                                     className="w-5 h-5 shrink-0 rounded-full"
@@ -421,7 +425,8 @@ export default function SignupModal({ matches }: Route.ComponentProps) {
                                   <img
                                     alt={country.country_name}
                                     src={
-                                      "https://ai.cloud7hub.uk" +
+                                      import.meta.env.VITE_API_URL +
+                                      "" +
                                       country.country_flag
                                     }
                                     className="w-5 h-5 shrink-0 rounded-full"

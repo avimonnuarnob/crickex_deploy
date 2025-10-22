@@ -199,7 +199,9 @@ export default function CategoryTab({ providers }: { providers: PROVIDERS }) {
                           }}
                         >
                           <img
-                            src={"https://ai.cloud7hub.uk" + item.thumbnail}
+                            src={
+                              import.meta.env.VITE_API_URL + "" + item.thumbnail
+                            }
                             className="w-10 h-10 object-cover"
                           />
                           {item.title}

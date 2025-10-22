@@ -19,7 +19,7 @@ export default function WalletButton() {
       onClick={async () => {
         setIsLoading(true);
         const response = await fetch(
-          "https://ai.cloud7hub.uk/auth/user-balance/",
+          import.meta.env.VITE_API_URL + "/auth/user-balance/",
           {
             headers: {
               Authorization: `Token ${Cookies.get("userToken")}`,
