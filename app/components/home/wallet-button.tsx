@@ -6,6 +6,7 @@ import classNames from "classnames";
 import { useCurrentUser } from "@/contexts/CurrentUserContext";
 import { useRouteLoaderData } from "react-router";
 import type { RootLoaderData } from "@/root";
+import refreshIcon from "@/assets/icon/refresh.svg";
 
 export default function WalletButton() {
   const data = useRouteLoaderData<RootLoaderData>("root");
@@ -36,8 +37,10 @@ export default function WalletButton() {
       }}
       // href={UnProtectedRoute.Login}
     >
-      <TfiReload
-        className={classNames("stroke-1", {
+      <img
+        src={refreshIcon}
+        alt="refresh"
+        className={classNames("", {
           "animate-spin": isLoading,
         })}
       />

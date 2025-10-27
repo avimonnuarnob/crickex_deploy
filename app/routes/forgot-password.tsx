@@ -1,22 +1,36 @@
+import "react-phone-number-input/style.css";
+
 import Modal from "@/components/ui/modal/Modal";
 import { useNavigate, useParams } from "react-router";
-import { Tab, TabGroup, TabList, TabPanel, TabPanels } from "@headlessui/react";
+import {
+  Field,
+  Label,
+  Tab,
+  TabGroup,
+  TabList,
+  TabPanel,
+  TabPanels,
+  Transition,
+} from "@headlessui/react";
 import classNames from "classnames";
 import { Controller, useForm } from "react-hook-form";
 
 import { useState } from "react";
 import { FormTextField } from "@/components/ui/form-inputs";
 import Button from "@/components/ui/button/Button";
+import PhoneInput, { type Value } from "react-phone-number-input";
 import { OTPInput, REGEXP_ONLY_DIGITS, type SlotProps } from "input-otp";
 import { GiConfirmed } from "react-icons/gi";
 import { FaRegCircleXmark } from "react-icons/fa6";
+import emailIcon from "@/assets/icon/icon-email.svg";
+import smsIcon from "@/assets/icon/icon-phone.svg";
 
 const categories = [
   {
-    name: "Email",
+    name: "SMS",
   },
   {
-    name: "SMS",
+    name: "Email",
   },
 ];
 
@@ -42,13 +56,49 @@ const DoItByEmail = ({
             'url("https://img.c88rx.com/cx/h5/assets/images/member-logo.png?v=1745315485946")',
         }}
       ></div>
-      <div className="p-2 flex-1">
+      <div className="p-2.5 flex-1 m-2.5">
         {step === 0 && <EmailFormInput setStep={setStep} setEmail={setEmail} />}
         {step === 1 && <OtpFormInput setStep={setStep} setOtp={setOtp} />}
         {step === 2 && (
           <ConfirmPasswordFromInput
             setIsSuccessfullRegistration={setIsSuccessfullRegistration}
             email={email}
+            otp={otp}
+          />
+        )}
+      </div>
+    </>
+  );
+};
+
+const DoItBySMS = ({
+  setIsSuccessfullRegistration,
+}: {
+  setIsSuccessfullRegistration: React.Dispatch<
+    React.SetStateAction<boolean | undefined>
+  >;
+}) => {
+  const [step, setStep] = useState(0);
+
+  const [phone, setPhone] = useState<Value | undefined>();
+  const [otp, setOtp] = useState<string | undefined>();
+
+  return (
+    <>
+      <div
+        className="w-[200px] h-[35px] mx-auto my-7 bg-contain bg-no-repeat bg-center"
+        style={{
+          backgroundImage:
+            'url("https://img.c88rx.com/cx/h5/assets/images/member-logo.png?v=1745315485946")',
+        }}
+      ></div>
+      <div className="p-2.5 flex-1 m-2.5">
+        {step === 0 && <PhoneFormInput setStep={setStep} setPhone={setPhone} />}
+        {step === 1 && <OtpFormInput setStep={setStep} setOtp={setOtp} />}
+        {step === 2 && (
+          <ConfirmPasswordFromInput
+            setIsSuccessfullRegistration={setIsSuccessfullRegistration}
+            email={""}
             otp={otp}
           />
         )}
@@ -101,7 +151,7 @@ const EmailFormInput = ({
     if (responseData.status === "failed" && responseData.errors) {
       setResponseMessage(responseData.errors);
     }
-    if (responseData.status === "ok" && responseData.message) {
+    if (responseData.status === "ok") {
       setStep((step) => step + 1);
       setEmail(data.email);
     }
@@ -123,23 +173,127 @@ const EmailFormInput = ({
             name="email"
             placeholder="Enter your email"
             required
+            className="bg-gray-1! border-gray-4!"
           />
         </div>
-        <div className="flex-1 flex flex-col justify-end">
+        <div className="flex-1 flex flex-col">
           {responseMessage && (
             <p className="text-center bg-red-500 my-4 py-4 text-white shadow rounded animate-bounce">
               {responseMessage}
             </p>
           )}
-          <Button
-            type="submit"
-            size="lg"
-            isBlock
-            isDisabled={!isDirty}
-            isLoading={isLoading}
-          >
-            Confirm
-          </Button>
+          <div className="h-[12vw] sm:h-[45px] my-[6.4vw] sm:my-6">
+            <Button
+              type="submit"
+              size="lg"
+              isBlock
+              isDisabled={!isDirty}
+              isLoading={isLoading}
+            >
+              Send verification code
+            </Button>
+          </div>
+        </div>
+      </form>
+    </>
+  );
+};
+
+const PhoneFormInput = ({
+  setStep,
+  setPhone,
+}: {
+  setStep: React.Dispatch<React.SetStateAction<number>>;
+  setPhone: React.Dispatch<React.SetStateAction<Value | undefined>>;
+}) => {
+  const [responseMessage, setResponseMessage] = useState<null | string>(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const {
+    control,
+    handleSubmit,
+    formState: { isDirty },
+  } = useForm<{
+    phone: Value;
+  }>({
+    defaultValues: {
+      phone: "",
+    },
+  });
+
+  const onSubmit = async (data: { phone: Value }) => {
+    setIsLoading(true);
+    const respose = await fetch(
+      import.meta.env.VITE_API_URL + "/auth/forgot-password/",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          contact: data.phone,
+        }),
+      }
+    );
+    const responseData = (await respose.json()) as {
+      status: "failed" | "ok";
+      errors?: string;
+      message?: string;
+    };
+    setIsLoading(false);
+    if (responseData.status === "failed" && responseData.errors) {
+      setResponseMessage(responseData.errors);
+    }
+    if (responseData.status === "ok") {
+      setStep((step) => step + 1);
+      setPhone(data.phone);
+    }
+  };
+  return (
+    <>
+      <form
+        onSubmit={(e) => {
+          e.preventDefault();
+          handleSubmit(onSubmit)(e);
+        }}
+        className="h-full flex flex-col"
+      >
+        <Field>
+          <Label className="mb-3 block text-[#474747] text-sm">
+            Phone number
+          </Label>
+          <Controller
+            name="phone"
+            control={control}
+            rules={{ required: "Phone number is required" }}
+            render={({ field }) => (
+              <PhoneInput
+                {...field}
+                placeholder="Enter phone number"
+                international
+                value={field.value}
+                onChange={field.onChange}
+                className="flex h-[12vw] sm:h-[45px] border border-gray-4 bg-gray-1 text-foreground-200 rounded p-2 text-xs [&>input]:outline-none mt-[2.6666666667vw] sm:mt-2.5"
+              />
+            )}
+          />
+        </Field>
+        <div className="flex-1 flex flex-col">
+          {responseMessage && (
+            <p className="text-center bg-red-500 my-4 py-4 text-white shadow rounded animate-bounce">
+              {responseMessage}
+            </p>
+          )}
+          <div className="h-[12vw] sm:h-[45px] my-[6.4vw] sm:my-6">
+            <Button
+              type="submit"
+              size="lg"
+              isBlock
+              isDisabled={!isDirty}
+              isLoading={isLoading}
+            >
+              Send verification code
+            </Button>
+          </div>
         </div>
       </form>
     </>
@@ -330,6 +484,7 @@ export default function ForgotPassword() {
   const [isSuccessfulRegistration, setIsSuccessfullRegistration] = useState<
     boolean | undefined
   >(undefined);
+  const [selectedIndex, setSelectedIndex] = useState(0);
 
   if (isSuccessfulRegistration === true) {
     return (
@@ -400,26 +555,84 @@ export default function ForgotPassword() {
       }}
       title="Forgot password?"
     >
-      <TabGroup className="flex flex-col h-full">
-        <TabList className={classNames("flex")}>
+      <TabGroup
+        className="flex flex-col h-full max-w-full overflow-x-hidden"
+        selectedIndex={selectedIndex}
+        onChange={setSelectedIndex}
+      >
+        <TabList
+          className={classNames(
+            "flex p-[4vw_3.2vw] sm:py-4 sm:px-3 bg-white gap-1"
+          )}
+        >
           {categories.map((category) => (
             <Tab
               key={category.name}
-              className="flex-1 py-3.75 bg-blue-1 text-sm font-bold text-white focus:not-data-focus:outline-none data-selected:text-yellow-1 data-selected:border-b-3 data-selected:border-b-yellow-1"
+              className="flex-1 text-sm font-bold focus:not-data-focus:outline-none group"
             >
-              <span>{category.name}</span>
-              <div className="h-[3px] w-full data-selected:bg-yellow-1"></div>
+              <div
+                className="py-[4vw] sm:py-4 bg-gray-2 group-data-[selected]:bg-green-1 rounded"
+                style={{
+                  boxShadow:
+                    "inset 0 .2666666667vw .2666666667vw 0 var(--tab-icon-section-btn-shadow-inset, rgba(102, 102, 102, .1))",
+                  border:
+                    "1px solid var(--tab-icon-section-btn-border, rgba(102, 102, 102, .1))",
+                }}
+              >
+                <div
+                  style={{
+                    maskImage: `url("${
+                      category.name === "Email" ? emailIcon : smsIcon
+                    }")`,
+                    maskRepeat: "no-repeat",
+                    maskPosition: "center",
+                    maskSize: "100%",
+                  }}
+                  className="w-[8vw] h-[8vw] sm:w-7.5 sm:h-7.5 group-data-[selected]:bg-gray-1 bg-gray-7 mx-auto"
+                ></div>
+              </div>
+              <span className="py-[2.6666666667vw] sm:py-2.5 text-[3.2vw] sm:text-xs block data-selected:text-blue-1 text-gray-7">
+                {category.name}
+              </span>
             </Tab>
           ))}
         </TabList>
-        <TabPanels className="flex-1 flex flex-col">
-          <TabPanel className="flex-1 flex flex-col">
-            <DoItByEmail
-              setIsSuccessfullRegistration={setIsSuccessfullRegistration}
-            />
+        <TabPanels className="flex bg-white flex-1">
+          <TabPanel unmount={false} className="data-[selected]:w-full w-0">
+            <Transition
+              appear
+              show={selectedIndex == 0}
+              enter="transition-transform duration-300"
+              enterFrom="-translate-x-full"
+              enterTo="translate-x-0"
+              leave="transition-transform duration-300"
+              leaveFrom="translate-x-0"
+              leaveTo="-translate-x-full"
+            >
+              <div>
+                <DoItByEmail
+                  setIsSuccessfullRegistration={setIsSuccessfullRegistration}
+                />
+              </div>
+            </Transition>
           </TabPanel>
-          <TabPanel className="flex-1">
-            <p>Hello</p>
+          <TabPanel unmount={false} className="data-[selected]:w-full w-0">
+            <Transition
+              appear
+              show={selectedIndex == 1}
+              enter="transition-transform duration-300"
+              enterFrom="translate-x-full"
+              enterTo="translate-x-0"
+              leave="transition-transform duration-300"
+              leaveFrom="translate-x-0"
+              leaveTo="translate-x-full"
+            >
+              <div>
+                <DoItBySMS
+                  setIsSuccessfullRegistration={setIsSuccessfullRegistration}
+                />
+              </div>
+            </Transition>
           </TabPanel>
         </TabPanels>
       </TabGroup>

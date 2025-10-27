@@ -36,8 +36,8 @@ const PersonalInfoModal: React.FC = () => {
     >
       <div className="flex flex-col bg-white">
         {/* Profile header with background image */}
-        <div className="relative px-5 pt-5 pr-5">
-          <div className="h-30 bg-gray-200 overflow-hidden rounded-lg">
+        <div className="relative p-[5.3333333333vw] pb-0 sm:p-5 sm:pb-0">
+          <div className="h-[32vw] sm:h-30 bg-gray-200 overflow-hidden rounded-lg">
             <img
               src="https://img.c88rx.com/cx/h5/assets/images/player/vip/vip-card-bg-1.jpg?v=1749551408337"
               alt="Profile background"
@@ -46,8 +46,8 @@ const PersonalInfoModal: React.FC = () => {
           </div>
 
           {/* Profile avatar */}
-          <div className="absolute left-1/2 transform -translate-x-1/2 -bottom-5">
-            <div className="w-20 h-20 rounded-full bg-gray-100 flex items-center justify-center shadow">
+          <div className="absolute left-1/2 transform -translate-x-1/2 -bottom-5.75">
+            <div className="w-[21.3333333333vw] h-[21.3333333333vw] sm:w-20 sm:h-20 rounded-full bg-gray-100 flex items-center justify-center shadow">
               {/* <FaUser className="text-gray-400 text-4xl" /> */}
               <img
                 src={memberIcon}
@@ -58,16 +58,18 @@ const PersonalInfoModal: React.FC = () => {
           </div>
         </div>
 
-        <div className="pt-8.75 mx-6.5 pb-5 bg-[#6666661A]">
+        <div className="pt-[9.3333333333vw] sm:pt-8.75 mx-[5.3333333333vw] sm:mx-5 pb-5 bg-[#6666661A]">
           {/* Username and level */}
           <div className="text-center flex justify-center items-center gap-2.5">
-            <div className="text-gray-700">{userInfo?.username}</div>
-            <div className="inline-block bg-gray-400 text-white text-xs px-2 py-0.5 rounded mt-1">
+            <div className="text-gray-700 text-[4.2666666667vw] sm:text-base">
+              {userInfo?.username}
+            </div>
+            <div className="inline-block bg-gray-400 text-white text-[3.2vw] sm:text-xs p-[1.3333333333vw] sm:p-1.25 rounded">
               {userInfo?.user_type}
             </div>
           </div>
           {/* Registration date */}
-          <div className="text-center text-xs text-gray-500 mt-4.5">
+          <div className="text-center text-[3.2vw] sm:text-xs text-gray-500 mt-[2.1333333333vw] sm:mt-2.5">
             Date Registered : {userInfo?.date_joined.split("T")[0]}
           </div>
         </div>
@@ -119,7 +121,7 @@ const PersonalInfoModal: React.FC = () => {
           </div>
 
           {/* Phone Number */}
-          <div className="flex justify-between items-center mt-4 pt-4 border-t border-t-[#6666661a]">
+          <div className="flex justify-between mt-4 pt-4 border-t border-t-[#6666661a]">
             <div className="flex">
               <div className="w-8 mt-2">
                 <FaPhone className="text-blue-500" />
@@ -131,28 +133,30 @@ const PersonalInfoModal: React.FC = () => {
                       Phone Number
                     </div>
                   </div>
-
-                  {!userInfo?.contact && <Button color="green">Add</Button>}
                 </div>
                 <div className="text-[#999999] text-sm">
                   {userInfo?.contact}
                 </div>
               </div>
             </div>
-            {userInfo?.contact ? null : (
-              <div>
+            {!userInfo?.contact ? (
+              <Link to="/member/new-profile-verify-phone">
                 <Button
                   color="green"
                   className="w-[25.3333333333vw] h-[8vw] sm:w-[95px] sm:h-[30px]"
                 >
                   Add
                 </Button>
-              </div>
+              </Link>
+            ) : (
+              <span className="text-green-1 leading-8.75 text-sm">
+                Verified
+              </span>
             )}
           </div>
 
           {/* Email section */}
-          <div className="flex justify-between items-center mt-4 pt-4 border-t border-t-[#6666661a]">
+          <div className="flex justify-between mt-4 pt-4 border-t border-t-[#6666661a]">
             <div className="flex">
               <div className="w-8 mt-2">
                 <IoMail className="text-blue-500" />
@@ -171,14 +175,20 @@ const PersonalInfoModal: React.FC = () => {
               </div>
             </div>
 
-            <Link to="/member/new-profile-verify-phone">
-              <Button
-                color="green"
-                className="w-[25.3333333333vw] h-[8vw] sm:w-[95px] sm:h-[30px]"
-              >
-                Add
-              </Button>
-            </Link>
+            {!userInfo?.email ? (
+              <Link to="/member/new-profile-verify-email">
+                <Button
+                  color="green"
+                  className="w-[25.3333333333vw] h-[8vw] sm:w-[95px] sm:h-[30px]"
+                >
+                  Add
+                </Button>
+              </Link>
+            ) : (
+              <span className="text-green-1 leading-8.75 text-sm">
+                Verified
+              </span>
+            )}
           </div>
         </div>
 

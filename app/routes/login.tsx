@@ -152,7 +152,7 @@ export default function LoginModal() {
               </Button>
             </div>
 
-            <p className="text-gray-3 text-center text-sm mb-1.5">
+            <p className="text-gray-8 text-center text-sm mb-1.5">
               Do not have an account?{" "}
               <Link
                 to={location.pathname.replace(

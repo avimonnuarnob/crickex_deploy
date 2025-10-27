@@ -66,7 +66,7 @@ export default function DepositForm({
       return self.findIndex((m) => m.id === method.id) === index;
     });
   const [selectedMethod, setSelectedMethod] = useState<number | undefined>(
-    selectedMethods[0].id
+    selectedMethods[0]?.id
   );
   const [selectedGateway, setSelectedGateway] = useState<Gateway | undefined>(
     () => {

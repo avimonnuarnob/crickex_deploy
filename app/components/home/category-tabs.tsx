@@ -57,47 +57,47 @@ export default function CategoryTab({ providers }: { providers: PROVIDERS }) {
     };
   }, []);
 
-  useEffect(() => {
-    const touchableElement = document.getElementById("touchPanel");
-    let touchstartX = 0;
-    let touchstartY = 0;
-    let touchendX = 0;
-    let touchendY = 0;
+  // useEffect(() => {
+  //   const touchableElement = document.getElementById("touchPanel");
+  //   let touchstartX = 0;
+  //   let touchstartY = 0;
+  //   let touchendX = 0;
+  //   let touchendY = 0;
 
-    function handleGesture() {
-      if (touchendX < touchstartX) {
-        console.log("Swiped Left");
-        if (selectedIndex > 0) {
-          setSelectedIndex((state) => state - 1);
-        }
-      }
+  //   function handleGesture() {
+  //     if (touchendX < touchstartX) {
+  //       console.log("Swiped Left");
+  //       if (selectedIndex > 0) {
+  //         setSelectedIndex((state) => state - 1);
+  //       }
+  //     }
 
-      if (touchendX > touchstartX) {
-        console.log("Swiped Right");
-        if (selectedIndex < filteredProviders.length - 1) {
-          setSelectedIndex((state) => state + 1);
-        }
-      }
-    }
+  //     if (touchendX > touchstartX) {
+  //       console.log("Swiped Right");
+  //       if (selectedIndex < filteredProviders.length - 1) {
+  //         setSelectedIndex((state) => state + 1);
+  //       }
+  //     }
+  //   }
 
-    const touchEndhandler = (event: any) => {
-      touchendX = event.changedTouches[0].screenX;
-      touchendY = event.changedTouches[0].screenY;
-      handleGesture();
-    };
-    const touchStartHandler = (event: any) => {
-      touchstartX = event.changedTouches[0].screenX;
-      touchstartY = event.changedTouches[0].screenY;
-    };
+  //   const touchEndhandler = (event: any) => {
+  //     touchendX = event.changedTouches[0].screenX;
+  //     touchendY = event.changedTouches[0].screenY;
+  //     handleGesture();
+  //   };
+  //   const touchStartHandler = (event: any) => {
+  //     touchstartX = event.changedTouches[0].screenX;
+  //     touchstartY = event.changedTouches[0].screenY;
+  //   };
 
-    touchableElement?.addEventListener("touchstart", touchStartHandler);
-    touchableElement?.addEventListener("touchend", touchEndhandler);
+  //   touchableElement?.addEventListener("touchstart", touchStartHandler);
+  //   touchableElement?.addEventListener("touchend", touchEndhandler);
 
-    return () => {
-      touchableElement?.removeEventListener("touchstart", touchStartHandler);
-      touchableElement?.removeEventListener("touchend", touchEndhandler);
-    };
-  }, []);
+  //   return () => {
+  //     touchableElement?.removeEventListener("touchstart", touchStartHandler);
+  //     touchableElement?.removeEventListener("touchend", touchEndhandler);
+  //   };
+  // }, []);
 
   return (
     <div className="w-full">
@@ -145,7 +145,9 @@ export default function CategoryTab({ providers }: { providers: PROVIDERS }) {
                   )}
 
                   <span className="text-sm sm:text-[13px] mt-2.25 mb-0.5 font-bold">
-                    {gameType.title.toUpperCase()}
+                    {gameType.game_type_code === "HT"
+                      ? "HOT"
+                      : gameType.title.toUpperCase()}
                   </span>
                   {selected && (
                     <span className="absolute bottom-[0px] left-1/2 -translate-x-1/2 w-0 h-0 border-l-8 border-r-8 border-b-8 border-transparent border-b-white" />
@@ -177,7 +179,9 @@ export default function CategoryTab({ providers }: { providers: PROVIDERS }) {
                   >
                     <div className="w-1 h-3.75 bg-[#005dac] rounded"></div>
                     <span className="font-bold text-[15px]">
-                      {gameType.title.toUpperCase()}
+                      {gameType.game_type_code === "HT"
+                        ? "HOT"
+                        : gameType.title.toUpperCase()}
                     </span>
                   </motion.div>
                   <motion.div

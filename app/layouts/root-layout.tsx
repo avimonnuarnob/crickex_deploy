@@ -1,4 +1,4 @@
-import { Link, Outlet, useRouteLoaderData } from "react-router";
+import { Link, NavLink, Outlet, useRouteLoaderData } from "react-router";
 import type { Route } from "./+types/root-layout";
 import { useEffect, useRef, useState } from "react";
 import classNames from "classnames";
@@ -149,16 +149,24 @@ export default function RootLayout() {
   }, []);
 
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-[auto_1fr] min-h-screen max-w-full max-h-screen">
+    <div className="grid grid-cols-1 sm:grid-cols-[auto_1fr] min-h-screen max-w-screen max-h-screen">
       <Sidebar isFull={isFull} setIsFull={setIsFull} />
       <main
         id="main"
-        className="relative flex! flex-col min-w-0 min-h-0 max-h-dvh overflow-auto overscroll-none"
+        className="relative flex! flex-col w-full max-h-dvh overflow-auto overscroll-none"
         ref={ref}
       >
         <Topbar isFull={isFull} />
 
-        <div className="w-full flex-1 relative max-w-[1200px] mx-auto">
+        <div
+          className={classNames(
+            "flex-1 relative max-w-[1200px] mx-auto transition-[width] duration-100",
+            {
+              "w-[calc(100%-(16px*3.75))]": isFull,
+              "w-full": !isFull,
+            }
+          )}
+        >
           <div className="px-0 sm:px-4 xl:px-0">
             <Outlet />
           </div>
@@ -173,14 +181,16 @@ export default function RootLayout() {
               className="sticky bottom-0 left-0 right-0 w-full bg-black flex sm:hidden items-center [&>*]:flex-1"
               style={{ boxShadow: "0 0 1.3333333333vw #00000080" }}
             >
-              <Link to="/" className="w-full h-full">
-                <div className="flex flex-col items-center py-2 gap-1">
+              <NavLink to="/" className="w-full h-full group">
+                <div className="flex flex-col items-center py-2 gap-1 relative">
+                  <div className="group-[.active]:w-12 w-0 group-[.active]:h-12 h-0 absolute rounded-full bg-gray-3/30 -z-1 top-1/2 -translate-y-1/2 transition-all duration-200"></div>
                   <img src={homeIcon} alt="home_logo" className="w-5 h-5" />
                   <p className="text-white text-sm">Home</p>
                 </div>
-              </Link>
-              <Link to="/promotion" className="w-full h-full">
+              </NavLink>
+              <NavLink to="/promotion" className="w-full h-full group">
                 <div className="flex flex-col items-center py-2 gap-1">
+                  <div className="group-[.active]:w-12 w-0 group-[.active]:h-12 h-0 absolute rounded-full bg-gray-3/30 -z-1 top-1/2 -translate-y-1/2 transition-all duration-200"></div>
                   <img
                     src={promotionIcon}
                     alt="promotion_logo"
@@ -188,8 +198,8 @@ export default function RootLayout() {
                   />
                   <p className="text-white text-sm">Promotions</p>
                 </div>
-              </Link>
-              <Link to="/member/wallet/deposit" className="w-full h-full">
+              </NavLink>
+              <NavLink to="/member/wallet/deposit" className="w-full h-full">
                 <div className="flex flex-col items-center py-2 gap-1">
                   <img
                     src={depositIcon}
@@ -198,7 +208,7 @@ export default function RootLayout() {
                   />
                   <p className="text-white text-sm">Deposit</p>
                 </div>
-              </Link>
+              </NavLink>
               <MobileProfileButton
                 isOpen={isProfileOpen}
                 onClose={() => setIsProfileOpen(false)}

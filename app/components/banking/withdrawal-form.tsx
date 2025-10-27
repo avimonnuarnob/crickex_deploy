@@ -58,7 +58,7 @@ export default function WithdrawalForm({
   const [isActivated, setIsActivated] = useState(false);
 
   const [selectedMethod, setSelectedMethod] = useState<number | undefined>(
-    gateways[0].gateway_name.supported_method[0].id
+    gateways[0]?.gateway_name.supported_method[0]?.id
   );
   const [selectedGateway, setSelectedGateway] = useState<Gateway | undefined>(
     () => {

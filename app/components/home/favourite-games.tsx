@@ -20,11 +20,11 @@ export default function FavouriteGames() {
         </div>
 
         <div className="overflow-x-auto [&::-webkit-scrollbar]:h-1.5 [&::-webkit-scrollbar-thumb]:bg-gray-300 [&::-webkit-scrollbar-thumb]:rounded py-1">
-          <div className="flex space-x-2 min-w-max">
+          <div className="flex space-x-2">
             {events?.map((m, i) => (
               <div
                 key={i}
-                className="max-w-[300px] rounded-md overflow-hidden shadow bg-white shadow-gray-9"
+                className="min-w-[72vw] sm:min-w-[25%] h-[41.33vw] sm:h-[172px] rounded-md overflow-hidden shadow bg-white shadow-gray-9"
               >
                 {m.forward_url ? (
                   <a

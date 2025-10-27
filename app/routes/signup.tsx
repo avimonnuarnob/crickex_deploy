@@ -1,3 +1,5 @@
+import "react-phone-number-input/style.css";
+
 import Button from "@/components/ui/button/Button";
 import { FormTextField } from "@/components/ui/form-inputs";
 import Modal from "@/components/ui/modal/Modal";
@@ -5,8 +7,13 @@ import { signUpSchema, type SignupInput } from "@/schema/authSchema";
 import { checkEmail, checkUsername } from "@/services/user/user_core";
 import { GiConfirmed } from "react-icons/gi";
 import { FaRegCircleXmark } from "react-icons/fa6";
+import PhoneInput, {
+  getCountryCallingCode,
+  type Value,
+} from "react-phone-number-input";
 
 import {
+  Field,
   Label,
   Listbox,
   ListboxButton,
@@ -22,12 +29,14 @@ import { useState } from "react";
 import { OTPInput, type SlotProps, REGEXP_ONLY_DIGITS } from "input-otp";
 import classNames from "classnames";
 import { useCurrentUser } from "@/contexts/CurrentUserContext";
+import { toast } from "react-toastify";
 
 export default function SignupModal({ matches }: Route.ComponentProps) {
   const navigate = useNavigate();
   const { loginUser } = useCurrentUser();
 
-  const { currencyList, countryList, defaultReferral } = matches[0].data;
+  const { currencyList, countryList, defaultReferral, mirrorLinks } =
+    matches[0].data;
   const [secondSubmission, setSecondSubmission] = useState(false);
   const [isSuccessfulRegistration, setIsSuccessfullRegistration] = useState<
     boolean | undefined
@@ -54,15 +63,19 @@ export default function SignupModal({ matches }: Route.ComponentProps) {
     setError,
     clearErrors,
     trigger,
-    formState: { isDirty },
+    formState: { isDirty, errors },
   } = useForm<SignupInput>({
     resolver: zodResolver(signUpSchema),
     defaultValues: {
       username: "",
       password: "",
-      email: "",
+      // email: "",
       referral_code: "",
       otp: "",
+      currency: mirrorLinks?.domain_currency[0].currency,
+      phone: countryList?.[0].country_code
+        ? "+" + getCountryCallingCode(countryList?.[0].country_code as any)
+        : undefined,
     },
   });
 
@@ -94,6 +107,7 @@ export default function SignupModal({ matches }: Route.ComponentProps) {
   };
 
   const onSubmit = async (data: SignupInput) => {
+    console.log(data);
     setIsLoading(true);
     if (responseData && secondSubmission) {
       const response = await fetch(
@@ -128,16 +142,23 @@ export default function SignupModal({ matches }: Route.ComponentProps) {
           body: JSON.stringify({
             username: data.username.toLowerCase(),
             password: data.password,
-            email: data.email.toLowerCase(),
             referral_code: data.referral_code.length
               ? data.referral_code
               : defaultReferral.referral_code,
             social_contact_id: 1,
             currency: data.currency,
+            contact: data.phone,
           }),
         }
       );
       const responseData = await response.json();
+
+      if (responseData.status === "failed") {
+        setIsLoading(false);
+        toast.error("Something went wrong!");
+        return;
+      }
+
       setIsLoading(false);
       setResponseData(responseData.data);
       setSecondSubmission(true);
@@ -312,6 +333,7 @@ export default function SignupModal({ matches }: Route.ComponentProps) {
                                 className="group relative cursor-default py-2 pr-9 pl-3 text-gray-900 select-none"
                               >
                                 <div className="flex items-center">
+                                  <span>{currency.currency_icon}</span>
                                   <span className="ml-2 block truncate font-normal">
                                     {currency.currency}
                                   </span>
@@ -326,6 +348,7 @@ export default function SignupModal({ matches }: Route.ComponentProps) {
                 </div>
                 <div className="mb-3.5">
                   <FormTextField
+                    autoComplete="one-time-code"
                     control={control}
                     label="Username"
                     id="username"
@@ -357,6 +380,7 @@ export default function SignupModal({ matches }: Route.ComponentProps) {
                 </div>
                 <div className="mb-4">
                   <FormTextField
+                    autoComplete="one-time-code"
                     control={control}
                     label="Password"
                     id="password"
@@ -371,116 +395,38 @@ export default function SignupModal({ matches }: Route.ComponentProps) {
                     }}
                   />
                 </div>
-                <div className="mb-4">
-                  <Controller
-                    control={control}
-                    defaultValue={countryList[0]}
-                    name="country"
-                    render={({ field: { value, onChange } }) => (
-                      <Listbox value={value} onChange={onChange}>
-                        <Label className="block text-sm/6 text-[#474747]">
-                          Country
-                        </Label>
-                        <div className="relative mt-2.5">
-                          <ListboxButton className="grid w-full cursor-default grid-cols-1 rounded-sm bg-[#eeeeee] py-3 pr-2 pl-2 text-left font-light text-gray-900 focus:outline-1 focus:outline-blue-1 sm:text-sm/6 border-1 border-[#e7e7e7]">
-                            <span className="col-start-1 row-start-1 flex items-center gap-2 pr-6">
-                              {value ? (
-                                <>
-                                  <img
-                                    alt={value.country_name}
-                                    src={
-                                      import.meta.env.VITE_API_URL +
-                                      "" +
-                                      value.country_flag
-                                    }
-                                    className="w-5 h-5 shrink-0 rounded-full"
-                                  />
-                                  <span className="block truncate">
-                                    {value.country_name}
-                                  </span>
-                                </>
-                              ) : (
-                                <span className="block truncate">
-                                  Choose a Country
-                                </span>
-                              )}
-                            </span>
-                            <FaCaretDown
-                              aria-hidden="true"
-                              className="col-start-1 row-start-1 size-3 self-center justify-self-end text-gray-500"
-                            />
-                          </ListboxButton>
 
-                          <ListboxOptions
-                            transition
-                            className="absolute z-10 mt-1 max-h-56 w-full overflow-auto rounded-md bg-[#eeeeee] py-1 text-base shadow-lg ring-1 ring-black/5 focus:outline-hidden data-leave:transition data-leave:duration-100 data-leave:ease-in data-closed:data-leave:opacity-0 sm:text-sm"
-                          >
-                            {countryList.map((country, idx) => (
-                              <ListboxOption
-                                key={country.country_name + idx + ""}
-                                value={country}
-                                className="group relative cursor-default py-2 pr-9 pl-3 text-gray-900 select-none"
-                              >
-                                <div className="flex items-center">
-                                  <img
-                                    alt={country.country_name}
-                                    src={
-                                      import.meta.env.VITE_API_URL +
-                                      "" +
-                                      country.country_flag
-                                    }
-                                    className="w-5 h-5 shrink-0 rounded-full"
-                                  />
-                                  <span className="ml-2 block truncate font-normal">
-                                    {country.country_name}
-                                  </span>
-                                </div>
-                              </ListboxOption>
-                            ))}
-                          </ListboxOptions>
-                        </div>
-                      </Listbox>
-                    )}
-                  />
-                </div>
                 <div className="mb-4">
-                  <FormTextField
-                    control={control}
-                    label="Email"
-                    id="email"
-                    name="email"
-                    required
-                    className="lowercase"
-                    onBlur={async (e) => {
-                      try {
-                        const isValid = await trigger("email");
-                        if (isValid) {
-                          try {
-                            await checkEmail(e.target.value);
-                            clearErrors("email");
-                          } catch (error) {
-                            if (error instanceof Error) {
-                              setError("email", { message: error.message });
-                            }
+                  <Field>
+                    <Label className="mb-3 block text-[#474747] text-sm">
+                      Phone number
+                    </Label>
+                    <Controller
+                      name="phone"
+                      control={control}
+                      rules={{ required: "Phone number is required" }}
+                      render={({ field }) => (
+                        <PhoneInput
+                          defaultCountry={
+                            (countryList?.[0].country_code as any) ?? undefined
                           }
-                        }
-                      } catch (error) {}
-                    }}
-                    onKeyDown={(e) => {
-                      if (e.key === " ") {
-                        e.preventDefault();
-                      } else return;
-                    }}
-                  />
+                          {...field}
+                          placeholder="Enter phone number"
+                          international
+                          value={field.value}
+                          onChange={field.onChange}
+                          className="flex h-[12vw] sm:h-[45px] border border-gray-4 bg-gray-1 text-foreground-200 rounded p-2 text-xs [&>input]:outline-none mt-[2.6666666667vw] sm:mt-2.5"
+                        />
+                      )}
+                    />
+                    {errors.phone && (
+                      <p className="text-red-1 text-xs">
+                        {errors.phone.message}
+                      </p>
+                    )}
+                  </Field>
                 </div>
-                <div className="mb-13">
-                  <FormTextField
-                    control={control}
-                    label="Refer Code"
-                    id="referral_code"
-                    name="referral_code"
-                  />
-                </div>
+                <div className="mb-13"></div>
               </>
             )}
 
@@ -509,7 +455,7 @@ export default function SignupModal({ matches }: Route.ComponentProps) {
               </Button>
             </div>
 
-            <p className="text-gray-3 text-center text-sm mb-4.5">
+            <p className="text-gray-8 text-center text-sm mb-4.5">
               Already a member ?{" "}
               <Link
                 to={location.pathname.replace(
@@ -522,7 +468,7 @@ export default function SignupModal({ matches }: Route.ComponentProps) {
               </Link>
             </p>
 
-            <p className="text-gray-3 text-center text-sm mb-1.5">
+            <p className="text-gray-8 text-center text-sm mb-1.5">
               Registering means you are over 18 years old, have read and agree
               to the{" "}
               <Link to="/" className="text-blue-1">

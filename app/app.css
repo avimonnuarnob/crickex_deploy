@@ -21,14 +21,14 @@
   --custom-dark-1: #313131;
 
   --custom-gray-1: #f5f5f5;
-  --custom-gray-2: #eaeff8;
-  --custom-gray-3: #999999;
-  --custom-gray-4: #d9d9d9;
-  --custom-gray-5: #b2b2b2;
-  --custom-gray-6: #dcdcdc;
-  --custom-gray-7: #e0e0e0;
-  --custom-gray-8: #eeeeee;
-  --custom-gray-9: #767676;
+  --custom-gray-2: #eeeeee;
+  --custom-gray-3: #eaeff8;
+  --custom-gray-4: #e0e0e0;
+  --custom-gray-5: #dcdcdc;
+  --custom-gray-6: #d9d9d9;
+  --custom-gray-7: #a1aac7;
+  --custom-gray-8: #b2b2b2;
+  --custom-gray-9: #999999;
 
   --custom-yellow-1: #ffe800;
   --custom-yellow-2: #e4b621;
@@ -336,6 +336,7 @@ body {
 
 .PhoneInputInput {
   padding-left: 10px;
+  height: 100%;
 }
 
 .PhoneInputCountryIcon {

@@ -1,3 +1,7 @@
+import {
+  isPossiblePhoneNumber,
+  isValidPhoneNumber,
+} from "react-phone-number-input";
 import { z } from "zod";
 
 export const loginSchema = z
@@ -39,18 +43,27 @@ export const signUpSchema = z
         /^[a-zA-Z0-9]+$/,
         "Password can only contain letters and numbers, no spaces"
       ),
-    email: z.string().email(),
     referral_code: z.string(),
-    country: z
-      .object({
-        country_name: z.string(),
-        country_flag: z.string(),
-      })
-      .nullable(),
+    // country: z
+    //   .object({
+    //     country_name: z.string(),
+    //     country_flag: z.string(),
+    //   })
+    //   .nullable(),
     currency: z.string(),
     otp: z.string().optional(),
+    phone: z.string(),
   })
-  .required();
+  .required()
+  .superRefine((data, ctx) => {
+    if (data.phone && !isPossiblePhoneNumber(data.phone)) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: "Valid phone number must be provided.",
+        path: ["phone"], // points to the whole object
+      });
+    }
+  });
 
 export const forgotPasswordByMailSchema = z
   .object({

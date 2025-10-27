@@ -18,7 +18,7 @@ export default function GameDescription({
 }) {
   const [shouldShowSection] = useImageLoaded(
     game.imgFileName.startsWith("/")
-      ? "https://img.softtake.net" + game.imgFileName
+      ? import.meta.env.VITE_GAME_IMG_URL + game.imgFileName
       : game.imgFileName
   );
   const navigate = useNavigate();
@@ -65,35 +65,37 @@ export default function GameDescription({
   };
 
   return (
-    <button
-      // overflow hidden somehow getting overwritten by normalize css file. maybe tailwind has less precedence over normalize css.
-      className={classNames(
-        "w-full h-full rounded-[3px] overflow-hidden! bg-white cursor-pointer",
-        {
-          "animate-pulse": isLoading,
-        }
-      )}
-      onClick={() => onClickHandler(game)}
-    >
-      {shouldShowSection ? (
-        <div className="w-full h-full max-h-[120px] rounded-md">
-          <img
-            src={
-              game.imgFileName.startsWith("/")
-                ? "https://img.softtake.net" + game.imgFileName
-                : game.imgFileName
-            }
-            alt={game.gameName.gameName_enus}
-            className="w-full h-full"
-            decoding="async"
-            loading="lazy"
-          />
-        </div>
-      ) : (
-        <div className="w-full h-[120px] flex justify-center items-center">
-          <div className="loader small"></div>
-        </div>
-      )}
+    <div className="flex flex-col">
+      <button
+        // overflow hidden somehow getting overwritten by normalize css file. maybe tailwind has less precedence over normalize css.
+        className={classNames(
+          "w-full h-full rounded-[3px] overflow-hidden! bg-white cursor-pointer",
+          {
+            "animate-pulse": isLoading,
+          }
+        )}
+        onClick={() => onClickHandler(game)}
+      >
+        {shouldShowSection ? (
+          <div className="w-full h-full max-h-[120px] rounded-md">
+            <img
+              src={
+                game.imgFileName.startsWith("/")
+                  ? import.meta.env.VITE_GAME_IMG_URL + game.imgFileName
+                  : game.imgFileName
+              }
+              alt={game.gameName.gameName_enus}
+              className="w-full h-full"
+              decoding="async"
+              loading="lazy"
+            />
+          </div>
+        ) : (
+          <div className="w-full h-[120px] flex justify-center items-center">
+            <div className="loader small"></div>
+          </div>
+        )}
+      </button>
       <div className="flex p-2 items-center">
         <h3 className="text-left whitespace-nowrap truncate flex-1">
           {game.gameName.gameName_enus}
@@ -102,6 +104,6 @@ export default function GameDescription({
           <img src={heartIcon} alt="heart" className="w-5 h-5" />
         </button>
       </div>
-    </button>
+    </div>
   );
 }

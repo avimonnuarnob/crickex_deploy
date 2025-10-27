@@ -26,8 +26,8 @@ const Button = <T extends React.ElementType = "button">({
   const baseClasses =
     "flex items-center justify-center cursor-pointer rounded transition-all disabled:cursor-not-allowed disabled:opacity-80";
   const colorClasses = {
-    blue: "bg-blue-1 text-white hover:bg-blue-7 disabled:bg-gray-3",
-    green: "bg-green-1 text-white hover:bg-green-600 disabled:bg-gray-3",
+    blue: "bg-blue-1 text-white hover:bg-blue-7 disabled:bg-gray-8",
+    green: "bg-green-1 text-white hover:bg-green-600 disabled:bg-gray-8",
     red: "bg-red-1 text-white hover:bg-red-700 disabled:bg-red-400",
     yellow: "bg-yellow-1 text-black hover:bg-yellow-2 disabled:bg-yellow-400",
     link: "bg-transparent text-black",

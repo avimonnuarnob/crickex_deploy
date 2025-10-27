@@ -112,7 +112,12 @@ const Topbar = ({ isFull }: TopbarProps) => {
             : "none",
         }}
       >
-        <div className={classNames("", {})}>
+        <div
+          className={classNames("mx-auto transition-[width] duration-100", {
+            "w-[calc(100%-(16px*3.75))]": isFull,
+            "w-full": !isFull,
+          })}
+        >
           <div className="flex h-[13.3vw] sm:h-auto items-center justify-between max-w-[1200px] mx-auto relative">
             <button
               className="w-[5vw] sm:hidden ml-4!"

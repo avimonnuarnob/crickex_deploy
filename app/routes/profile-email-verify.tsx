@@ -11,17 +11,17 @@ import Cookies from "js-cookie";
 import { toast } from "react-toastify";
 import { OTPInput, REGEXP_ONLY_DIGITS, type SlotProps } from "input-otp";
 import Button from "@/components/ui/button/Button";
-import { Field, Fieldset, Label } from "@headlessui/react";
+import { Field, Fieldset, Input, Label } from "@headlessui/react";
 import { useNavigate } from "react-router";
 
-export default function ProfilePhoneVerify() {
+export default function ProfileEmailVerify() {
   const { userInfo, setUserInfo } = useCurrentUser();
   const navigate = useNavigate();
-  const [phoneValue, setPhoneValue] = useState<Value | undefined>();
-  const [isPhoneVerificationOpen, setIsPhoneVerificationOpen] = useState(false);
+  const [emailValue, setEmailValue] = useState<string | undefined>();
+  const [isEmailVerificationOpen, setIsEmailVerificationOpen] = useState(false);
   const [value, setValue] = useState("");
 
-  const verifyPhone = async (value: string) => {
+  const verifyEmail = async (value: string) => {
     const response = await fetch(
       import.meta.env.VITE_API_URL + "/auth/user/update/",
       {
@@ -33,7 +33,7 @@ export default function ProfilePhoneVerify() {
         },
         body: JSON.stringify({
           otp: value,
-          contact: phoneValue,
+          email: emailValue,
         }),
       }
     );
@@ -54,56 +54,52 @@ export default function ProfilePhoneVerify() {
       onClose={() => {
         navigate(-1);
       }}
-      title="Add Phone Number"
-      isFullScreen
       onBack={() => {
         navigate(-1);
       }}
+      title="Add E-mail"
+      isFullScreen
     >
-      <div className=" bg-white h-full">
+      <div className="bg-white h-full">
         <div className="h-px"></div>
-        <div>
+        <div className="">
           <form
             onSubmit={async (e) => {
               e.preventDefault();
               e.stopPropagation();
 
-              if (!isPhoneVerificationOpen) {
-                if (phoneValue) {
-                  const response = await fetch(
-                    import.meta.env.VITE_API_URL + "/auth/user/update/",
-                    {
-                      method: "PUT",
+              if (!isEmailVerificationOpen) {
+                const response = await fetch(
+                  import.meta.env.VITE_API_URL + "/auth/user/update/",
+                  {
+                    method: "PUT",
 
-                      headers: {
-                        "Content-Type": "application/json",
-                        Authorization: `Token ${Cookies.get("userToken")}`,
-                      },
-                      body: JSON.stringify({
-                        contact: phoneValue,
-                      }),
-                    }
-                  );
-                  const responseData = await response.json();
-                  if (responseData.status === "ok") {
-                    setIsPhoneVerificationOpen(true);
-                  } else {
-                    toast.error(responseData.errors);
+                    headers: {
+                      "Content-Type": "application/json",
+                      Authorization: `Token ${Cookies.get("userToken")}`,
+                    },
+                    body: JSON.stringify({
+                      email: emailValue,
+                    }),
                   }
+                );
+                const responseData = await response.json();
+                if (responseData.status === "ok") {
+                  setIsEmailVerificationOpen(true);
                 } else {
-                  return;
+                  toast.error(responseData.errors);
                 }
               }
             }}
           >
-            {isPhoneVerificationOpen ? (
+            {isEmailVerificationOpen ? (
               <div className="space-y-2.5 text-center p-[2.6666666667vw] m-[2.6666666667vw] sm:p-2.5 sm:m-2.5">
                 <div>
                   <p className="text-[3.7333333333vw] sm:text-sm">
                     Please enter the verification code sent to
                   </p>
                   <p className="text-[3.7333333333vw] sm:text-sm font-bold">
-                    {phoneValue}
+                    {emailValue}
                   </p>
                 </div>
                 <OTPInput
@@ -114,7 +110,7 @@ export default function ProfilePhoneVerify() {
                     setValue(value);
                     if (value.length === 6) {
                       setValue(value);
-                      verifyPhone(value);
+                      verifyEmail(value);
                     }
                   }}
                   maxLength={6}
@@ -132,44 +128,33 @@ export default function ProfilePhoneVerify() {
               </div>
             ) : (
               <Fieldset className="p-[2.6666666667vw]! m-[2.6666666667vw]! sm:p-2.5! sm:m-2.5!">
-                <Field className="">
+                <Field className="space-y-[2.6666666667vw] sm:space-y-2.5">
                   <Label className="flex text-[#474747] text-[3.7333333333vw] sm:text-sm h-[6.4vw] sm:h-6 leading-[6.4vw] sm:leading-6">
-                    Phone Number
+                    E-mail
                   </Label>
-                  <PhoneInput
-                    defaultCountry={userInfo?.country_id?.country_code}
-                    className={classNames(
-                      "h-[12vw] sm:h-[45px] border border-gray-1 bg-gray-1 text-foreground-200 rounded p-2 text-xs [&>input]:outline-none mt-[2.6666666667vw] sm:mt-2.5",
-                      {
-                        "border-red-500":
-                          phoneValue && !isPossiblePhoneNumber(phoneValue),
-                      }
-                    )}
-                    value={phoneValue}
-                    onChange={setPhoneValue}
-                    international
-                    placeholder="Enter phone number"
+                  <Input
+                    required
+                    type="email"
+                    name="email"
+                    value={emailValue}
+                    onChange={(e) => setEmailValue(e.target.value)}
+                    placeholder="Enter your E-mail"
+                    className="w-full h-[12vw] sm:h-11.25 p-[0_4.2666666667vw] sm:px-4 border border-gray-1 bg-gray-1 text-foreground-200 rounded text-[3.2vw]! sm:text-xs!"
                   />
-                  {phoneValue && !isPossiblePhoneNumber(phoneValue) && (
-                    <p className="text-red-500 text-xs mt-[2.6666666667vw] sm:mt-2.5">
-                      Please enter a valid phone number.
-                    </p>
-                  )}
                 </Field>
               </Fieldset>
             )}
-            {!isPhoneVerificationOpen && (
+            {!isEmailVerificationOpen && (
               <Button
                 color="green"
                 type="submit"
                 className="w-[calc(100%-10.6666666667vw)] sm:w-[calc(100%-40px)] m-[2.6666666667vw_auto]! sm:m-[10px_auto]! block text-[4vw]! sm:text-[15px]! h-[12vw] sm:h-11.25 leading-[12vw] sm:leading-11.25"
-                disabled={!phoneValue || !isPossiblePhoneNumber(phoneValue)}
+                disabled={!emailValue}
               >
                 Send verfication code
               </Button>
             )}
-
-            {!isPhoneVerificationOpen && (
+            {!isEmailVerificationOpen && (
               <p className="text-[#999] text-[3.7333333333vw] p-[2.6666666667vw_5.3333333333vw] sm:py-2.5 sm:px-5 sm:text-sm">
                 For your privacy, the information cannot be modified after
                 confirmation.If you need help, please contact{" "}

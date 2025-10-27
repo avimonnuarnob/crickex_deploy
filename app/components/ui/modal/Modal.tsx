@@ -7,6 +7,7 @@ import {
 } from "@headlessui/react";
 import classNames from "classnames";
 import { AnimatePresence, motion } from "motion/react";
+import { IoIosArrowBack } from "react-icons/io";
 import { IoCloseSharp } from "react-icons/io5";
 
 type ModalProps = {
@@ -15,6 +16,7 @@ type ModalProps = {
   children: React.ReactNode;
   title: string;
   isFullScreen?: boolean;
+  onBack?: () => void;
 };
 
 const Modal = ({
@@ -23,6 +25,7 @@ const Modal = ({
   children,
   title,
   isFullScreen = false,
+  onBack,
 }: ModalProps) => {
   return (
     <AnimatePresence>
@@ -43,25 +46,30 @@ const Modal = ({
             >
               <DialogPanel
                 className={classNames(
-                  "space-y-4 rounded-none sm:rounded-[10px] absolute w-full h-full overflow-hidden flex flex-col shadow",
-                  {
-                    "bg-white": isFullScreen,
-                  }
+                  "space-y-4 rounded-none sm:rounded-[10px] absolute w-full h-full overflow-hidden flex flex-col shadow"
                 )}
               >
                 {title && (
-                  <div className="bg-blue-1 relative mb-0 sm:rounded-t-[10px] p-2.75">
+                  <div className="bg-blue-1 relative mb-0 sm:rounded-t-[10px] flex items-center justify-center min-h-[13.3333333333vw] sm:min-h-12.5">
                     <CloseButton className="absolute top-1/2 right-2 mb-0 -translate-y-1/2 cursor-pointer">
                       <IoCloseSharp className="text-xl text-white" />
                     </CloseButton>
-                    <DialogTitle className="mb-0 text-center text-lg text-white">
+                    {onBack && (
+                      <button
+                        className="absolute top-1/2 left-2 mb-0 -translate-y-1/2 cursor-pointer"
+                        onClick={onBack}
+                      >
+                        <IoIosArrowBack className="text-xl text-white" />
+                      </button>
+                    )}
+                    <DialogTitle className="mb-0 text-center text-xl text-white">
                       {title}
                     </DialogTitle>
                   </div>
                 )}
                 <div
                   className={classNames(
-                    "bg-[#f5f5f5] rounded-b-[10px] overflow-y-auto [&::-webkit-scrollbar]:w-1.25 [&::-webkit-scrollbar-thumb]:bg-gray-300 [&::-webkit-scrollbar-thumb]:rounded",
+                    "bg-white rounded-b-[10px] overflow-y-auto [&::-webkit-scrollbar]:w-1.25 [&::-webkit-scrollbar-thumb]:bg-gray-300 [&::-webkit-scrollbar-thumb]:rounded",
                     {
                       "flex-1": isFullScreen,
                     }

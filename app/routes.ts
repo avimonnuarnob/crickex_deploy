@@ -88,6 +88,13 @@ export default [
           id: "home-profile-verify-phone",
         }
       ),
+      route(
+        "member/new-profile-verify-email",
+        "./routes/profile-email-verify.tsx",
+        {
+          id: "home-profile-verify-email",
+        }
+      ),
       route("member/transaction-records", "./routes/transaction-records.tsx", {
         id: "home-transaction-records",
       }),

@@ -268,7 +268,7 @@ export default function MobileProfileButton({
                     <p className="text-[3.2vw]">Personal Info</p>
                   </div>
                 </Link>
-                <div>
+                <Link to="member/change-password">
                   <div>
                     <img
                       src={resetpasswordsIcon}
@@ -279,7 +279,7 @@ export default function MobileProfileButton({
                   <div className="h-9.25 bg-gray-2 flex items-center justify-center border border-gray-1 py-1.25">
                     <p className="text-[3.2vw]">Change Password</p>
                   </div>
-                </div>
+                </Link>
                 <div>
                   <div>
                     <img
