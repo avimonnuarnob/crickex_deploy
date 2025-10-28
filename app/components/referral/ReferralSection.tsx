@@ -8,6 +8,7 @@ import { useNavigate } from "react-router";
 import TransactionRecordsTable from "../transaction/TransactionRecordsTable";
 import ReferBonusTable from "./ReferBonusTable";
 import type { ReferralData } from "@/routes/referral";
+import { toast } from "react-toastify";
 
 interface ReferralSectionProps {
   invitationCode: string;
@@ -19,11 +20,11 @@ interface ReferralSectionProps {
 export default function ReferralSection({
   invitationCode = "8v2YUL",
   invitationUrl = "https://example.com/invite/8v2YUL",
-  qrCodeUrl = "/placeholder-qr-code.png",
+  qrCodeUrl,
   referralData,
 }: ReferralSectionProps) {
   const [selectedTab, setSelectedTab] = useState(0);
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(true);
 
   const navigate = useNavigate();
 
@@ -31,35 +32,48 @@ export default function ReferralSection({
     if (navigator.share) {
       navigator
         .share({
-          title: "Join me on our platform",
+          title: invitationUrl,
           text: "Use my invitation code to sign up!",
           url: invitationUrl,
+        })
+        .then(() => {
+          toast.success("Shared");
         })
         .catch((error) => console.log("Error sharing:", error));
     } else {
       // Fallback for browsers that don't support the Web Share API
-      navigator.clipboard.writeText(invitationUrl);
-      alert("Invitation URL copied to clipboard!");
+      navigator.clipboard.writeText(invitationUrl).then(() => {
+        toast.success("Copied to clipboard");
+      });
     }
   };
 
   const copyToClipboard = (text: string) => {
-    navigator.clipboard.writeText(text);
+    navigator.clipboard.writeText(text).then(() => {
+      toast.success("Copied to clipboard");
+    });
     // You could add a toast notification here
   };
 
   return (
     <Modal
       isFullScreen={true}
-      isOpen={true}
+      isOpen={open}
       onClose={() => {
-        navigate(-1);
+        setTimeout(() => {
+          const a = location.pathname.replace(
+            "/member/common-referral/invite",
+            ""
+          );
+          navigate(a ? a + location.hash : "/" + location.hash);
+        }, 200);
+        setOpen(false);
       }}
       title="Refer Bonus"
     >
       <TabGroup selectedIndex={selectedTab} onChange={setSelectedTab}>
         <TabList
-          className="flex gap-1.5 bg-[#f5f5f5] px-2.5 h-12.25 text-sm absolute top-12.5 w-full z-10"
+          className="flex gap-1.5 bg-[#f5f5f5] px-2.5 h-12.25 text-sm absolute top-[13.3333333333vw] sm:top-12.5 w-full z-10"
           style={{
             boxShadow: "0 1px 3px #0000004d",
           }}
@@ -120,7 +134,7 @@ export default function ReferralSection({
                     <div className="border-r pr-4 border-blue-600">
                       <h3 className="mb-1 text-xs">Invitation QR Code</h3>
                       <div className="bg-white p-1 rounded-lg border-4 border-green-400">
-                        {qrCodeUrl ? (
+                        {!qrCodeUrl ? (
                           <img
                             src={qrCodeUrl}
                             alt="QR Code"
@@ -139,7 +153,7 @@ export default function ReferralSection({
                       <h3 className="mb-1 text-xs">Invitation URL</h3>
                       <button
                         onClick={handleShare}
-                        className="bg-green-500 hover:bg-green-600 text-white font-bold h-8.75 rounded-sm transition-colors !mb-3.75"
+                        className="bg-green-500 hover:bg-green-600 text-white font-bold h-8.75 rounded-sm transition-colors !mb-3.75 cursor-pointer"
                         style={{
                           background:
                             "linear-gradient( 180deg, #43fa19 0%, #1f9b09 45%, #187e03 55%, #1fa205 90%, #26bb07 100% )",
@@ -157,7 +171,7 @@ export default function ReferralSection({
                         </div>
                         <button
                           onClick={() => copyToClipboard(invitationCode)}
-                          className="bg-blue-500 hover:bg-blue-600 py-2 px-3 rounded-r-sm transition-colors"
+                          className="bg-blue-500 hover:bg-blue-600 py-2 px-3 rounded-r-sm transition-colors cursor-pointer"
                           style={{
                             background:
                               "linear-gradient( #19bdfa 0%, #0065c1 40%, #0a5596 55%, #0560ae 80%, #006cc5 90%, #0180de 100% )",
@@ -613,7 +627,6 @@ export default function ReferralSection({
             <ReferBonusTable
               referrals={referralData}
               onFilterClick={() => {
-                console.log(open);
                 setOpen(!open);
               }}
               filterPeriod={[]}

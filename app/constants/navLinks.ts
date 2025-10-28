@@ -33,7 +33,7 @@ export const navLinks = [
   },
 
   {
-    href: "#",
+    href: "member/common-referral/invite",
     icon: referBonusIcon,
     text: "Refer Bonus",
   },

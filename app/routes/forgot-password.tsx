@@ -18,7 +18,10 @@ import { Controller, useForm } from "react-hook-form";
 import { useState } from "react";
 import { FormTextField } from "@/components/ui/form-inputs";
 import Button from "@/components/ui/button/Button";
-import PhoneInput, { type Value } from "react-phone-number-input";
+import PhoneInput, {
+  getCountryCallingCode,
+  type Value,
+} from "react-phone-number-input";
 import { OTPInput, REGEXP_ONLY_DIGITS, type SlotProps } from "input-otp";
 import { GiConfirmed } from "react-icons/gi";
 import { FaRegCircleXmark } from "react-icons/fa6";
@@ -216,7 +219,7 @@ const PhoneFormInput = ({
     phone: Value;
   }>({
     defaultValues: {
-      phone: "",
+      phone: "+" + getCountryCallingCode("BD"),
     },
   });
 
@@ -267,12 +270,20 @@ const PhoneFormInput = ({
             rules={{ required: "Phone number is required" }}
             render={({ field }) => (
               <PhoneInput
+                countrySelectProps={{
+                  disabled: true,
+                }}
+                countries={["BD"]}
+                defaultCountry="BD"
                 {...field}
                 placeholder="Enter phone number"
                 international
                 value={field.value}
                 onChange={field.onChange}
                 className="flex h-[12vw] sm:h-[45px] border border-gray-4 bg-gray-1 text-foreground-200 rounded p-2 text-xs [&>input]:outline-none mt-[2.6666666667vw] sm:mt-2.5"
+                style={{
+                  "--PhoneInputCountrySelectArrow-opacity": "0",
+                }}
               />
             )}
           />
@@ -610,7 +621,7 @@ export default function ForgotPassword() {
               leaveTo="-translate-x-full"
             >
               <div>
-                <DoItByEmail
+                <DoItBySMS
                   setIsSuccessfullRegistration={setIsSuccessfullRegistration}
                 />
               </div>
@@ -628,7 +639,7 @@ export default function ForgotPassword() {
               leaveTo="translate-x-full"
             >
               <div>
-                <DoItBySMS
+                <DoItByEmail
                   setIsSuccessfullRegistration={setIsSuccessfullRegistration}
                 />
               </div>

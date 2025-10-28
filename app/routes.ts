@@ -44,6 +44,9 @@ export default [
           id: "game-forgot-password",
         }
       ),
+      route("member/common-referral/invite", "./routes/referral.tsx", {
+        id: "game-referral",
+      }),
     ]),
 
     route("/promotion", "./routes/promotion.tsx", [
@@ -109,6 +112,9 @@ export default [
       }),
       route("member/vip-points-exchange", "./routes/point-exchange.tsx", {
         id: "home-point-exchange",
+      }),
+      route("member/turnover/:status", "./routes/turnover.tsx", {
+        id: "home-turnover",
       }),
     ]),
 

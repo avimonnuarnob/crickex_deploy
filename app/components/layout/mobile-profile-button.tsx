@@ -292,7 +292,7 @@ export default function MobileProfileButton({
                     <p className="text-[3.2vw]">Inbox</p>
                   </div>
                 </div>
-                <div>
+                <Link to="member/common-referral/invite">
                   <div>
                     <img
                       src={referralIcon}
@@ -303,7 +303,7 @@ export default function MobileProfileButton({
                   <div className="h-9.25 bg-gray-2 flex items-center justify-center border border-gray-1 py-1.25">
                     <p className="text-[3.2vw]">Refer Bonus</p>
                   </div>
-                </div>
+                </Link>
               </div>
             </div>
 

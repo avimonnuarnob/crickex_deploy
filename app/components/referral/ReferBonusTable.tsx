@@ -1,4 +1,5 @@
 import type { ReferralData } from "@/routes/referral";
+import { format } from "date-fns";
 import React from "react";
 import { FaCalendarAlt, FaChevronRight, FaFilter } from "react-icons/fa";
 
@@ -49,17 +50,11 @@ const ReferBonusTable: React.FC<ReferBonusTableProps> = ({
       </div>
 
       {/* Table header */}
-      <div className="grid grid-cols-[1.5fr_1.2fr_1.5fr_1fr] bg-blue-200 text-gray-800 font-medium px-2.5 whitespace-nowrap truncate text-ellipsis">
-        <div className="my-1.25 p-1.25 text-center border-r border-r-white border-dotted text-xs">
-          Bonus Type
-        </div>
+      <div className="grid grid-cols-2 bg-blue-200 text-gray-800 font-medium px-2.5 whitespace-nowrap truncate text-ellipsis">
         <div className="my-1.25 p-1.25 text-center border-r border-r-white border-dotted text-xs">
           Invited users
         </div>
-        <div className="my-1.25 p-1.25 text-center border-r border-r-white border-dotted text-xs">
-          Reward amount
-        </div>
-        <div className="my-1.25 p-1.25 text-center text-xs">Status</div>
+        <div className="my-1.25 p-1.25 text-center text-xs">Joining date</div>
       </div>
 
       {/* Table body */}
@@ -83,7 +78,7 @@ const ReferBonusTable: React.FC<ReferBonusTableProps> = ({
             {groupedreferrals[date].map((referral, index) => (
               <div
                 key={index}
-                className={`grid grid-cols-[1.5fr_1.2fr_1.5fr_1fr] border-b border-gray-200 hover:bg-gray-50 cursor-pointer items-center ${
+                className={`grid grid-cols-2 border-b border-gray-200 hover:bg-gray-50 cursor-pointer items-center ${
                   groupedreferrals[date].indexOf(referral) % 2 === 1
                     ? "bg-gray-50"
                     : ""
@@ -92,8 +87,8 @@ const ReferBonusTable: React.FC<ReferBonusTableProps> = ({
               >
                 <div className="p-3 text-center">
                   {/* {transaction.transaction_purpose} */}
+                  {referral[0]}
                 </div>
-                <div className="p-3 text-center font-medium">{referral[0]}</div>
                 <div className="p-3 flex justify-center">
                   {/* <span
                     className={`px-1.25 py-0.75 rounded text-xs w-full text-center ${
@@ -108,10 +103,7 @@ const ReferBonusTable: React.FC<ReferBonusTableProps> = ({
                       ? "Fail"
                       : transaction.status}
                   </span> */}
-                </div>
-                <div className="p-3 flex items-center justify-between">
-                  <span></span>
-                  {/* <FaChevronRight className="text-gray-400" /> */}
+                  {format(new Date(referral[1]), "Pp")}
                 </div>
               </div>
             ))}

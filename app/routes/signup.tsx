@@ -23,20 +23,35 @@ import {
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Controller, useForm } from "react-hook-form";
 import { FaCaretDown, FaLaptopHouse } from "react-icons/fa";
-import { Link, useNavigate } from "react-router";
+import { Link, useNavigate, useParams, useSearchParams } from "react-router";
 import type { Route } from "./+types/signup";
 import { useState } from "react";
 import { OTPInput, type SlotProps, REGEXP_ONLY_DIGITS } from "input-otp";
 import classNames from "classnames";
 import { useCurrentUser } from "@/contexts/CurrentUserContext";
 import { toast } from "react-toastify";
+import { MdCheckCircle, MdError } from "react-icons/md";
+import useEmblaCarousel from "embla-carousel-react";
+import Autoplay from "embla-carousel-autoplay";
+import { DotButton, useDotButton } from "@/components/home/home-slider-dots";
 
 export default function SignupModal({ matches }: Route.ComponentProps) {
   const navigate = useNavigate();
+  const [params] = useSearchParams();
   const { loginUser } = useCurrentUser();
+  const refcode = params.get("refcode");
 
-  const { currencyList, countryList, defaultReferral, mirrorLinks } =
-    matches[0].data;
+  const [emblaRef, emblaApi] = useEmblaCarousel({ loop: true }, [
+    Autoplay({ playOnInit: true, delay: 3000 }),
+  ]);
+  const { scrollSnaps, onDotButtonClick } = useDotButton(emblaApi);
+  const {
+    currencyList,
+    countryList,
+    defaultReferral,
+    mirrorLinks,
+    promotionList,
+  } = matches[0].data;
   const [secondSubmission, setSecondSubmission] = useState(false);
   const [isSuccessfulRegistration, setIsSuccessfullRegistration] = useState<
     boolean | undefined
@@ -63,6 +78,7 @@ export default function SignupModal({ matches }: Route.ComponentProps) {
     setError,
     clearErrors,
     trigger,
+    watch,
     formState: { isDirty, errors },
   } = useForm<SignupInput>({
     resolver: zodResolver(signUpSchema),
@@ -70,14 +86,26 @@ export default function SignupModal({ matches }: Route.ComponentProps) {
       username: "",
       password: "",
       // email: "",
-      referral_code: "",
+      referral_code: refcode || defaultReferral.referral_code,
       otp: "",
       currency: mirrorLinks?.domain_currency[0].currency,
-      phone: countryList?.[0].country_code
-        ? "+" + getCountryCallingCode(countryList?.[0].country_code as any)
-        : undefined,
+      phone: "+" + getCountryCallingCode("BD"),
     },
   });
+
+  const password = watch("password");
+
+  const requirements = [
+    {
+      label: "Between 6~20 characters.",
+      test: password?.length >= 6 && password?.length <= 20,
+    },
+    { label: "At least one alphabet.", test: /[a-zA-Z]/.test(password) },
+    {
+      label: "At least one number. (Special character, symbols are allowed).",
+      test: /[0-9]/.test(password),
+    },
+  ];
 
   const loginBtnHandler = async () => {
     setIsLoading(true);
@@ -142,9 +170,7 @@ export default function SignupModal({ matches }: Route.ComponentProps) {
           body: JSON.stringify({
             username: data.username.toLowerCase(),
             password: data.password,
-            referral_code: data.referral_code.length
-              ? data.referral_code
-              : defaultReferral.referral_code,
+            referral_code: data.referral_code,
             social_contact_id: 1,
             currency: data.currency,
             contact: data.phone,
@@ -243,7 +269,41 @@ export default function SignupModal({ matches }: Route.ComponentProps) {
                   'url("https://img.c88rx.com/cx/h5/assets/images/member-logo.png?v=1745315485946")',
               }}
             ></div>
-            <div className="w-full h-[120px] bg-gray-5"></div>
+            <div className="embla">
+              <div className="embla__viewport overflow-hidden" ref={emblaRef}>
+                <div className="embla__container">
+                  {promotionList
+                    ?.filter((promotion) => promotion.signup)
+                    .map((promotion, index) => (
+                      <div
+                        className="embla__slide signup__slide h-30 ml-2"
+                        key={index}
+                      >
+                        <div className="embla__slide__number h-full">
+                          <img
+                            className="h-full w-full rounded"
+                            src={
+                              import.meta.env.VITE_API_URL +
+                              promotion.banner_image
+                            }
+                          />
+                        </div>
+                      </div>
+                    ))}
+                </div>
+              </div>
+              <div className="embla__dots flex gap-1.5 justify-center sm:p-[7px_0_3px] p-[1.8666666667vw_0_.8vw]">
+                {scrollSnaps.map((_, index) => (
+                  <DotButton
+                    key={index}
+                    onClick={() => onDotButtonClick(index)}
+                    className={
+                      "w-5 h-0.5 bg-[#7aa8d0] rounded-xl cursor-pointer"
+                    }
+                  />
+                ))}
+              </div>
+            </div>
           </>
         ) : null}
 
@@ -291,6 +351,11 @@ export default function SignupModal({ matches }: Route.ComponentProps) {
               </div>
             ) : (
               <>
+                {refcode && (
+                  <div className="my-[2.6666666667vw] sm:my-2.5 p-[1.8666666667vw_2.9333333333vw] sm:p-[7px_11px] rounded bg-[#586e9b] text-[3.2vw] sm:text-xs font-bold text-gray-1">
+                    Refer Code: {refcode}
+                  </div>
+                )}
                 <div className="mb-5.5">
                   <Controller
                     control={control}
@@ -394,6 +459,29 @@ export default function SignupModal({ matches }: Route.ComponentProps) {
                       } else return;
                     }}
                   />
+                  <ul
+                    className={`space-y-[3.2vw] sm:space-y-3 mt-[3.2vw] sm:mt-3 ${
+                      password ? "grayscale-0" : "grayscale-100"
+                    }`}
+                  >
+                    {requirements.map((req) => (
+                      <li
+                        key={req.label}
+                        style={{ color: req.test ? "green" : "red" }}
+                        className="text-[3.7333333333vw] sm:text-sm flex gap-2 items-center"
+                      >
+                        <span className="">
+                          {((req.test && password) || !password) && (
+                            <MdCheckCircle className="size-5" />
+                          )}
+                          {!req.test && password && (
+                            <MdError className="size-5" />
+                          )}
+                        </span>
+                        {req.label}
+                      </li>
+                    ))}
+                  </ul>
                 </div>
 
                 <div className="mb-4">
@@ -407,12 +495,10 @@ export default function SignupModal({ matches }: Route.ComponentProps) {
                       rules={{ required: "Phone number is required" }}
                       render={({ field }) => (
                         <PhoneInput
-                          defaultCountry={
-                            (countryList?.[0].country_code as any) ?? undefined
-                          }
+                          countries={["BD"]}
+                          defaultCountry="BD"
                           {...field}
                           placeholder="Enter phone number"
-                          international
                           value={field.value}
                           onChange={field.onChange}
                           className="flex h-[12vw] sm:h-[45px] border border-gray-4 bg-gray-1 text-foreground-200 rounded p-2 text-xs [&>input]:outline-none mt-[2.6666666667vw] sm:mt-2.5"

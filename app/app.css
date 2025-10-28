@@ -107,6 +107,10 @@ body {
   flex: 0 0 100%;
   min-width: 0;
 }
+.embla__slide.signup__slide {
+  flex: 0 0 70%;
+  min-width: 0;
+}
 .embla__controls {
   display: grid;
   grid-template-columns: auto 1fr;

@@ -1,8 +1,10 @@
 import ReferralSection from "@/components/referral/ReferralSection";
 import Cookies from "js-cookie";
 import type { Route } from "./+types/referral";
-import { Await } from "react-router";
+import { Await, useRouteLoaderData } from "react-router";
 import React from "react";
+import type { RootLoaderData } from "@/root";
+import { useCurrentUser } from "@/contexts/CurrentUserContext";
 
 export interface Response {
   status: string;
@@ -28,6 +30,9 @@ export function clientLoader() {
 }
 
 export default function ReferralPage({ loaderData }: Route.ComponentProps) {
+  const data = useRouteLoaderData<RootLoaderData>("root");
+  const { userInfo } = useCurrentUser();
+
   // In a real app, you would fetch this data from your API
   const referralData = {
     invitationCode: "8v2YUL",
@@ -38,7 +43,7 @@ export default function ReferralPage({ loaderData }: Route.ComponentProps) {
   };
 
   return (
-    <div className="max-w-lg mx-auto">
+    <div className="max-w-lg mx-auto page-body">
       <React.Suspense
         fallback={
           <div className="flex justify-center items-center flex-col h-full">
@@ -53,9 +58,12 @@ export default function ReferralPage({ loaderData }: Route.ComponentProps) {
             return (
               <ReferralSection
                 referralData={value}
-                invitationCode={referralData.invitationCode}
-                invitationUrl={referralData.invitationUrl}
-                qrCodeUrl={referralData.qrCodeUrl}
+                invitationCode={data?.defaultReferral.referral_code || ""}
+                invitationUrl={
+                  userInfo?.user_base_origin +
+                  "/signup?refcode=" +
+                  userInfo?.referral_code
+                }
               />
             );
           }}

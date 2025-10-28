@@ -36,19 +36,18 @@ const passwordSchema = z
 type PasswordFormData = z.infer<typeof passwordSchema>;
 
 type ChangePasswordModalProps = {
-  isOpen: boolean;
   onClose: () => void;
   onSubmit: (data: PasswordFormData) => void;
 };
 
 const ChangePasswordModal = ({
-  isOpen,
   onClose,
   onSubmit,
 }: ChangePasswordModalProps) => {
   const [showCurrentPassword, setShowCurrentPassword] = useState(false);
   const [showNewPassword, setShowNewPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [isOpen, setIsOpen] = useState(true);
 
   const {
     register,
@@ -74,8 +73,6 @@ const ChangePasswordModal = ({
     },
   ];
 
-  console.log(errors);
-
   const handleFormSubmit = (data: PasswordFormData) => {
     onSubmit(data);
   };
@@ -84,7 +81,10 @@ const ChangePasswordModal = ({
     <Modal
       isOpen={isOpen}
       isFullScreen={true}
-      onClose={onClose}
+      onClose={() => {
+        setTimeout(onClose, 300);
+        setIsOpen(false);
+      }}
       title="Change Password"
     >
       <form

@@ -75,7 +75,6 @@ export default function ChangePasswordPage() {
         )}
       </AnimatePresence>
       <ChangePasswordModal
-        isOpen={true}
         onClose={() => {
           !notification && navigate(-1);
         }}
