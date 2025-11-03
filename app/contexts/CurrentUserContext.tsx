@@ -43,6 +43,7 @@ interface UserProfile {
   reg_link: string;
   url_id: number;
   domain_bot: string;
+  currency_icon: string;
 }
 
 interface SocialContactId {

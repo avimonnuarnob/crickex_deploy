@@ -1,4 +1,4 @@
-import type { Gateway, Gateways, UserDeposit } from "@/routes/deposit";
+import type { Gateway, Gateways, UserDeposit } from "@/routes/transaction";
 import {
   Field,
   Input,
@@ -11,7 +11,12 @@ import {
 } from "@headlessui/react";
 import classNames from "classnames";
 import { useEffect, useState } from "react";
-import { BsCheck, BsFileSlides, BsUpload } from "react-icons/bs";
+import {
+  BsCheck,
+  BsCheck2Circle,
+  BsFileSlides,
+  BsUpload,
+} from "react-icons/bs";
 import { IoCloseCircleSharp, IoInformationCircleSharp } from "react-icons/io5";
 import {
   LuLoader,
@@ -638,7 +643,9 @@ export default function DepositForm({
                   "deposit_type",
                   selectedGateway?.gateway_name.deposit_type ?? ""
                 );
-                // formData.append("promotion_id", promotion ?? "");
+                if (promotion) {
+                  formData.append("promotion_id", promotion);
+                }
 
                 const response = await fetch(
                   import.meta.env.VITE_API_URL + "/wallet/deposit/",
@@ -714,42 +721,71 @@ export default function DepositForm({
           </div>
         </TabPanel>
         <TabPanel>
-          <div className="p-2 relative h-full">
-            <img
-              src={pendingLogo}
-              alt="pending"
-              className="w-25 aspect-square mx-auto"
-            />
-
-            <div className="text-center my-1.25 mb-3.75">
-              <p className="text-xl">Processing Transaction</p>
-              <p>Pending deposit in progress.</p>
-              <p>You may submit a new request after approval.</p>
-            </div>
-
-            <div className="bg-foreground-400 text-foreground-100 p-3 rounded space-y-2">
-              <p className="font-bold">Deposit</p>
-              <p className="text-xs">{pendingDeposit?.id}</p>
-              <div className="flex justify-between items-center">
-                <p>{pendingDeposit?.gateway_title}</p>
-                <Button size="sm" onClick={() => setSelectedIndex(3)}>
-                  Details
-                </Button>
+          <div className="w-full p-4">
+            {/* Header with Icon */}
+            <div className="flex flex-col items-center gap-2">
+              <div className="w-15 h-15 bg-amber-400 rounded-full flex items-center justify-center">
+                <BsCheck2Circle
+                  className="w-10 h-10 text-white"
+                  strokeWidth={1.5}
+                />
               </div>
-              <div className="flex justify-between items-center pt-2 border-t border-t-foreground-300">
-                <p>
-                  {format(new Date(pendingDeposit?.created_at ?? 0), "Pppp")}
+              <div className="text-center">
+                <h1 className="text-xl! font-semibold text-amber-400 m-0!">
+                  Processing Now
+                </h1>
+                <p className="text-gray-8 text-sm">Deposit request received</p>
+              </div>
+            </div>
+            {/* Divider */}
+            <div className="border-t border-gray-8 my-2"></div>
+            {/* Withdrawal Amount Section */}
+            <div className="text-center mb-8">
+              <p className="text-gray-8 text-sm">Deposit Amount</p>
+              <p className="text-3xl font-bold text-amber-400">
+                {pendingDeposit?.amount}
+              </p>
+            </div>
+            {/* Details Section */}
+
+            {/* You will receive */}
+            <div>
+              <div className="bg-gray-8 px-4 py-3">
+                <p className="text-gray-2 font-medium text-sm">
+                  You will receive
                 </p>
-                <p>{pendingDeposit?.amount}</p>
+              </div>
+              <div className="px-4 py-3 bg-gray-1">
+                <p className="text-blue-1 font-semibold">
+                  {pendingDeposit?.exchange_amount}
+                </p>
+              </div>
+            </div>
+            {/* Bank Name */}
+            <div>
+              <div className="bg-gray-8 px-4 py-3">
+                <p className="text-gray-2 font-medium text-sm">Bank Name</p>
+              </div>
+              <div className="px-4 py-3 bg-gray-1">
+                <p className="text-blue-1 font-semibold">
+                  {pendingDeposit?.gateway_title}
+                </p>
               </div>
             </div>
 
-            <Button
-              className="w-full absolute p-6 bottom-0 left-0 right-0"
-              onClick={parentCallback}
-            >
-              Close
-            </Button>
+            {/* Account Number */}
+            <div>
+              <div className="bg-gray-8 px-4 py-3">
+                <p className="text-gray-2 font-medium text-sm">
+                  Account Number
+                </p>
+              </div>
+              <div className="px-4 py-3 bg-gray-1">
+                <p className="text-blue-1 font-semibold">
+                  {pendingDeposit?.payee_account}
+                </p>
+              </div>
+            </div>
           </div>
         </TabPanel>
         <TabPanel>

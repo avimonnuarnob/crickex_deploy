@@ -4,19 +4,12 @@ import type {
   Gateway,
   Gateways,
   UserWithdrawal,
-} from "@/routes/deposit";
-import {
-  Disclosure,
-  DisclosureButton,
-  DisclosurePanel,
-  TabGroup,
-  TabPanel,
-  TabPanels,
-} from "@headlessui/react";
+} from "@/routes/transaction";
+import { TabGroup, TabPanel, TabPanels } from "@headlessui/react";
 import classNames from "classnames";
 import Cookies from "js-cookie";
 import { useEffect, useState } from "react";
-import { BsCaretDown, BsCheck } from "react-icons/bs";
+import { BsCaretDown, BsCheck, BsCheck2Circle } from "react-icons/bs";
 import { IoCloseCircleSharp, IoInformationCircleSharp } from "react-icons/io5";
 import { TfiReload } from "react-icons/tfi";
 import BankBook from "./bank-book";
@@ -420,47 +413,96 @@ export default function WithdrawalForm({
           </form>
         </TabPanel>
         <TabPanel>
-          <div className="p-2 relative h-full">
-            <img
-              src={pendingLogo}
-              alt="pending"
-              className="w-25 aspect-square mx-auto"
-            />
-
-            <div className="text-center my-1.25 mb-3.75">
-              <p className="text-xl">Processing Transaction</p>
-              <p>Pending withdrawal in progress.</p>
-              <p>You may submit a new request after approval.</p>
-            </div>
-
-            <div className="bg-foreground-400 text-foreground-100 p-3 rounded space-y-2">
-              <p className="font-bold">Withdrawal</p>
-              <p className="text-xs">{pendingWithdrawal?.id}</p>
-              <div className="flex justify-between items-center">
-                <p>{pendingWithdrawal?.gateway_title}</p>
-                <Button
-                  size="sm"
-                  onClick={() =>
-                    setSelectedIndex((selectedIndex) => selectedIndex + 1)
-                  }
-                >
-                  Details
-                </Button>
+          <div className="w-full p-4">
+            {/* Header with Icon */}
+            <div className="flex flex-col items-center gap-2">
+              <div className="w-15 h-15 bg-amber-400 rounded-full flex items-center justify-center">
+                <BsCheck2Circle
+                  className="w-10 h-10 text-white"
+                  strokeWidth={1.5}
+                />
               </div>
-              <div className="flex justify-between items-center pt-2 border-t border-t-foreground-300">
-                <p>
-                  {format(new Date(pendingWithdrawal?.created_at ?? 0), "Pppp")}
+              <div className="text-center">
+                <h1 className="text-xl! font-semibold text-amber-400 m-0!">
+                  Processing Now
+                </h1>
+                <p className="text-gray-8 text-sm">
+                  Withdrawal request received
                 </p>
-                <p>{pendingWithdrawal?.amount}</p>
               </div>
             </div>
+            {/* Divider */}
+            <div className="border-t border-gray-8 my-2"></div>
+            {/* Withdrawal Amount Section */}
+            <div className="text-center mb-8">
+              <p className="text-gray-8 text-sm">Withdrawal Amount</p>
+              <p className="text-3xl font-bold text-amber-400">
+                {pendingWithdrawal?.amount}
+              </p>
+            </div>
+            {/* Details Section */}
+            {/* Fee */}
+            <div>
+              <div className="bg-gray-8 px-4 py-3">
+                <p className="text-gray-2 font-medium text-sm">Fee</p>
+              </div>
+              <div className="px-4 py-3 bg-gray-1">
+                <p className="text-blue-1 font-semibold">
+                  {pendingWithdrawal?.fee_amount}
+                </p>
+              </div>
+            </div>
+            {/* You will receive */}
+            <div>
+              <div className="bg-gray-8 px-4 py-3">
+                <p className="text-gray-2 font-medium text-sm">
+                  You will receive
+                </p>
+              </div>
+              <div className="px-4 py-3 bg-gray-1">
+                <p className="text-blue-1 font-semibold">
+                  {pendingWithdrawal?.withdrawal_amount}
+                </p>
+              </div>
+            </div>
+            {/* Bank Name */}
+            <div>
+              <div className="bg-gray-8 px-4 py-3">
+                <p className="text-gray-2 font-medium text-sm">Bank Name</p>
+              </div>
+              <div className="px-4 py-3 bg-gray-1">
+                <p className="text-blue-1 font-semibold">
+                  {pendingWithdrawal?.bank_name}
+                </p>
+              </div>
+            </div>
+            {/* Bank Account Name */}
 
-            <Button
-              className="w-full absolute p-6 bottom-0 left-0 right-0"
-              onClick={parentCallback}
-            >
-              Close
-            </Button>
+            <div>
+              <div className="bg-gray-8 px-4 py-3">
+                <p className="text-gray-2 font-medium text-sm">
+                  Bank Account Name
+                </p>
+              </div>
+              <div className="px-4 py-3 bg-gray-1">
+                <p className="text-blue-1 font-semibold">
+                  {pendingWithdrawal?.bank_acc_name}
+                </p>
+              </div>
+            </div>
+            {/* Account Number */}
+            <div>
+              <div className="bg-gray-8 px-4 py-3">
+                <p className="text-gray-2 font-medium text-sm">
+                  Account Number
+                </p>
+              </div>
+              <div className="px-4 py-3 bg-gray-1">
+                <p className="text-blue-1 font-semibold">
+                  {pendingWithdrawal?.account_email}
+                </p>
+              </div>
+            </div>
           </div>
         </TabPanel>
         <TabPanel>
@@ -560,10 +602,7 @@ export default function WithdrawalForm({
               </div>
             </div>
 
-            <Button
-              className="w-full absolute p-6 bottom-0 left-0 right-0"
-              onClick={parentCallback}
-            >
+            <Button className="w-full" onClick={parentCallback}>
               Close
             </Button>
           </div>

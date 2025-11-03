@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { FaCopy } from "react-icons/fa";
-import { FaRupeeSign } from "react-icons/fa";
 import Modal from "@/components/ui/modal/Modal";
+import { QRCodeCanvas } from "qrcode.react";
 import { Tab, TabGroup, TabList, TabPanel, TabPanels } from "@headlessui/react";
 import classNames from "classnames";
 import { useNavigate } from "react-router";
@@ -9,6 +9,7 @@ import TransactionRecordsTable from "../transaction/TransactionRecordsTable";
 import ReferBonusTable from "./ReferBonusTable";
 import type { ReferralData } from "@/routes/referral";
 import { toast } from "react-toastify";
+import { useCurrentUser } from "@/contexts/CurrentUserContext";
 
 interface ReferralSectionProps {
   invitationCode: string;
@@ -23,6 +24,7 @@ export default function ReferralSection({
   qrCodeUrl,
   referralData,
 }: ReferralSectionProps) {
+  const { userInfo } = useCurrentUser();
   const [selectedTab, setSelectedTab] = useState(0);
   const [open, setOpen] = useState(true);
 
@@ -134,17 +136,14 @@ export default function ReferralSection({
                     <div className="border-r pr-4 border-blue-600">
                       <h3 className="mb-1 text-xs">Invitation QR Code</h3>
                       <div className="bg-white p-1 rounded-lg border-4 border-green-400">
-                        {!qrCodeUrl ? (
-                          <img
-                            src={qrCodeUrl}
-                            alt="QR Code"
-                            className="w-22.5 h-22.5"
-                          />
-                        ) : (
-                          <div className="w-22.5 h-22.5 bg-gray-200 flex items-center justify-center">
-                            <span className="text-gray-500">QR Code</span>
-                          </div>
-                        )}
+                        <QRCodeCanvas
+                          id="profileQR"
+                          value={invitationUrl}
+                          size={90}
+                          bgColor="#ffffff"
+                          fgColor="#000000"
+                          level="H"
+                        />
                       </div>
                     </div>
 
@@ -170,7 +169,7 @@ export default function ReferralSection({
                           </span>
                         </div>
                         <button
-                          onClick={() => copyToClipboard(invitationCode)}
+                          onClick={() => copyToClipboard(invitationUrl)}
                           className="bg-blue-500 hover:bg-blue-600 py-2 px-3 rounded-r-sm transition-colors cursor-pointer"
                           style={{
                             background:
@@ -216,7 +215,10 @@ export default function ReferralSection({
                         Today's Rebate
                       </p>
                       <div className="flex items-center justify-center">
-                        <FaRupeeSign className="text-green-400 text-3xl" />
+                        <p className="text-green-400 text-3xl font-bold">
+                          {userInfo?.currency_icon}
+                        </p>
+
                         <p className="text-green-400 text-3xl font-bold">0</p>
                       </div>
                     </div>
@@ -226,7 +228,10 @@ export default function ReferralSection({
                         Yesterday's Rebate
                       </p>
                       <div className="flex items-center justify-center">
-                        <FaRupeeSign className="text-green-400 text-3xl" />
+                        <p className="text-green-400 text-3xl font-bold">
+                          {userInfo?.currency_icon}
+                        </p>
+
                         <p className="text-green-400 text-3xl font-bold">0</p>
                       </div>
                     </div>
@@ -246,7 +251,10 @@ export default function ReferralSection({
 
                   <div className="py-3 px-4.5 flex justify-between items-center">
                     <div className="flex items-center">
-                      <FaRupeeSign className="text-green-400 text-2xl" />
+                      <p className="text-green-400 text-2xl font-bold">
+                        {userInfo?.currency_icon}
+                      </p>
+
                       <p className="text-green-400 text-2xl font-bold">0</p>
                     </div>
                     <button
@@ -282,7 +290,9 @@ export default function ReferralSection({
                       <div className="bg-blue-3 rounded-lg p-3.75 text-center">
                         <p className="text-white text-xs">Total Deposits</p>
                         <div className="flex items-center justify-center">
-                          <FaRupeeSign className="text-green-400 text-lg" />
+                          <div className="text-green-400 text-lg font-bold">
+                            {userInfo?.currency_icon}
+                          </div>
                           <div className="text-green-400 text-lg font-bold">
                             2,000.00
                           </div>
@@ -293,7 +303,9 @@ export default function ReferralSection({
                       <div className="bg-blue-3 rounded-lg p-3.75 text-center">
                         <p className="text-white text-xs">Total Turnover</p>
                         <div className="flex items-center justify-center">
-                          <FaRupeeSign className="text-green-400 text-lg" />
+                          <div className="text-green-400 text-lg font-bold">
+                            {userInfo?.currency_icon}
+                          </div>
                           <div className="text-green-400 text-lg font-bold">
                             2,000.00
                           </div>
@@ -394,7 +406,9 @@ export default function ReferralSection({
                         </div>
 
                         <div className="mt-1.25 flex items-center">
-                          <FaRupeeSign className="text-yellow-400 text-base" />
+                          <span className="text-yellow-400 text-base font-bold">
+                            {userInfo?.currency_icon}
+                          </span>
                           <span className="text-yellow-400 text-base font-bold">
                             177.00
                           </span>
@@ -438,7 +452,9 @@ export default function ReferralSection({
                         </div>
 
                         <div className="mt-1.25 flex items-center">
-                          <FaRupeeSign className="text-yellow-400 text-base" />
+                          <span className="text-yellow-400 text-base font-bold">
+                            {userInfo?.currency_icon}
+                          </span>{" "}
                           <span className="text-yellow-400 text-base font-bold">
                             377.00
                           </span>
@@ -498,7 +514,9 @@ export default function ReferralSection({
                         </div>
 
                         <div className="mt-1.25 flex items-center">
-                          <FaRupeeSign className="text-yellow-400 text-base" />
+                          <span className="text-yellow-400 text-base font-bold">
+                            {userInfo?.currency_icon}
+                          </span>
                           <span className="text-yellow-400 text-base font-bold">
                             777.00
                           </span>
@@ -562,8 +580,9 @@ export default function ReferralSection({
                       <tbody>
                         <tr>
                           <td className="bg-white text-blue-1 p-1.25 text-center border border-blue-1">
-                            <FaRupeeSign className="inline-block" /> 100 -{" "}
-                            <FaRupeeSign className="inline-block" /> 10,000
+                            {userInfo?.currency_icon}
+                            100 - {userInfo?.currency_icon}
+                            10,000
                           </td>
                           <td className="bg-white text-blue-1 p-1.25 text-center border border-blue-1">
                             0.10%
@@ -577,8 +596,9 @@ export default function ReferralSection({
                         </tr>
                         <tr>
                           <td className="bg-white text-blue-1 p-1.25 text-center border border-blue-1">
-                            <FaRupeeSign className="inline-block" /> 10,001 -{" "}
-                            <FaRupeeSign className="inline-block" /> 30,000
+                            {userInfo?.currency_icon}
+                            10,001 - {userInfo?.currency_icon}
+                            30,000
                           </td>
                           <td className="bg-white text-blue-1 p-1.25 text-center border border-blue-1">
                             0.15%
@@ -592,7 +612,8 @@ export default function ReferralSection({
                         </tr>
                         <tr>
                           <td className="bg-white text-blue-1 p-1.25 text-center border border-blue-1">
-                            <FaRupeeSign className="inline-block" /> 30,001+
+                            {userInfo?.currency_icon}
+                            30,001+
                           </td>
                           <td className="bg-white text-blue-1 p-1.25 text-center border border-blue-1">
                             0.20%

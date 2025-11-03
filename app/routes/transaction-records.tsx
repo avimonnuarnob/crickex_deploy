@@ -20,9 +20,9 @@ import Button from "@/components/ui/button/Button";
 import classNames from "classnames";
 import Cookies from "js-cookie";
 import type { Route } from "./+types/transaction-records";
-import Deposit from "./deposit";
+import Deposit from "./transaction";
 
-export interface Deposit {
+export interface UserDeposit {
   id: number;
   receiver_id: ReceiverId;
   agent_id: any;
@@ -47,8 +47,77 @@ export interface Deposit {
   agent_exchange_amount: string;
   created_at: string;
   updated_at: string;
-  type: "Deposit";
 }
+
+interface UserTransaction {
+  id: number;
+  from_user: User | null;
+  to_user: User;
+  transaction_id: string;
+  reference_id: string;
+  transaction_purpose: string;
+  amount: string;
+  transaction_charge_percentage: string;
+  transaction_charge: string;
+  total_amount: string;
+  from_wallet: string;
+  to_wallet: string;
+  exchange_amount: string;
+  sender_current_balance: string;
+  sender_previous_balance: string;
+  receiver_current_balance: string;
+  receiver_previous_balance: string;
+  note: null;
+  created_at: Date;
+  updated_at: Date;
+  request_origin: number;
+}
+
+export interface UserWithdrawal {
+  id: number;
+  user_id: User;
+  agent_id: any;
+  url_id: UrlId;
+  payment_gateway: string;
+  gateway_title: string;
+  payment_unit: string;
+  amount: string;
+  transaction_id: string;
+  to_account: string;
+  withdrawal_fee_percentage: string;
+  fee_amount: string;
+  withdrawal_amount: string;
+  withdrawal_type: string;
+  wallet: string;
+  bank_acc_name: any;
+  bank_name: any;
+  bank_branch: any;
+  bank_code: any;
+  account_email: any;
+  bank_country: any;
+  bank_swift_code: any;
+  bank_iban: any;
+  status: string;
+  busy_screenshot: any;
+  busy_reason: any;
+  user_previous_balance: string;
+  user_current_balance: string;
+  user_to_gateway_currency_rate: string;
+  user_to_agent_currency_rate: string;
+  exchange_amount: string;
+  agent_exchange_amount: string;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface TableTdata {
+  id: number;
+  type: string;
+  amount: string;
+  status: string;
+  date: string;
+}
+
 export interface ReceiverId {
   id: number;
   username: string;
@@ -61,7 +130,13 @@ export interface UrlId {
   url: string;
 }
 
-export type Transaction = Deposit;
+interface User {
+  id: number;
+  username: string;
+  currency: string;
+}
+
+export type Transaction = TableTdata;
 
 export async function clientLoader() {
   const deposits = fetch(import.meta.env.VITE_API_URL + "/wallet/deposit/", {
@@ -69,12 +144,22 @@ export async function clientLoader() {
       Authorization: `Token ${Cookies.get("userToken")}`,
     },
   });
-
-  // const withdrawals = fetch(import.meta.env.VITE_API_URL + "/wallet/withdrawal/", {
-  //   headers: {
-  //     Authorization: `Token ${Cookies.get("userToken")}`,
-  //   },
-  // });
+  const withdrawals = fetch(
+    import.meta.env.VITE_API_URL + "/wallet/withdrawal/",
+    {
+      headers: {
+        Authorization: `Token ${Cookies.get("userToken")}`,
+      },
+    }
+  );
+  const transactions = fetch(
+    import.meta.env.VITE_API_URL + "/wallet/transaction-history/",
+    {
+      headers: {
+        Authorization: `Token ${Cookies.get("userToken")}`,
+      },
+    }
+  );
 
   const data = Promise.all([
     deposits
@@ -82,10 +167,40 @@ export async function clientLoader() {
       .then((data) => data.data)
       .then(
         (data) =>
-          data.map((d: Deposit) => ({
-            ...d,
+          data.map((d: UserDeposit) => ({
             type: "Deposit",
-          })) as Promise<Deposit[]>
+            id: d.id,
+            amount: d.amount,
+            status: d.deposit_status,
+            date: d.created_at,
+          })) as Promise<TableTdata[]>
+      ),
+    withdrawals
+      .then((response) => response.json())
+      .then((data) => data.data)
+      .then(
+        (data) =>
+          data.map((w: UserWithdrawal) => ({
+            type: "Withdrawal",
+            id: w.id,
+            amount: w.amount,
+            status: w.status,
+            date: w.created_at,
+          })) as Promise<TableTdata[]>
+      ),
+
+    transactions
+      .then((response) => response.json())
+      .then((data) => data.data)
+      .then(
+        (data) =>
+          data.map((t: UserTransaction) => ({
+            type: t.transaction_purpose,
+            id: t.id,
+            amount: t.amount,
+            status: "success",
+            date: t.created_at,
+          })) as Promise<TableTdata[]>
       ),
   ]);
 
@@ -175,10 +290,11 @@ const TransactionRecords = ({ loaderData }: Route.ComponentProps) => {
             }
           >
             <Await resolve={transactionsPromise}>
-              {([deposits]) => {
+              {(data: [TableTdata[], TableTdata[], TableTdata[]]) => {
+                const tableData = data.flat();
                 return (
                   <TransactionRecordsTable
-                    transactions={[...deposits]}
+                    transactions={tableData}
                     onFilterClick={() => {
                       console.log(open);
                       setOpen(!open);
@@ -302,7 +418,7 @@ const TransactionRecords = ({ loaderData }: Route.ComponentProps) => {
 
                 <div className="mb-6.5">
                   <h2 className="text-xs text-[#0009] mb-2">Date</h2>
-                  <div className="grid grid-cols-3 gap-2">
+                  <div className="flex flex-wrap gap-2">
                     <button
                       className={`bg-[#f5f5f5] px-4 py-2 text-[13px] rounded-xs  h-[35px] text-center cursor-pointer hover:opacity-[0.7] text-[#0009] ${
                         dateFilter === "Today" ? "bg-[#005dac]! text-white" : ""
@@ -312,7 +428,7 @@ const TransactionRecords = ({ loaderData }: Route.ComponentProps) => {
                       Today
                     </button>
                     <button
-                      className={`bg-[#f5f5f5] px-4 py-2 text-[13px] rounded-xs  h-[35px] text-center cursor-pointer hover:opacity-[0.7] text-[#0009] ${
+                      className={`bg-[#f5f5f5] px-4 py-2 text-[13px] rounded-xs h-[35px] text-center cursor-pointer hover:opacity-[0.7] text-[#0009] ${
                         dateFilter === "Yesterday"
                           ? "bg-[#005dac]! text-white"
                           : ""
@@ -322,7 +438,7 @@ const TransactionRecords = ({ loaderData }: Route.ComponentProps) => {
                       yesterday
                     </button>
                     <button
-                      className={`bg-[#f5f5f5] px-4 py-2 text-[13px] rounded-xs  h-[35px] text-center cursor-pointer hover:opacity-[0.7] text-[#0009] ${
+                      className={`bg-[#f5f5f5] px-4 py-2 text-[13px] rounded-xs h-[35px] text-center cursor-pointer hover:opacity-[0.7] text-[#0009] ${
                         dateFilter === "Last 7 days"
                           ? "bg-[#005dac]! text-white"
                           : ""

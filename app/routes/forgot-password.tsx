@@ -66,6 +66,7 @@ const DoItByEmail = ({
           <ConfirmPasswordFromInput
             setIsSuccessfullRegistration={setIsSuccessfullRegistration}
             email={email}
+            phone={undefined}
             otp={otp}
           />
         )}
@@ -102,6 +103,7 @@ const DoItBySMS = ({
           <ConfirmPasswordFromInput
             setIsSuccessfullRegistration={setIsSuccessfullRegistration}
             email={""}
+            phone={phone}
             otp={otp}
           />
         )}
@@ -379,10 +381,12 @@ const OtpFormInput = ({
 
 const ConfirmPasswordFromInput = ({
   email,
+  phone,
   otp,
   setIsSuccessfullRegistration,
 }: {
   email: string | undefined;
+  phone: Value | undefined;
   otp: string | undefined;
   setIsSuccessfullRegistration: React.Dispatch<
     React.SetStateAction<boolean | undefined>
@@ -411,6 +415,7 @@ const ConfirmPasswordFromInput = ({
     confirm_password: string;
   }) => {
     setIsLoading(true);
+    const contact = email ? { email } : { contact: phone };
     const respose = await fetch(
       import.meta.env.VITE_API_URL + "/auth/set-password/",
       {
@@ -420,7 +425,7 @@ const ConfirmPasswordFromInput = ({
         },
         body: JSON.stringify({
           password: data.password,
-          email,
+          ...contact,
           otp,
         }),
       }
@@ -516,12 +521,7 @@ export default function ForgotPassword() {
             size="lg"
             isBlock
             onClick={() =>
-              navigate(
-                location.pathname.replace(
-                  "forgot-password/email",
-                  "account-login-quick"
-                )
-              )
+              navigate(location.pathname.replace("forgot-password/email", ""))
             }
           >
             Continue to login

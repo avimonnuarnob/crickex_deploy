@@ -1,10 +1,68 @@
 import Modal from "@/components/ui/modal/Modal";
 import boxRotateAnimation from "@/assets/coin-rotate-silver-alpha.webm";
 import coinRotateAnimation from "@/assets/coin-rotate-gold-alpha.webm";
-import { useNavigate } from "react-router";
+import { Await, useNavigate } from "react-router";
+import Cookies from "js-cookie";
+import React from "react";
+import type { Route } from "./+types/point-exchange";
 
-export default function PointExchange() {
+export type CASHBACK_LEVELS = CASHBACK_LEVEL[];
+
+export interface LEVEL {
+  id: number;
+  category_name: string;
+  category_limit: string;
+  photo: string;
+}
+
+export interface CASHBACK_LEVEL {
+  id: number;
+  name: string;
+  cashback: string;
+  turnover: string;
+  status: boolean;
+  created_at: string;
+  updated_at: string;
+  level: LEVEL;
+  url_id: number;
+}
+
+export async function clientLoader() {
+  const promiseOfCashbackAvailableData = fetch(
+    import.meta.env.VITE_API_URL + "/wallet/cashback-available/",
+    {
+      headers: {
+        Authorization: `Token ${Cookies.get("userToken")}`,
+      },
+    }
+  )
+    .then((response) => response.json())
+    .then((response) => response.data as CASHBACK_LEVEL);
+
+  const promiseOfCashbackLevelsData = fetch(
+    import.meta.env.VITE_API_URL +
+      "/wallet/cashback-available/?all_level_info=yes",
+    {
+      headers: {
+        Authorization: `Token ${Cookies.get("userToken")}`,
+      },
+    }
+  )
+    .then((response) => response.json())
+    .then((response) => response.data as CASHBACK_LEVELS);
+
+  const promise = Promise.all([
+    promiseOfCashbackAvailableData,
+    promiseOfCashbackLevelsData,
+  ]);
+  return {
+    promise,
+  };
+}
+
+export default function PointExchange({ loaderData }: Route.ComponentProps) {
   const navigate = useNavigate();
+  const { promise } = loaderData;
 
   return (
     <Modal
@@ -15,6 +73,30 @@ export default function PointExchange() {
       }}
       isFullScreen={true}
     >
+      <React.Suspense
+        fallback={
+          <div className="flex justify-center items-center flex-col h-full">
+            <div className="list-loading w-10 h-10">
+              <span className="sr-only">Loading...</span>
+            </div>
+          </div>
+        }
+      >
+        <Await resolve={promise}>
+          {([cashbackAvailableData, cashbackLevelsData]: [
+            CASHBACK_LEVEL,
+            CASHBACK_LEVELS
+          ]) => {
+            return (
+              <div>
+                <p>{cashbackAvailableData?.name}</p>
+                <p>{cashbackLevelsData[0]?.name}</p>
+              </div>
+            );
+          }}
+        </Await>
+      </React.Suspense>
+
       <div className="px-3.75 bg-blue-2 overflow-auto min-h-full">
         <div
           className="mt-1.25 mb-2 h-auto min-h-43 relative bg-transparent"

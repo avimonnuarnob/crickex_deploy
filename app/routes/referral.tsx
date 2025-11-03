@@ -58,10 +58,10 @@ export default function ReferralPage({ loaderData }: Route.ComponentProps) {
             return (
               <ReferralSection
                 referralData={value}
-                invitationCode={data?.defaultReferral.referral_code || ""}
+                invitationCode={userInfo?.referral_code || ""}
                 invitationUrl={
                   userInfo?.user_base_origin +
-                  "/signup?refcode=" +
+                  "/new-register-entry/account?refcode=" +
                   userInfo?.referral_code
                 }
               />

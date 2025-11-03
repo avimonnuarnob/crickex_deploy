@@ -199,6 +199,7 @@ export async function clientLoader() {
       admin_user: { username: string; referral_code: string };
       resource: string;
       status: boolean;
+      floating: boolean;
     }[];
     promotionList: PROMOTIONLIST;
     links: LINKS;

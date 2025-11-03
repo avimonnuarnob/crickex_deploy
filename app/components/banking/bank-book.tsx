@@ -1,5 +1,5 @@
 import { useCurrentUser } from "@/contexts/CurrentUserContext";
-import type { BankBook, BankEntry } from "@/routes/deposit";
+import type { BankBook, BankEntry } from "@/routes/transaction";
 import {
   Disclosure,
   DisclosureButton,

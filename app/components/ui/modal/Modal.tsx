@@ -31,22 +31,26 @@ const Modal = ({
     <AnimatePresence>
       {isOpen && (
         <Dialog open={isOpen} onClose={onClose} className="relative z-50">
-          <DialogBackdrop className="fixed inset-0 sm:backdrop-blur-xs" />
+          <DialogBackdrop className="fixed inset-0 sm:backdrop-blur-xs bg-black/30" />
 
-          <div className="fixed inset-0 flex w-screen justify-center">
+          <div className="fixed inset-0 flex justify-center">
             <motion.div
               initial={{ opacity: 0, y: 100 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: 100 }}
               transition={{ duration: 0.2, ease: "easeInOut" }}
-              className="w-full h-full sm:max-w-[375px] relative sm:my-auto sm:max-h-[700px]"
+              className="w-full h-full sm:max-w-[375px] relative sm:my-auto sm:max-h-[700px] flex items-center"
               // style={{
               //   height: "calc(100dvh - 60px)",
               // }}
             >
               <DialogPanel
                 className={classNames(
-                  "space-y-4 rounded-none sm:rounded-[10px] absolute w-full h-full overflow-hidden flex flex-col shadow"
+                  "space-y-4 rounded-none sm:rounded-[10px] absolute w-full overflow-hidden flex flex-col shadow",
+                  {
+                    "h-full": isFullScreen,
+                    "h-auto": !isFullScreen,
+                  }
                 )}
               >
                 {title && (

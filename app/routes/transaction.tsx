@@ -14,7 +14,7 @@ import {
 } from "@headlessui/react";
 import classNames from "classnames";
 import Cookies from "js-cookie";
-import type { Route } from "./+types/deposit";
+import type { Route } from "./+types/transaction";
 import { BsCaretDown, BsCheck } from "react-icons/bs";
 import { TfiReload } from "react-icons/tfi";
 import { useCurrentUser } from "@/contexts/CurrentUserContext";
@@ -207,7 +207,11 @@ export const clientLoader = async () => {
   return { promiseOfGateways };
 };
 
-export default function Deposit({ loaderData }: Route.ComponentProps) {
+export default function Transaction({
+  loaderData,
+  params,
+}: Route.ComponentProps) {
+  const { transaction_type } = params;
   const { promiseOfGateways } = loaderData;
   const navigate = useNavigate();
 
@@ -215,13 +219,18 @@ export default function Deposit({ loaderData }: Route.ComponentProps) {
   const promotion = searchParams.get("promotion");
 
   const [isModalOpen, setIsModalOpen] = useState(true);
-  const [selectedIndex, setSelectedIndex] = useState(0);
+  const [selectedIndex, setSelectedIndex] = useState(
+    transaction_type === "deposit" ? 0 : 1
+  );
 
   const handleCasheirModal = () => {
     setIsModalOpen(false);
 
     setTimeout(() => {
-      const a = location.pathname.replace("/member/wallet/deposit", "");
+      const a = location.pathname.replace(
+        "/member/wallet/" + transaction_type,
+        ""
+      );
       const b = a ? a : "/";
       setSearchParams((searchParams) => {
         searchParams.delete("promotion");
@@ -254,7 +263,19 @@ export default function Deposit({ loaderData }: Route.ComponentProps) {
                 <TabGroup
                   className=""
                   selectedIndex={selectedIndex}
-                  onChange={setSelectedIndex}
+                  onChange={(index) => {
+                    setSelectedIndex(index);
+
+                    if (index === 0) {
+                      navigate("/member/wallet/deposit", {
+                        replace: true,
+                      });
+                    } else {
+                      navigate("/member/wallet/withdrawal", {
+                        replace: true,
+                      });
+                    }
+                  }}
                 >
                   <TabList
                     className="flex bg-blue-1 pb-3 px-3.75 pt-2 text-sm"

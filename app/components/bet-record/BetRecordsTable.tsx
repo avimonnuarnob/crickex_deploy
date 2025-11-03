@@ -1,31 +1,30 @@
-import type { Transaction } from "@/routes/transaction-records";
+import type { RECORD, RECORDS } from "@/routes/betting-records";
 import classNames from "classnames";
 import React from "react";
 import { FaCalendarAlt, FaChevronRight, FaFilter } from "react-icons/fa";
 
 interface TransactionRecordsTableProps {
-  transactions: Transaction[];
+  transactions: RECORDS;
   onFilterClick: () => void;
-  onRowClick: (transaction: Transaction) => void;
+  onRowClick: (transaction: RECORD) => void;
   filterPeriod?: (string | undefined)[];
 }
 
-const TransactionRecordsTable: React.FC<TransactionRecordsTableProps> = ({
+const BetRecordsTable: React.FC<TransactionRecordsTableProps> = ({
   transactions,
   onFilterClick,
   onRowClick,
   filterPeriod,
 }) => {
-  console.log(transactions);
   // Group transactions by date
   const groupedTransactions = transactions.reduce((groups, transaction) => {
-    const date = transaction.date;
+    const date = transaction.created_at;
     if (!groups[date]) {
       groups[date] = [];
     }
     groups[date].push(transaction);
     return groups;
-  }, {} as Record<string, Transaction[]>);
+  }, {} as Record<string, RECORDS>);
 
   return (
     <div className="flex flex-col bg-white rounded-lg overflow-hidden">
@@ -53,15 +52,15 @@ const TransactionRecordsTable: React.FC<TransactionRecordsTableProps> = ({
       {/* Table header */}
       <div className="grid grid-cols-4 bg-blue-200 text-gray-800 font-medium px-2.5 whitespace-nowrap truncate text-ellipsis">
         <div className="my-0.75 p-1.25 text-center border-r border-r-white border-dotted text-xs">
-          Type
+          Platform
         </div>
         <div className="my-0.75 p-1.25 text-center border-r border-r-white border-dotted text-xs">
-          Amount
+          Game Type
         </div>
         <div className="my-0.75 p-1.25 text-center border-r border-r-white border-dotted text-xs">
-          Status
+          Turnover
         </div>
-        <div className="my-0.75 p-1.25 text-center text-[10px]">Txn Date</div>
+        <div className="my-0.75 p-1.25 text-center text-xs">Profit/Loss</div>
       </div>
 
       {/* Table body */}
@@ -75,7 +74,7 @@ const TransactionRecordsTable: React.FC<TransactionRecordsTableProps> = ({
                 <span className="text-gray-500">{date.split("T")[0]}</span>
               </div>
               <div className="col-span-2 flex justify-end items-center">
-                <span className="border text-gray-700 px-0.75 mx-1.75 rounded text-[10px]">
+                <span className="border text-gray-700 px-0.75 mx-1.75 rounded">
                   +{date.split("T")[1].split("+")[1]}
                 </span>
               </div>
@@ -92,32 +91,37 @@ const TransactionRecordsTable: React.FC<TransactionRecordsTableProps> = ({
                 }`}
                 onClick={() => onRowClick(transaction)}
               >
-                <div className="p-3 text-center">{transaction.type}</div>
+                <div className="p-3 text-center">
+                  {transaction.provider_title}
+                </div>
                 <div className="p-3 text-center font-medium">
-                  {transaction.amount.toLocaleString()}
+                  {transaction.game}
                 </div>
                 <div className="p-3 flex justify-center">
+                  {transaction.bet_amount}
+                </div>
+
+                <div className="p-3 flex items-center justify-between">
                   <span
                     className={classNames(
                       `px-1.25 py-0.75 rounded text-xs w-full text-center`,
                       {
-                        "bg-yellow-400 text-yellow-800":
-                          transaction.status === "pending",
-                        "bg-green-500 text-white":
-                          transaction.status === "success",
-                        "bg-red-500 text-white":
-                          transaction.status === "cancel",
-                        "bg-orange-500 text-white":
-                          transaction.status === "in review",
+                        "text-green-500 bg-green-200":
+                          transaction.status === "won" ||
+                          transaction.status === "refund" ||
+                          transaction.status === "rollbacked",
+                        "text-orange-500 bg-orange-200":
+                          transaction.status === "reject" ||
+                          transaction.status === "cancelled",
+                        "text-red-500 bg-red-200":
+                          transaction.status === "lose" ||
+                          transaction.status === "lost",
+                        "text-yellow-500 bg-yellow-200":
+                          transaction.status === "placed",
                       }
                     )}
                   >
-                    {transaction.status}
-                  </span>
-                </div>
-                <div className="p-3 flex items-center justify-between">
-                  <span className="text-[10px]">
-                    {transaction.date.split("T")[1].split("+")[0]}
+                    {transaction.win_amount}
                   </span>
                   <FaChevronRight className="text-gray-400" />
                 </div>
@@ -143,4 +147,4 @@ const TransactionRecordsTable: React.FC<TransactionRecordsTableProps> = ({
   );
 };
 
-export default TransactionRecordsTable;
+export default BetRecordsTable;

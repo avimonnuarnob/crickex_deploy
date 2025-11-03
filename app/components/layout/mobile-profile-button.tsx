@@ -21,9 +21,9 @@ import emailIcon from "@/assets/images/icon-email.png";
 import telegramIcon from "@/assets/images/icon-telegram.png";
 import { IoExitOutline } from "react-icons/io5";
 import { IoMdClose } from "react-icons/io";
-import { Link } from "react-router";
 import { useRouteLoaderData } from "react-router";
 import type { RootLoaderData } from "@/root";
+import { useNavigate } from "react-router";
 export default function MobileProfileButton({
   isOpen,
   onClose,
@@ -33,6 +33,7 @@ export default function MobileProfileButton({
   onClose: () => void;
   children: React.ReactNode;
 }) {
+  const navigate = useNavigate();
   const data = useRouteLoaderData<RootLoaderData>("root");
   const { userInfo, setUserWalletData, userWalletData, logoutUser } =
     useCurrentUser();
@@ -58,7 +59,7 @@ export default function MobileProfileButton({
               <div className="flex gap-[2.6666666667vw] items-center leading-[4.8vw]">
                 <span>ID</span>
                 <span className="text-blue-3">
-                  {userInfo?.username ?? "N/A"}
+                  {userInfo?.username.slice(2) ?? "N/A"}
                 </span>
               </div>
               <div className="flex gap-[2.6666666667vw] items-center">
@@ -164,7 +165,12 @@ export default function MobileProfileButton({
               </div>
               <div className="h-px w-full bg-gray-3"></div>
               <div className="pt-2 flex [&>*]:flex-1">
-                <Link to="/member/wallet/deposit">
+                <button
+                  onClick={() => {
+                    onClose();
+                    navigate("/member/wallet/deposit");
+                  }}
+                >
                   <div>
                     <img
                       src={depositIcon}
@@ -175,8 +181,13 @@ export default function MobileProfileButton({
                   <div className="h-9.25 bg-gray-2 flex items-center justify-center border border-gray-1 py-1.25">
                     <p className="text-[3.2vw]">Deposit</p>
                   </div>
-                </Link>
-                <Link to="/member/wallet/deposit">
+                </button>
+                <button
+                  onClick={() => {
+                    onClose();
+                    navigate("/member/wallet/withdrawal");
+                  }}
+                >
                   <div>
                     <img
                       src={withdrawalIcon}
@@ -187,8 +198,13 @@ export default function MobileProfileButton({
                   <div className="h-9.25 bg-gray-2 flex items-center justify-center border border-gray-1 py-1.25">
                     <p className="text-[3.2vw]">Withdrawal</p>
                   </div>
-                </Link>
-                <div>
+                </button>
+                <button
+                  onClick={() => {
+                    onClose();
+                    navigate("/member/real-time-bonus");
+                  }}
+                >
                   <div>
                     <img
                       src={realTimeBonusIcon}
@@ -199,7 +215,7 @@ export default function MobileProfileButton({
                   <div className="h-9.25 bg-gray-2 flex items-center justify-center border border-gray-1 py-1.25">
                     <p className="text-[3.2vw]">Real Time Bonus</p>
                   </div>
-                </div>
+                </button>
               </div>
             </div>
 
@@ -210,7 +226,12 @@ export default function MobileProfileButton({
               </div>
               <div className="h-px w-full bg-gray-3"></div>
               <div className="pt-2 flex [&>*]:flex-1">
-                <div>
+                <button
+                  onClick={() => {
+                    onClose();
+                    navigate("/member/betting-records/settled");
+                  }}
+                >
                   <div>
                     <img
                       src={betrecordsIcon}
@@ -221,8 +242,13 @@ export default function MobileProfileButton({
                   <div className="h-9.25 bg-gray-2 flex items-center justify-center border border-gray-1 py-1.25">
                     <p className="text-[3.2vw]">Betting Records</p>
                   </div>
-                </div>
-                <div>
+                </button>
+                <button
+                  onClick={() => {
+                    onClose();
+                    navigate("/member/turnover/active");
+                  }}
+                >
                   <div>
                     <img
                       src={turnoverIcon}
@@ -233,8 +259,13 @@ export default function MobileProfileButton({
                   <div className="h-9.25 bg-gray-2 flex items-center justify-center border border-gray-1 py-1.25">
                     <p className="text-[3.2vw]">Turnover</p>
                   </div>
-                </div>
-                <Link to="member/transaction-records">
+                </button>
+                <button
+                  onClick={() => {
+                    onClose();
+                    navigate("member/transaction-records");
+                  }}
+                >
                   <div>
                     <img
                       src={recordsIcon}
@@ -245,7 +276,7 @@ export default function MobileProfileButton({
                   <div className="h-9.25 bg-gray-2 flex items-center justify-center border border-gray-1 py-1.25">
                     <p className="text-[3.2vw]">Transaction Records</p>
                   </div>
-                </Link>
+                </button>
               </div>
             </div>
 
@@ -256,7 +287,12 @@ export default function MobileProfileButton({
               </div>
               <div className="h-px w-full bg-gray-3"></div>
               <div className="pt-2 flex [&>*]:flex-1">
-                <Link to="/member/new-profile-info">
+                <button
+                  onClick={() => {
+                    onClose();
+                    navigate("/member/new-profile-info");
+                  }}
+                >
                   <div>
                     <img
                       src={profileIcon}
@@ -267,8 +303,13 @@ export default function MobileProfileButton({
                   <div className="h-9.25 bg-gray-2 flex items-center justify-center border border-gray-1 py-1.25">
                     <p className="text-[3.2vw]">Personal Info</p>
                   </div>
-                </Link>
-                <Link to="member/change-password">
+                </button>
+                <button
+                  onClick={() => {
+                    onClose();
+                    navigate("member/change-password");
+                  }}
+                >
                   <div>
                     <img
                       src={resetpasswordsIcon}
@@ -279,7 +320,7 @@ export default function MobileProfileButton({
                   <div className="h-9.25 bg-gray-2 flex items-center justify-center border border-gray-1 py-1.25">
                     <p className="text-[3.2vw]">Change Password</p>
                   </div>
-                </Link>
+                </button>
                 <div>
                   <div>
                     <img
@@ -292,7 +333,12 @@ export default function MobileProfileButton({
                     <p className="text-[3.2vw]">Inbox</p>
                   </div>
                 </div>
-                <Link to="member/common-referral/invite">
+                <button
+                  onClick={() => {
+                    onClose();
+                    navigate("member/common-referral/invite");
+                  }}
+                >
                   <div>
                     <img
                       src={referralIcon}
@@ -303,7 +349,7 @@ export default function MobileProfileButton({
                   <div className="h-9.25 bg-gray-2 flex items-center justify-center border border-gray-1 py-1.25">
                     <p className="text-[3.2vw]">Refer Bonus</p>
                   </div>
-                </Link>
+                </button>
               </div>
             </div>
 
@@ -313,55 +359,40 @@ export default function MobileProfileButton({
                 <span className="text-[4vw]">Contact Us</span>
               </div>
               <div className="h-px w-full bg-gray-3"></div>
-              <div className="pt-2 flex [&>*]:flex-1">
-                <div>
-                  <div>
-                    <img
-                      src={customerIcon}
-                      alt="Live Chat"
-                      className="w-[9.3333333333vw] aspect-square mx-auto mb-[1.3333333333vw]"
-                    />
-                  </div>
-                  <div className="h-9.25 bg-gray-2 flex items-center justify-center border border-gray-1 py-1.25">
-                    <p className="text-[3.2vw]">Live Chat</p>
-                  </div>
-                </div>
-                <div>
-                  <div>
-                    <img
-                      src={emailIcon}
-                      alt="Support Email"
-                      className="w-[9.3333333333vw] aspect-square mx-auto mb-[1.3333333333vw]"
-                    />
-                  </div>
-                  <div className="h-9.25 bg-gray-2 flex items-center justify-center border border-gray-1 py-1.25">
-                    <p className="text-[3.2vw]">Support Email</p>
-                  </div>
-                </div>
-                <div>
-                  <div>
-                    <img
-                      src={emailIcon}
-                      alt="Marketing Email"
-                      className="w-[9.3333333333vw] aspect-square mx-auto mb-[1.3333333333vw]"
-                    />
-                  </div>
-                  <div className="h-9.25 bg-gray-2 flex items-center justify-center border border-gray-1 py-1.25">
-                    <p className="text-[3.2vw]">Marketing Email</p>
-                  </div>
-                </div>
-                <div>
-                  <div>
-                    <img
-                      src={telegramIcon}
-                      alt="Telegram"
-                      className="w-[9.3333333333vw] aspect-square mx-auto mb-[1.3333333333vw]"
-                    />
-                  </div>
-                  <div className="h-9.25 bg-gray-2 flex items-center justify-center border border-gray-1 py-1.25">
-                    <p className="text-[3.2vw]">Telegram Channel</p>
-                  </div>
-                </div>
+              <div className="pt-2 flex [&>*]:min-w-1/3 flex-wrap">
+                {data?.socialList
+                  .filter((socialLink) => {
+                    return socialLink.status;
+                  })
+                  .filter((socialLink) => {
+                    return socialLink.floating;
+                  })
+                  .map((socialLink) => {
+                    return (
+                      <a
+                        key={socialLink.id}
+                        href={`${socialLink.social_prefix_id.prefix}${socialLink.resource}`}
+                        target="_blank"
+                        className="flex-1"
+                      >
+                        <div>
+                          <img
+                            src={
+                              import.meta.env.VITE_API_URL +
+                              socialLink.social_prefix_id.logo
+                            }
+                            alt={socialLink.social_prefix_id.name}
+                            className="w-[9.3333333333vw] aspect-square mx-auto mb-[1.3333333333vw]"
+                          />
+                        </div>
+                        <div className="h-9.25 bg-gray-2 flex items-center justify-center border border-gray-1 py-1.25">
+                          <p className="text-[3.2vw]">
+                            {socialLink.social_prefix_id.name}
+                          </p>
+                        </div>
+                      </a>
+                    );
+                  })}
               </div>
             </div>
 

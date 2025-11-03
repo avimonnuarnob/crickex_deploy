@@ -71,6 +71,8 @@ export default function ProfileButton() {
       logoutUser();
     } else if (id === "Deposit") {
       navigate("/member/wallet/deposit");
+    } else if (id === "Withdrawal") {
+      navigate("/member/wallet/withdrawal");
     } else if (id === "Personal Info") {
       navigate("member/new-profile-info");
     } else if (id === "Transaction Records") {
@@ -81,6 +83,12 @@ export default function ProfileButton() {
       navigate("member/inbox/notifications");
     } else if (id === "Refer Bonus") {
       navigate("member/common-referral/invite");
+    } else if (id === "Turnover") {
+      navigate("member/turnover/active");
+    } else if (id === "Betting Records") {
+      navigate("member/betting-records/settled");
+    } else if (id === "Real Time Bonus") {
+      navigate("member/real-time-bonus");
     } else return;
   };
   return (

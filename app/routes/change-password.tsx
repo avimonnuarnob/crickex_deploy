@@ -76,7 +76,11 @@ export default function ChangePasswordPage() {
       </AnimatePresence>
       <ChangePasswordModal
         onClose={() => {
-          !notification && navigate(-1);
+          setTimeout(() => {
+            const a = location.pathname.replace("member/change-password", "");
+            !notification &&
+              navigate(a ? a + location.hash : "/" + location.hash);
+          }, 200);
         }}
         onSubmit={handleSubmit}
       />

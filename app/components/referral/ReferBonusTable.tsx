@@ -87,7 +87,7 @@ const ReferBonusTable: React.FC<ReferBonusTableProps> = ({
               >
                 <div className="p-3 text-center">
                   {/* {transaction.transaction_purpose} */}
-                  {referral[0]}
+                  {referral[0].slice(2)}
                 </div>
                 <div className="p-3 flex justify-center">
                   {/* <span

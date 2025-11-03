@@ -63,8 +63,8 @@ export default [
           id: "promotion-forgot-password",
         }
       ),
-      route("member/wallet/deposit", "./routes/deposit.tsx", {
-        id: "promotion-deposit",
+      route("member/wallet/:transaction_type", "./routes/transaction.tsx", {
+        id: "promotion-transaction",
       }),
     ]),
 
@@ -73,7 +73,9 @@ export default [
       route("new-register-entry/account", "./routes/signup.tsx", {
         id: "home-signup",
       }),
-      route("member/wallet/deposit", "./routes/deposit.tsx"),
+      route("member/wallet/:transaction_type", "./routes/transaction.tsx", {
+        id: "home-transaction",
+      }),
       route(
         "account-login-quick/forgot-password/:medium",
         "./routes/forgot-password.tsx",
@@ -115,6 +117,12 @@ export default [
       }),
       route("member/turnover/:status", "./routes/turnover.tsx", {
         id: "home-turnover",
+      }),
+      route("member/betting-records/:status", "./routes/betting-records.tsx", {
+        id: "home-betting-records",
+      }),
+      route("member/real-time-bonus", "./routes/real-time-bonus.tsx", {
+        id: "home-real-time-bonus",
       }),
     ]),
 

@@ -88,7 +88,7 @@ export default function SignupModal({ matches }: Route.ComponentProps) {
       // email: "",
       referral_code: refcode || defaultReferral.referral_code,
       otp: "",
-      currency: mirrorLinks?.domain_currency[0].currency,
+      currency: "BDT",
       phone: "+" + getCountryCallingCode("BD"),
     },
   });
@@ -359,26 +359,38 @@ export default function SignupModal({ matches }: Route.ComponentProps) {
                 <div className="mb-5.5">
                   <Controller
                     control={control}
-                    defaultValue={currencyList[0].currency}
                     name="currency"
                     render={({ field: { value, onChange } }) => (
-                      <Listbox value={value} onChange={onChange}>
+                      <Listbox
+                        value={value}
+                        onChange={onChange}
+                        disabled={true}
+                      >
                         <Label className="block text-sm/6 text-[#474747]">
                           Choose currency
                         </Label>
                         <div className="relative mt-2.5">
-                          <ListboxButton className="grid w-full cursor-default grid-cols-1 rounded-sm bg-[#eeeeee] py-3 pr-2 pl-2 text-left font-light text-gray-900 focus:outline-1 focus:outline-blue-1 sm:text-sm/6">
+                          <ListboxButton className="grid w-full grid-cols-1 rounded-sm bg-[#eeeeee] py-3 pr-2 pl-2 text-left font-light text-gray-900 focus:outline-1 focus:outline-blue-1 sm:text-sm/6 cursor-no-drop">
                             <span className="col-start-1 row-start-1 flex items-center gap-2 pr-6">
                               {value ? (
-                                <>
-                                  <span className="block truncate">
+                                <div className="flex gap-2.5 items-center">
+                                  {value === "BDT" && (
+                                    <img
+                                      src="/BD.png"
+                                      alt="bd_logo"
+                                      className="w-[5.3333333333vw] h-[5.3333333333vw] sm:w-5 sm:h-5"
+                                    />
+                                  )}
+                                  <span className="block truncate text-[3.2vw] sm:text-xs">
                                     {value}
                                   </span>
-                                </>
+                                </div>
                               ) : (
-                                <span className="block truncate">
-                                  Choose a currency
-                                </span>
+                                <div>
+                                  <span className="block truncate">
+                                    Choose a currency
+                                  </span>
+                                </div>
                               )}
                             </span>
                             <FaCaretDown
@@ -497,11 +509,17 @@ export default function SignupModal({ matches }: Route.ComponentProps) {
                         <PhoneInput
                           countries={["BD"]}
                           defaultCountry="BD"
+                          countrySelectProps={{
+                            disabled: true,
+                          }}
                           {...field}
                           placeholder="Enter phone number"
                           value={field.value}
                           onChange={field.onChange}
                           className="flex h-[12vw] sm:h-[45px] border border-gray-4 bg-gray-1 text-foreground-200 rounded p-2 text-xs [&>input]:outline-none mt-[2.6666666667vw] sm:mt-2.5"
+                          style={{
+                            "--PhoneInputCountrySelectArrow-opacity": "0",
+                          }}
                         />
                       )}
                     />

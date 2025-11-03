@@ -33,6 +33,7 @@ const PersonalInfoModal: React.FC = () => {
       isOpen={isModalOpen}
       onClose={handlePersonalInfoModal}
       title="Personal Info"
+      isFullScreen
     >
       <div className="flex flex-col bg-white">
         {/* Profile header with background image */}
@@ -62,7 +63,7 @@ const PersonalInfoModal: React.FC = () => {
           {/* Username and level */}
           <div className="text-center flex justify-center items-center gap-2.5">
             <div className="text-gray-700 text-[4.2666666667vw] sm:text-base">
-              {userInfo?.username}
+              {userInfo?.username.slice(2)}
             </div>
             <div className="inline-block bg-gray-400 text-white text-[3.2vw] sm:text-xs p-[1.3333333333vw] sm:p-1.25 rounded">
               {userInfo?.user_type}
@@ -78,16 +79,14 @@ const PersonalInfoModal: React.FC = () => {
         <div className="m-2.5 p-2.5">
           <div className="px-4 flex items-center justify-between bg-[#6666661A] h-13.5 rounded">
             <div className="flex-1 flex items-center">
-              <div className="text-sm text-gray-600">Gift Points</div>
+              <div className="text-sm text-gray-600">VIP Points (VP)</div>
               <div className="text-xl font-medium text-blue-500 flex-1 text-center">
                 {userWalletData?.coin_balance}
               </div>
             </div>
             <Link to={"/member/vip-points-exchange"}>
               <div className="flex items-center">
-                <span className="text-sm text-gray-600 mr-2">
-                  My Gift Points
-                </span>
+                <span className="text-sm text-gray-600 mr-2">My VIP</span>
                 <FaChevronRight className="text-gray-400" />
               </div>
             </Link>

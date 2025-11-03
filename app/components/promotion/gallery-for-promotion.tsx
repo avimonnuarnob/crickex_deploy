@@ -125,7 +125,7 @@ export default function GalleryForPromotion() {
                   >
                     <Button
                       color="green"
-                      className="w-full bg-primary-button text-white rounded py-2.5"
+                      className="w-full h-full bg-primary-button text-white rounded py-2.5"
                     >
                       Register Now
                     </Button>
