@@ -100,11 +100,23 @@ const PersonalInfoModal: React.FC = () => {
             <div className="w-8 mt-2">
               <FaUser className="text-blue-500" />
             </div>
-            <div className="flex-1">
-              <div className="text-[#474747] leading-8.75">Full Name</div>
-              <div className="text-[#999999] text-sm">
-                {userInfo?.first_name} {userInfo?.last_name}
+            <div className="flex-1 flex items justify-between">
+              <div>
+                <div className="text-[#474747] leading-8.75">Full Name</div>
+                <div className="text-[#999999] text-sm">
+                  {userInfo?.first_name} {userInfo?.last_name}
+                </div>
               </div>
+              {!userInfo?.first_name && !userInfo?.last_name && (
+                <Link to="/member/new-profile-verify-name">
+                  <Button
+                    color="green"
+                    className="w-[25.3333333333vw] h-[8vw] sm:w-[95px] sm:h-[30px]"
+                  >
+                    Add
+                  </Button>
+                </Link>
+              )}
             </div>
           </div>
 
@@ -113,9 +125,21 @@ const PersonalInfoModal: React.FC = () => {
             <div className="w-8 mt-2">
               <FaBirthdayCake className="text-blue-500" />
             </div>
-            <div className="flex-1">
-              <div className="text-[#474747] leading-8.75">Birthday</div>
-              <div className="text-[#999999] text-sm">{userInfo?.dob}</div>
+            <div className="flex-1 flex justify-between items-center">
+              <div>
+                <div className="text-[#474747] leading-8.75">Birthday</div>
+                <div className="text-[#999999] text-sm">{userInfo?.dob}</div>
+              </div>
+              {!userInfo?.dob && (
+                <Link to="/member/new-profile-verify-dob">
+                  <Button
+                    color="green"
+                    className="w-[25.3333333333vw] h-[8vw] sm:w-[95px] sm:h-[30px]"
+                  >
+                    Add
+                  </Button>
+                </Link>
+              )}
             </div>
           </div>
 

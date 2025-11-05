@@ -11,8 +11,8 @@ const TopbarGame = ({ isFull }: TopbarProps) => {
   const navigate = useNavigate();
   const location = useLocation();
 
-  const parentRouteRef = useRef(location.state.from);
-  const pageNumberRef = useRef(location.state.page);
+  const parentRouteRef = useRef(location.state?.from ?? "/");
+  const pageNumberRef = useRef(location.state?.page);
 
   return (
     <>

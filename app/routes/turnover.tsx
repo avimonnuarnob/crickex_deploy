@@ -106,12 +106,13 @@ export default function TurnoverPage({
                 );
               }
               const isTurnoverActive =
-                Number(turnover?.turnover_achieved) <= 100;
+                Number(turnover?.turnover_achieved) < 100 ||
+                Number(turnover?.bonus_turnover_achieved) < 100;
 
               return (
                 <TabGroup
                   className="flex flex-col h-full max-w-full overflow-x-hidden"
-                  selectedIndex={isTurnoverActive ? 0 : 1}
+                  selectedIndex={selectedIndex}
                   onChange={(index) => {
                     setSelectedIndex(index);
                   }}
@@ -215,7 +216,11 @@ export default function TurnoverPage({
                                     </div>
                                     <div className="flex justify-between items-center">
                                       <span className="text-gray-8 text-[2.6666666667vw] sm:text-[10px]">
-                                        0
+                                        {Number(turnover?.turnover_achieved) +
+                                          Number(
+                                            turnover?.bonus_turnover_achieved ??
+                                              0
+                                          )}
                                       </span>
                                       <span className="text-gray-8 text-[2.6666666667vw] sm:text-[10px]">
                                         {Number(turnover?.base_amount) +
@@ -333,7 +338,11 @@ export default function TurnoverPage({
                                     </div>
                                     <div className="flex justify-between items-center">
                                       <span className="text-gray-8 text-[2.6666666667vw] sm:text-[10px]">
-                                        0
+                                        {Number(turnover?.turnover_achieved) +
+                                          Number(
+                                            turnover?.bonus_turnover_achieved ??
+                                              0
+                                          )}
                                       </span>
                                       <span className="text-gray-8 text-[2.6666666667vw] sm:text-[10px]">
                                         {Number(turnover?.base_amount) +

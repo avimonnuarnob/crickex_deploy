@@ -100,6 +100,20 @@ export default [
           id: "home-profile-verify-email",
         }
       ),
+      route(
+        "member/new-profile-verify-name",
+        "./routes/profile-name-verify.tsx",
+        {
+          id: "home-profile-name-verify",
+        }
+      ),
+      route(
+        "member/new-profile-verify-dob",
+        "./routes/profile-dob-verify.tsx",
+        {
+          id: "home-profile-dob-verify",
+        }
+      ),
       route("member/transaction-records", "./routes/transaction-records.tsx", {
         id: "home-transaction-records",
       }),
@@ -123,6 +137,12 @@ export default [
       }),
       route("member/real-time-bonus", "./routes/real-time-bonus.tsx", {
         id: "home-real-time-bonus",
+      }),
+      route("auto-pay/success", "./routes/auto-pay/success.tsx", {
+        id: "home-auto-pay-success",
+      }),
+      route("auto-pay/cancel", "./routes/auto-pay/cancel.tsx", {
+        id: "home-auto-pay-cancel",
       }),
     ]),
 

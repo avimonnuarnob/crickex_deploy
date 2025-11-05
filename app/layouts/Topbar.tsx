@@ -40,6 +40,9 @@ import {
 import type { RootLoaderData } from "@/root";
 import type { GAMEPROVIDER } from "@/routes/index.tsx";
 import { RiMobileDownloadLine } from "react-icons/ri";
+import type { GAMES } from "@/routes/game-type";
+import Cookies from "js-cookie";
+import Modal from "@/components/ui/modal/Modal";
 
 type TopbarProps = Readonly<{
   isFull: boolean;
@@ -58,6 +61,9 @@ const Topbar = ({ isFull }: TopbarProps) => {
   const [activeGameTypeProviders, setActiveGameTypeProviders] = useState<
     GAMEPROVIDER[] | null
   >(null);
+  const [sportsGames, setSportsGames] = useState<GAMES>();
+  const [hotGames, setHotGames] = useState<GAMES>();
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const [_, startTransition] = useTransition();
   const dialogPanelRef = useRef(null);
 
@@ -79,6 +85,18 @@ const Topbar = ({ isFull }: TopbarProps) => {
       window.removeEventListener("add", addShadowEventHandler);
       window.removeEventListener("remove", removeShadowEventHandler);
     };
+  }, []);
+
+  useEffect(() => {
+    fetch(import.meta.env.VITE_API_URL + `/game/getGameListByType/SB/`)
+      .then((response) => response.json())
+      .then((d) => setSportsGames(d.data));
+  }, []);
+
+  useEffect(() => {
+    fetch(import.meta.env.VITE_API_URL + `/game/getGameListByType/HT/`)
+      .then((response) => response.json())
+      .then((d) => setHotGames(d.data));
   }, []);
 
   const loginBtnHandler = () => {
@@ -338,7 +356,11 @@ const Topbar = ({ isFull }: TopbarProps) => {
                           className="w-8.75 h-8.75 bg-blue-1 rounded-full"
                           alt={gameType.title}
                         />
-                        <p className="text-sm">{gameType.title}</p>
+                        <p className="text-sm">
+                          {gameType.game_type_code === "HT"
+                            ? "HOT"
+                            : gameType.title}
+                        </p>
                       </div>
                     </button>
                   ))}
@@ -383,7 +405,7 @@ const Topbar = ({ isFull }: TopbarProps) => {
                       alt="crickex_blog_logo"
                       className="w-8.75 h-8.75"
                     />
-                    <p className="text-sm">Crickex Blog</p>
+                    <p className="text-sm">Lineguru Blog</p>
                   </div>
                 </Link>
                 <Link to="/">
@@ -427,34 +449,188 @@ const Topbar = ({ isFull }: TopbarProps) => {
                 }
               )}
             >
-              {activeGameTypeProviders?.map((provider) => (
-                <div
-                  key={provider.id}
-                  className="py-5.5 flex flex-col justify-center items-center border-b border-gray-4 mx-1 min-w-[23.5vw]"
-                  onClick={() => {
-                    setSidebarOpen(false);
-                    setActiveGameTypeProviders(null);
-                    setActiveGameType(null);
-                    navigate(
-                      `/games/${activeGameType}#vendor=${provider.provider_code}`,
-                      {
-                        viewTransition: true,
+              {activeGameType === "HT" ? (
+                <>
+                  {hotGames?.map((game) => (
+                    <div
+                      key={game.g_code}
+                      className="py-5.5 flex flex-col justify-center items-center border-b border-gray-4 mx-1 max-w-[23.5vw]"
+                      onClick={async () => {
+                        const userToken = Cookies.get("userToken");
+
+                        if (!userToken) {
+                          setIsModalOpen(true);
+                          return;
+                        }
+
+                        if (game.iframe) {
+                          navigate(
+                            `/open-game/${game.p_code}/${game.p_type}/${game.g_code}/${game.operator}`,
+                            {
+                              state: {
+                                from: location.search
+                                  ? location.pathname + location.search
+                                  : location.pathname,
+                              },
+                            }
+                          );
+                        } else {
+                          await fetch(
+                            import.meta.env.VITE_API_URL +
+                              `/game/launchGame/${game.p_code}/${game.p_type}/?game_id=${game.g_code}&operator=${game.operator}`,
+                            {
+                              method: "GET",
+                              headers: {
+                                Authorization: `Token ${userToken}`,
+                              },
+                            }
+                          )
+                            .then((d) => d.json())
+                            .then((game_info) => {
+                              window
+                                .open(game_info?.data?.gameUrl, "_blank")
+                                ?.focus();
+                            });
+                        }
+                      }}
+                    >
+                      <img
+                        src={
+                          game.imgFileName.startsWith("/")
+                            ? import.meta.env.VITE_GAME_IMG_URL +
+                              game.imgFileName
+                            : game.imgFileName
+                        }
+                        alt={game.gameName.gameName_enus}
+                        className="w-11 h-11"
+                      ></img>
+                      <p className="w-full truncate text-center">
+                        {game.gameName.gameName_enus}
+                      </p>
+                    </div>
+                  ))}
+                </>
+              ) : (
+                activeGameTypeProviders?.map((provider) => (
+                  <div
+                    key={provider.id}
+                    className="py-5.5 flex flex-col justify-center items-center border-b border-gray-4 mx-1 min-w-[23.5vw]"
+                    onClick={async () => {
+                      if (activeGameType === "SB") {
+                        const games = sportsGames?.filter(
+                          (game) => game.p_code === provider.provider_code
+                        );
+
+                        const availableLengthOfGames = games?.length;
+                        if (
+                          availableLengthOfGames &&
+                          availableLengthOfGames > 1
+                        ) {
+                          navigate(
+                            `/games/${activeGameType}#vendor=${provider.provider_code}`,
+                            {
+                              viewTransition: true,
+                            }
+                          );
+                        } else {
+                          const userToken = Cookies.get("userToken");
+
+                          if (!userToken) {
+                            setIsModalOpen(true);
+                            return;
+                          }
+
+                          const game = sportsGames?.find(
+                            (game) => game.p_code === provider.provider_code
+                          );
+
+                          if (game) {
+                            if (provider.iframe) {
+                              navigate(
+                                `/open-game/${game.p_code}/${game.p_type}/${game.g_code}/${game.operator}`,
+                                {
+                                  state: {
+                                    from: location.search
+                                      ? location.pathname + location.search
+                                      : location.pathname,
+                                  },
+                                }
+                              );
+                            } else {
+                              await fetch(
+                                import.meta.env.VITE_API_URL +
+                                  `/game/launchGame/${game.p_code}/${game.p_type}/?game_id=${game.g_code}&operator=${game.operator}`,
+                                {
+                                  method: "GET",
+                                  headers: {
+                                    Authorization: `Token ${userToken}`,
+                                  },
+                                }
+                              )
+                                .then((d) => d.json())
+                                .then((game_info) => {
+                                  window
+                                    .open(game_info?.data?.gameUrl, "_blank")
+                                    ?.focus();
+                                });
+                            }
+                          }
+                        }
+                        setSidebarOpen(false);
+                        setActiveGameTypeProviders(null);
+                        setActiveGameType(null);
+                      } else {
+                        setSidebarOpen(false);
+                        setActiveGameTypeProviders(null);
+                        setActiveGameType(null);
+                        navigate(
+                          `/games/${activeGameType}#vendor=${provider.provider_code}`,
+                          {
+                            viewTransition: true,
+                          }
+                        );
                       }
-                    );
-                  }}
-                >
-                  <img
-                    src={import.meta.env.VITE_API_URL + "" + provider.thumbnail}
-                    alt={provider.title}
-                    className="w-11 h-11"
-                  ></img>
-                  <p>{provider.title}</p>
-                </div>
-              ))}
+                    }}
+                  >
+                    <img
+                      src={
+                        import.meta.env.VITE_API_URL + "" + provider.thumbnail
+                      }
+                      alt={provider.title}
+                      className="w-11 h-11"
+                    ></img>
+                    <p>{provider.title}</p>
+                  </div>
+                ))
+              )}
             </div>
           </DialogPanel>
         </div>
       </Dialog>
+
+      <Modal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        title="Notification"
+      >
+        <div className="px-4 pt-2.5 pb-5">
+          <p className="mb-6 text-sm">
+            Please login or sign up to play the game.
+          </p>
+          <div className="mx-auto grid w-full max-w-sm grid-cols-2 gap-4">
+            <Button className="h-10 rounded-xs" onClick={loginBtnHandler}>
+              Login
+            </Button>
+            <Button
+              className="rounded-xs text-black"
+              color="yellow"
+              onClick={signupBtnHandler}
+            >
+              Sign Up
+            </Button>
+          </div>
+        </div>
+      </Modal>
     </>
   );
 };

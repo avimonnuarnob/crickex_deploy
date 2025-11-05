@@ -16,7 +16,7 @@ import profileIcon from "../../assets/images/icon-profile.png";
 import resetpasswordsIcon from "../../assets/images/icon-resetpasswords.png";
 import inboxIcon from "../../assets/images/icon-inbox.png";
 import referralIcon from "../../assets/images/icon-referral.png";
-import customerIcon from "@/assets/images/icon-customer.png";
+import messengerIcon from "@/assets/images/icon-facebook-messenger.png";
 import emailIcon from "@/assets/images/icon-email.png";
 import telegramIcon from "@/assets/images/icon-telegram.png";
 import { IoExitOutline } from "react-icons/io5";
@@ -321,7 +321,12 @@ export default function MobileProfileButton({
                     <p className="text-[3.2vw]">Change Password</p>
                   </div>
                 </button>
-                <div>
+                <button
+                  onClick={() => {
+                    onClose();
+                    navigate("member/inbox/notifications");
+                  }}
+                >
                   <div>
                     <img
                       src={inboxIcon}
@@ -332,7 +337,7 @@ export default function MobileProfileButton({
                   <div className="h-9.25 bg-gray-2 flex items-center justify-center border border-gray-1 py-1.25">
                     <p className="text-[3.2vw]">Inbox</p>
                   </div>
-                </div>
+                </button>
                 <button
                   onClick={() => {
                     onClose();
@@ -376,14 +381,34 @@ export default function MobileProfileButton({
                         className="flex-1"
                       >
                         <div>
-                          <img
-                            src={
-                              import.meta.env.VITE_API_URL +
-                              socialLink.social_prefix_id.logo
-                            }
-                            alt={socialLink.social_prefix_id.name}
-                            className="w-[9.3333333333vw] aspect-square mx-auto mb-[1.3333333333vw]"
-                          />
+                          {socialLink.social_prefix_id.name === "Telegram" && (
+                            <img
+                              src={telegramIcon}
+                              alt="Telegram"
+                              className="w-[9.3333333333vw] aspect-square mx-auto mb-[1.3333333333vw]"
+                            />
+                          )}
+                          {socialLink.social_prefix_id.name === "Email" && (
+                            <img
+                              src={emailIcon}
+                              alt="Email"
+                              className="w-[9.3333333333vw] aspect-square mx-auto mb-[1.3333333333vw]"
+                            />
+                          )}
+                          {socialLink.social_prefix_id.name === "Messenger" && (
+                            <img
+                              src={messengerIcon}
+                              alt="Messenger"
+                              className="w-[9.3333333333vw] aspect-square mx-auto mb-[1.3333333333vw]"
+                            />
+                          )}
+                          {socialLink.social_prefix_id.name === "T-Channel" && (
+                            <img
+                              src={telegramIcon}
+                              alt="T-Channel"
+                              className="w-[9.3333333333vw] aspect-square mx-auto mb-[1.3333333333vw]"
+                            />
+                          )}
                         </div>
                         <div className="h-9.25 bg-gray-2 flex items-center justify-center border border-gray-1 py-1.25">
                           <p className="text-[3.2vw]">

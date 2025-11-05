@@ -1,6 +1,6 @@
 import Cookies from "js-cookie";
 import type { Route } from "./+types/open-game";
-import React from "react";
+import React, { useState } from "react";
 import { Await, useSearchParams } from "react-router";
 import { motion } from "motion/react";
 
@@ -24,6 +24,7 @@ export async function clientLoader({ params }: Route.ClientLoaderArgs) {
 
 export default function GameLauncher({ loaderData }: Route.ComponentProps) {
   const { gamebox } = loaderData;
+
   return (
     <div className="mt-7.5">
       <React.Suspense

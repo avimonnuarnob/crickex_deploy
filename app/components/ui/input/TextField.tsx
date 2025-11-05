@@ -40,7 +40,7 @@ const TextField = ({
           id={id}
           type={isPassword && showPassword ? "text" : type}
           className={classNames(
-            "border-gray-7 bg-gray-1 w-full rounded-sm border px-4 py-3.75 text-xs transition-all focus:ring-none focus:outline-none focus:border-blue-1 font-light",
+            "border-gray-7 bg-gray-1 w-full rounded-sm border px-4 py-3.75 text-xs transition-all focus:ring-none focus:outline-none focus:border-blue-1 font-light lowercase",
             {
               "border-red-1 focus:ring-red-400": !!error,
             },
@@ -55,9 +55,9 @@ const TextField = ({
             className="absolute top-1/2 right-3 -translate-y-1/2"
           >
             {showPassword ? (
-              <FaEyeSlash className="text-gray-3 text-sm" />
+              <FaEyeSlash className="text-gray-8 text-sm" />
             ) : (
-              <FaEye className="text-gray-3 text-sm" />
+              <FaEye className="text-gray-8 text-sm" />
             )}
           </button>
         )}

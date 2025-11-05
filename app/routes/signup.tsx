@@ -265,8 +265,7 @@ export default function SignupModal({ matches }: Route.ComponentProps) {
             <div
               className="w-[200px] h-[35px] my-3.75 mx-auto bg-contain bg-no-repeat bg-center"
               style={{
-                backgroundImage:
-                  'url("https://img.c88rx.com/cx/h5/assets/images/member-logo.png?v=1745315485946")',
+                backgroundImage: 'url("/logo-blue.png")',
               }}
             ></div>
             <div className="embla">

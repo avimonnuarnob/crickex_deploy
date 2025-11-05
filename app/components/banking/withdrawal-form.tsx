@@ -472,7 +472,7 @@ export default function WithdrawalForm({
               </div>
               <div className="px-4 py-3 bg-gray-1">
                 <p className="text-blue-1 font-semibold">
-                  {pendingWithdrawal?.bank_name}
+                  {selectedBank?.bank_name}
                 </p>
               </div>
             </div>
@@ -486,7 +486,7 @@ export default function WithdrawalForm({
               </div>
               <div className="px-4 py-3 bg-gray-1">
                 <p className="text-blue-1 font-semibold">
-                  {pendingWithdrawal?.bank_acc_name}
+                  {userInfo?.first_name} {userInfo?.last_name}
                 </p>
               </div>
             </div>
@@ -499,7 +499,7 @@ export default function WithdrawalForm({
               </div>
               <div className="px-4 py-3 bg-gray-1">
                 <p className="text-blue-1 font-semibold">
-                  {pendingWithdrawal?.account_email}
+                  {selectedBank?.account_number}
                 </p>
               </div>
             </div>

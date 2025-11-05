@@ -1,6 +1,7 @@
 import { navLinks } from "@/constants/navLinks";
 import classNames from "classnames";
 import {
+  useEffect,
   useState,
   useTransition,
   type Dispatch,
@@ -15,6 +16,10 @@ import type { RootLoaderData } from "@/root";
 import { motion } from "motion/react";
 
 import homeIcon from "@/assets/images/icon-home.png";
+import type { GAMES } from "@/routes/game-type";
+import Modal from "@/components/ui/modal/Modal";
+import { useNavigate } from "react-router";
+import Button from "@/components/ui/button/Button";
 
 type SidebarProps = Readonly<{
   isFull: boolean;
@@ -23,9 +28,26 @@ type SidebarProps = Readonly<{
 
 const Sidebar = ({ isFull, setIsFull }: SidebarProps) => {
   const data = useRouteLoaderData<RootLoaderData>("root");
+  const navigate = useNavigate();
+
   const [activeDisclosurePanel, setActiveDisclosurePanel] = useState<any>(null);
+  const [sportsGames, setSportsGames] = useState<GAMES>();
+  const [hotGames, setHotGames] = useState<GAMES>();
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const [isPending, startTransition] = useTransition();
+
+  useEffect(() => {
+    fetch(import.meta.env.VITE_API_URL + `/game/getGameListByType/SB/`)
+      .then((response) => response.json())
+      .then((d) => setSportsGames(d.data));
+  }, []);
+
+  useEffect(() => {
+    fetch(import.meta.env.VITE_API_URL + `/game/getGameListByType/HT/`)
+      .then((response) => response.json())
+      .then((d) => setHotGames(d.data));
+  }, []);
 
   function togglePanels(newPanel: any) {
     if (activeDisclosurePanel) {
@@ -42,6 +64,16 @@ const Sidebar = ({ isFull, setIsFull }: SidebarProps) => {
       open: !newPanel.open,
     });
   }
+
+  const loginBtnHandler = () => {
+    setIsModalOpen(false);
+    navigate("/account-login-quick" + location.hash);
+  };
+
+  const signupBtnHandler = () => {
+    setIsModalOpen(false);
+    navigate("/new-register-entry/account" + location.hash);
+  };
   return (
     <div
       className={classNames(
@@ -129,28 +161,96 @@ const Sidebar = ({ isFull, setIsFull }: SidebarProps) => {
 
           {data?.gameProviders
             .filter((gameType) => gameType.top_menu)
-            .map((gameType) => (
-              <li
-                key={gameType.id}
-                className={classNames({
-                  "-ml-[9.5px]": !isFull,
-                })}
-              >
-                <Submenu
-                  isFull={isFull}
-                  icon={`/game_type/${gameType.game_type_code}.png`}
-                  text={gameType.title}
-                  children={gameType.game_provider.map((provider) => ({
-                    icon:
-                      import.meta.env.VITE_API_URL + "" + provider.thumbnail,
-                    text: provider.title,
-                    href: `/games/${gameType.game_type_code}#vendor=${provider.provider_code}`,
-                  }))}
-                  togglePanels={togglePanels}
-                  index={gameType.game_type_code + gameType.id}
-                />
-              </li>
-            ))}
+            .map((gameType) => {
+              if (gameType.game_type_code === "HT") {
+                return (
+                  <li
+                    key={gameType.id}
+                    className={classNames({
+                      "-ml-[9.5px]": !isFull,
+                    })}
+                  >
+                    {hotGames && (
+                      <Submenu
+                        isFull={isFull}
+                        icon={`/game_type/${gameType.game_type_code}.png`}
+                        text={"HOT"}
+                        children={hotGames?.map((game) => {
+                          return {
+                            icon: game.imgFileName.startsWith("/")
+                              ? import.meta.env.VITE_GAME_IMG_URL +
+                                game.imgFileName
+                              : game.imgFileName,
+                            text: game.gameName.gameName_enus,
+                            href: `/open-game/${game.p_code}/${game.p_type}/${game.g_code}/${game.operator}`,
+                            setIsModalOpen,
+                          };
+                        })}
+                        togglePanels={togglePanels}
+                        index={gameType.game_type_code + gameType.id}
+                      />
+                    )}
+                  </li>
+                );
+              }
+              if (gameType.game_type_code === "SB") {
+                return (
+                  <li
+                    key={gameType.id}
+                    className={classNames({
+                      "-ml-[9.5px]": !isFull,
+                    })}
+                  >
+                    <Submenu
+                      isFull={isFull}
+                      icon={`/game_type/${gameType.game_type_code}.png`}
+                      text={gameType.title}
+                      children={gameType.game_provider.map((provider) => {
+                        const game = sportsGames?.find(
+                          (game) => game.p_code === provider.provider_code
+                        );
+                        return {
+                          setIsModalOpen,
+                          icon:
+                            import.meta.env.VITE_API_URL +
+                            "" +
+                            provider.thumbnail,
+                          text: provider.title,
+                          href: game
+                            ? `/open-game/${game.p_code}/${game.p_type}/${game.g_code}/${game.operator}`
+                            : `/games/${gameType.game_type_code}#vendor=${provider.provider_code}`,
+                        };
+                      })}
+                      togglePanels={togglePanels}
+                      index={gameType.game_type_code + gameType.id}
+                    />
+                  </li>
+                );
+              }
+              return (
+                <li
+                  key={gameType.id}
+                  className={classNames({
+                    "-ml-[9.5px]": !isFull,
+                  })}
+                >
+                  <Submenu
+                    isFull={isFull}
+                    icon={`/game_type/${gameType.game_type_code}.png`}
+                    text={gameType.title}
+                    children={gameType.game_provider.map((provider) => ({
+                      setIsModalOpen,
+                      icon:
+                        import.meta.env.VITE_API_URL + "" + provider.thumbnail,
+                      text: provider.title,
+                      href: `/games/${gameType.game_type_code}#vendor=${provider.provider_code}`,
+                    }))}
+                    togglePanels={togglePanels}
+                    index={gameType.game_type_code + gameType.id}
+                  />
+                </li>
+              );
+            })}
 
           {navLinks.map((navLink, index) =>
             navLink.children ? (
@@ -200,6 +300,30 @@ const Sidebar = ({ isFull, setIsFull }: SidebarProps) => {
           {/* design purpose 🤷 */}
         </ul>
       </div>
+
+      <Modal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        title="Notification"
+      >
+        <div className="px-4 pt-2.5 pb-5">
+          <p className="mb-6 text-sm">
+            Please login or sign up to play the game.
+          </p>
+          <div className="mx-auto grid w-full max-w-sm grid-cols-2 gap-4">
+            <Button className="h-10 rounded-xs" onClick={loginBtnHandler}>
+              Login
+            </Button>
+            <Button
+              className="rounded-xs text-black"
+              color="yellow"
+              onClick={signupBtnHandler}
+            >
+              Sign Up
+            </Button>
+          </div>
+        </div>
+      </Modal>
     </div>
   );
 };

@@ -14,6 +14,7 @@ type SubmenuProps = {
   togglePanels: any;
   index: any;
   children: {
+    setIsModalOpen?: (value: boolean) => void;
     icon: string;
     text: string;
     href: string;

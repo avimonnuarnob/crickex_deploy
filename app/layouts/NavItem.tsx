@@ -1,5 +1,6 @@
 import { useClose } from "@headlessui/react";
 import classNames from "classnames";
+import Cookies from "js-cookie";
 import { useEffect } from "react";
 import { BsChevronDown } from "react-icons/bs";
 
@@ -12,6 +13,7 @@ type NavItemProps = Readonly<{
   isChild?: boolean;
   isOpen?: boolean;
   isFull?: boolean;
+  setIsModalOpen?: (value: boolean) => void;
 }>;
 
 const NavItem = ({
@@ -21,6 +23,7 @@ const NavItem = ({
   isChild = false,
   isOpen = false,
   isFull,
+  setIsModalOpen,
 }: NavItemProps) => {
   const close = useClose();
 
@@ -35,6 +38,15 @@ const NavItem = ({
     <Link
       viewTransition
       to={href}
+      onClick={(e) => {
+        const userToken = Cookies.get("userToken");
+        if (!userToken) {
+          e.stopPropagation();
+          e.preventDefault();
+
+          setIsModalOpen?.(true);
+        }
+      }}
       className={classNames(
         "flex items-center transition-colors cursor-pointer gap-4",
         {

@@ -15,7 +15,8 @@ import type { Route } from "./+types/index";
 import type { RootLoaderData } from "@/root";
 import UserDashboard from "@/components/home/user-dashboard";
 import { useCurrentUser } from "@/contexts/CurrentUserContext";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
+import type { GAMES } from "@/routes/game-type";
 
 export type PROVIDERS = GAMETYPE[];
 
@@ -55,11 +56,18 @@ export interface GAMEPROVIDER {
 
 export default function Home() {
   const data = useRouteLoaderData<RootLoaderData>("root");
+  const [hotGamesData, setHotGamesData] = useState<GAMES>();
   const { isLoggedIn } = useCurrentUser();
 
   useEffect(() => {
     const root = document.documentElement;
     root.style.setProperty("--direction", "1");
+  }, []);
+
+  useEffect(() => {
+    fetch(import.meta.env.VITE_API_URL + `/game/getGameListByType/HT/`)
+      .then((response) => response.json())
+      .then((d) => setHotGamesData(d.data));
   }, []);
 
   return (
@@ -70,14 +78,17 @@ export default function Home() {
         {isLoggedIn && <UserDashboard />}
         <div className="transition-all">
           {data?.gameProviders && (
-            <CategoryTab providers={data?.gameProviders} />
+            <CategoryTab
+              providers={data?.gameProviders}
+              hotGames={hotGamesData}
+            />
           )}
         </div>
         <div className="py-2.75">
           <FavouriteGames />
         </div>
         <div className="py-2.5">
-          <FeaturedGames />
+          <FeaturedGames hotGames={hotGamesData} />
         </div>
       </div>
       <Outlet />

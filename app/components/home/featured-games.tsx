@@ -5,8 +5,7 @@ import Modal from "../ui/modal/Modal";
 import { useNavigate } from "react-router";
 import Button from "../ui/button/Button";
 
-export default function FeaturedGames() {
-  const [gamesData, setGamesData] = useState<GAMES | null>(null);
+export default function FeaturedGames({ hotGames }: { hotGames?: GAMES }) {
   const navigate = useNavigate();
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -19,13 +18,6 @@ export default function FeaturedGames() {
     setIsModalOpen(false);
     navigate("/new-register-entry/account");
   };
-
-  useEffect(() => {
-    fetch(import.meta.env.VITE_API_URL + `/game/getGameListByType/HT/`)
-      .then((response) => response.json())
-      .then((d) => setGamesData(d.data));
-  }, []);
-
   return (
     <div className="w-full px-2 sm:px-0">
       <div className="flex py-2 gap-1 items-center">
@@ -35,7 +27,7 @@ export default function FeaturedGames() {
 
       <div className="overflow-x-auto [&::-webkit-scrollbar]:h-1.5 [&::-webkit-scrollbar-thumb]:bg-gray-300 [&::-webkit-scrollbar-thumb]:rounded">
         <div className="flex gap-x-2 [&>*]:min-w-[180px] [&_img]:max-h-[120px]">
-          {gamesData?.map((game, i) => (
+          {hotGames?.map((game, i) => (
             <GameDescription
               key={game.gameName.gameName_enus}
               game={game}

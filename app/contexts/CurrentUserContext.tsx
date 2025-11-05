@@ -1,4 +1,5 @@
 import Cookies from "js-cookie";
+import { getws, initws } from "@/notification";
 import React, {
   useState,
   useEffect,
@@ -122,6 +123,19 @@ const CurrentUserProvider: React.FC<{ children: React.ReactNode }> = ({
       getWalletData();
     }
   }, [user]);
+
+  useEffect(() => {
+    if (userInfo) {
+      initws(userInfo.username);
+    }
+
+    return () => {
+      if (userInfo) {
+        const socket = getws();
+        socket.close();
+      }
+    };
+  }, [userInfo]);
 
   const loginUser = (token: string) => {
     Cookies.set("userToken", token, { sameSite: "Strict" });
