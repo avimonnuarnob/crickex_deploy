@@ -8,7 +8,7 @@ import {
 } from "@headlessui/react";
 import IconButton from "../ui/button/IconButton";
 // import infoIcon from "../../assets/icon/icon-info.svg";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { TfiReload } from "react-icons/tfi";
 
 import depositIcon from "../../assets/images/icon-deposit.png";
@@ -21,8 +21,11 @@ import resetpasswordsIcon from "../../assets/images/icon-resetpasswords.png";
 import inboxIcon from "../../assets/images/icon-inbox.png";
 import referralIcon from "../../assets/images/icon-referral.png";
 import logoutIcon from "../../assets/images/icon-logout.png";
+import realTimeBonusIcon from "@/assets/images/icon-real-time-bonus.png";
+
 import { useCurrentUser } from "@/contexts/CurrentUserContext";
 import { useNavigate } from "react-router";
+import Cookies from "js-cookie";
 
 const PROFILE_ITEMS = [
   {
@@ -35,6 +38,10 @@ const PROFILE_ITEMS = [
       {
         name: "Withdrawal",
         icon: withdrawalIcon,
+      },
+      {
+        name: "Real Time Bonus",
+        icon: realTimeBonusIcon,
       },
     ],
   },
@@ -63,8 +70,57 @@ const PROFILE_ITEMS = [
 ];
 
 export default function ProfileButton() {
-  const { logoutUser, userInfo } = useCurrentUser();
+  const { logoutUser, userInfo, userWalletData, setUserWalletData } =
+    useCurrentUser();
   const navigate = useNavigate();
+
+  const [vipPoint, setVipPoint] = useState<number>();
+  const [availableCashbackId, setAvailableCashbackId] = useState<number>();
+
+  const [isWalletDataFetching, setIsWalletDataFetching] = useState(false);
+  const [isVipPointFetching, setIsVipPointFetching] = useState(false);
+
+  const getAvailableCashbackId = async () => {
+    const availablecashback = await fetch(
+      import.meta.env.VITE_API_URL + "/wallet/cashback-available/",
+      {
+        headers: {
+          Authorization: `Token ${Cookies.get("userToken")}`,
+        },
+      }
+    );
+    const availableCashbackData = await availablecashback.json();
+    return availableCashbackData.data.id as number;
+  };
+
+  const getCashbackPoints = async (id: number) => {
+    const response = await fetch(
+      import.meta.env.VITE_API_URL + "/wallet/cashback/",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Token ${Cookies.get("userToken")}`,
+        },
+        body: JSON.stringify({
+          cashback_setting_id: id,
+        }),
+      }
+    );
+
+    const responseData = await response.json();
+
+    return responseData.data.cash_back_amount as number;
+  };
+
+  useEffect(() => {
+    getAvailableCashbackId().then((id) => {
+      setAvailableCashbackId(id);
+      getCashbackPoints(id).then((data) => {
+        setVipPoint(data);
+      });
+    });
+  }, []);
 
   const onClickHandler = (id: string) => {
     if (id === "Log Out") {
@@ -73,6 +129,8 @@ export default function ProfileButton() {
       navigate("/member/wallet/deposit");
     } else if (id === "Withdrawal") {
       navigate("/member/wallet/withdrawal");
+    } else if (id === "Real Time Bonus") {
+      navigate("/member/real-time-bonus");
     } else if (id === "Personal Info") {
       navigate("member/new-profile-info");
     } else if (id === "Transaction Records") {
@@ -112,17 +170,72 @@ export default function ProfileButton() {
             </span>
 
             <span className="block text-sm mt-1 text-[#555555]">
-              Gift Points
+              VIP Points
             </span>
 
             <div className="flex items-center -mt-0.5">
-              <span className="text-lg font-bold text-blue-1">0</span>
+              <span className="text-lg font-bold text-blue-1">{vipPoint}</span>
               <IconButton
                 className="inline-block"
                 color="link"
-                icon={<TfiReload className="size-2.5 text-blue-1 stroke-2" />}
+                icon={
+                  <TfiReload
+                    className={
+                      "size-2.5 text-blue-1 stroke-2" +
+                      (isVipPointFetching ? " animate-spin" : "")
+                    }
+                  />
+                }
                 onClick={(e) => {
+                  if (availableCashbackId) {
+                    e.preventDefault();
+                    setIsVipPointFetching(true);
+                    getCashbackPoints(availableCashbackId).then((data) => {
+                      setIsVipPointFetching(false);
+                      setVipPoint(data);
+                    });
+                  }
+                }}
+              ></IconButton>
+            </div>
+
+            <span className="block text-sm mt-1 text-[#555555]">
+              Bonus Wallet
+            </span>
+
+            <div className="flex items-center -mt-0.5">
+              <span className="text-lg font-bold text-blue-1">
+                {userInfo?.currency_icon} {userWalletData?.coin_balance}
+              </span>
+              <IconButton
+                className="inline-block"
+                color="link"
+                icon={
+                  <TfiReload
+                    className={
+                      "size-2.5 text-blue-1 stroke-2" +
+                      (isWalletDataFetching ? " animate-spin" : "")
+                    }
+                  />
+                }
+                onClick={async (e) => {
                   e.preventDefault();
+                  setIsWalletDataFetching(true);
+                  const response = await fetch(
+                    import.meta.env.VITE_API_URL + "/auth/user-balance/",
+                    {
+                      headers: {
+                        Authorization: `Token ${Cookies.get("userToken")}`,
+                      },
+                    }
+                  );
+
+                  const responseData = await response.json();
+
+                  if (responseData.status === "ok") {
+                    setUserWalletData(responseData.data);
+                    setIsWalletDataFetching(false);
+                  }
                 }}
               ></IconButton>
             </div>

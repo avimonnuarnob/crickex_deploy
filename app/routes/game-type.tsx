@@ -95,7 +95,11 @@ export default function GameType({ loaderData, params }: Route.ComponentProps) {
         <Await resolve={promiseOfGames}>
           {(games: GAMES) => {
             return (
-              <GalleryForGames games={games} providersMap={providersMap} />
+              <GalleryForGames
+                key={gametype}
+                games={games}
+                providersMap={providersMap}
+              />
             );
           }}
         </Await>

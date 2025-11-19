@@ -20,7 +20,7 @@ export interface RECORD {
   win_amount: string;
   refund: string;
   game_code: string;
-  game: string;
+  game?: string;
   provider: string;
   provider_title: string;
   status: string;
@@ -60,7 +60,7 @@ const BettingRecords = ({ loaderData, params }: Route.ComponentProps) => {
   // >([]);
   const [dateFilter, setDateFilter] = useState<
     "Today" | "Yesterday" | "Last 7 days"
-  >("Today");
+  >();
 
   // const onStatusFilterUpdate = (
   //   status: "Processing" | "Completed" | "Failed"
@@ -87,7 +87,17 @@ const BettingRecords = ({ loaderData, params }: Route.ComponentProps) => {
   // };
 
   const onDateFilterUpdate = (date: "Today" | "Yesterday" | "Last 7 days") => {
-    setDateFilter(date);
+    if (dateFilter === date) {
+      setDateFilter(undefined);
+    } else {
+      setDateFilter(date);
+    }
+  };
+
+  const clearFilters = () => {
+    // setStatusFilter([]);
+    // setPaymentTypeFilter([]);
+    setDateFilter(undefined);
   };
 
   const handleBettingRecordsModal = () => {
@@ -109,7 +119,7 @@ const BettingRecords = ({ loaderData, params }: Route.ComponentProps) => {
         onClose={handleBettingRecordsModal}
         title="Betting Records"
       >
-        <div className="">
+        <div className="h-full">
           <React.Suspense
             fallback={
               <div className="flex justify-center items-center flex-col h-full">
@@ -133,10 +143,12 @@ const BettingRecords = ({ loaderData, params }: Route.ComponentProps) => {
                       console.log("row clicked");
                     }}
                     filterPeriod={[
-                      // ...statusFilter,
-                      // ...paymentTypeFilter,
-                      dateFilter,
+                      {
+                        type: "date",
+                        value: dateFilter,
+                      },
                     ]}
+                    clearFilters={clearFilters}
                   />
                 );
               }}

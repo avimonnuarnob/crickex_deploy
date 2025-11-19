@@ -65,7 +65,12 @@ const PersonalInfoModal: React.FC = () => {
             <div className="text-gray-700 text-[4.2666666667vw] sm:text-base">
               {userInfo?.username.slice(2)}
             </div>
-            <div className="inline-block bg-gray-400 text-white text-[3.2vw] sm:text-xs p-[1.3333333333vw] sm:p-1.25 rounded">
+            <div
+              className="inline-block text-white text-[3.2vw] sm:text-xs p-[1.3333333333vw] sm:p-1.25 rounded"
+              style={{
+                background: "linear-gradient(105deg,#c8c3b2 2%,#80795a)",
+              }}
+            >
               {userInfo?.user_type}
             </div>
           </div>

@@ -5,6 +5,7 @@ import {
 } from "@headlessui/react";
 import { AnimatePresence, motion } from "motion/react";
 import NavItem from "./NavItem";
+import customerIcon from "@/assets/images/icon-customer.png";
 
 type SubmenuProps = {
   isFull: boolean;
@@ -56,15 +57,49 @@ const Submenu = ({ isFull, togglePanels, index, ...navLink }: SubmenuProps) => {
                     className="origin-top"
                   >
                     <DisclosurePanel static as="ul">
-                      {navLink.children.map((child, index) => (
-                        <li key={index + 1}>
+                      {navLink.text === "Contact Us" && (
+                        <li key="Live Chat">
                           <div className="pl-3.25 bg-[#f5f5f5] hover:bg-[#ddd]">
-                            <NavItem {...child} isChild isFull={isFull}>
-                              {child.text}
-                            </NavItem>
+                            <button
+                              onClick={() => {
+                                if (window && window.anw2 !== undefined) {
+                                  window.anw2.open();
+                                }
+                              }}
+                              className={
+                                "flex items-center transition-colors cursor-pointer gap-4 whitespace-nowrap"
+                              }
+                              style={{
+                                padding: isFull
+                                  ? "10px 23px 10px 23px"
+                                  : "10px 10px 10px 23px",
+                              }}
+                            >
+                              <img src={customerIcon} className="w-7.5 h-7.5" />
+                              <span
+                                className={
+                                  "text-base truncate text-dark-1 text-left"
+                                }
+                                style={{ width: "11ch" }}
+                              >
+                                Live Chat
+                              </span>
+                            </button>
                           </div>
                           <div className="border-gray-4 border-b" />
                         </li>
+                      )}
+                      {navLink.children.map((child, index) => (
+                        <>
+                          <li key={index + 1}>
+                            <div className="pl-3.25 bg-[#f5f5f5] hover:bg-[#ddd]">
+                              <NavItem {...child} isChild isFull={isFull}>
+                                {child.text}
+                              </NavItem>
+                            </div>
+                            <div className="border-gray-4 border-b" />
+                          </li>
+                        </>
                       ))}
                     </DisclosurePanel>
                   </motion.div>

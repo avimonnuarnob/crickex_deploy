@@ -9,7 +9,7 @@ import {
 } from "react-router";
 import type { Route } from "./+types/root";
 
-import loader from "./assets/loader.webm";
+import loader from "./assets/loader.mp4";
 
 import normalizeStyles from "./normalize.css?url";
 import appStylesHref from "./app.css?url";
@@ -212,10 +212,14 @@ export default function App() {
   const data = useRouteLoaderData<RootLoaderData>("root");
 
   useEffect(() => {
+    if (document.getElementById("anw2-sdk-XCLSmPTJDTCco9k0kNbmNg")) return;
     const s1 = document.createElement("script");
+    s1.type = "text/javascript";
+    s1.id = "anw2-sdk-XCLSmPTJDTCco9k0kNbmNg";
+    s1.src =
+      "https://api.soft-take.com/widget2/load?id=98d2225c-c9f4-300d-9ca3-d93490d6e636&r=" +
+      encodeURIComponent(window.location.href);
     s1.async = true;
-    s1.src = "https://embed.tawk.to/6783e17249e2fd8dfe06606e/1ihdihae5";
-    s1.setAttribute("crossorigin", "*");
     document.body.appendChild(s1);
   }, []);
 
@@ -292,7 +296,7 @@ export function HydrateFallback() {
   return (
     <div className="flex h-full w-full min-h-screen justify-center items-center">
       <video width={150} autoPlay={true} muted={true} loop={true}>
-        <source src={loader} type="video/webm" />
+        <source src={loader} type="video/mp4" />
       </video>
     </div>
   );

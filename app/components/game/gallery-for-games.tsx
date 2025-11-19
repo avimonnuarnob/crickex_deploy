@@ -1,6 +1,6 @@
 import type { GAMES } from "@/routes/game-type";
 import classNames from "classnames";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useLocation, useNavigate } from "react-router";
 import Modal from "@/components/ui/modal/Modal";
 import Button from "@/components/ui/button/Button";
@@ -19,6 +19,7 @@ import IconButton from "@/components/ui/button/IconButton";
 import { FaSearch } from "react-icons/fa";
 
 import noGameImage from "@/assets/images/img-no-game.png";
+import { useParams } from "react-router";
 
 const GAMES_PER_PAGE = 40;
 
@@ -31,43 +32,27 @@ export default function GalleryForGames({
 }) {
   const navigate = useNavigate();
   const { hash, state } = useLocation();
+  const params = useParams();
   const vendor = hash.replace("#vendor=", "");
+  console.log(vendor);
+
+  const favoriteGames = localStorage.getItem(
+    "favoriteGames_" + params.gametype
+  );
+  const favoriteGamesSet: Set<string> = favoriteGames
+    ? new Set(JSON.parse(favoriteGames))
+    : new Set();
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [gameFilter, setGameFilter] = useState<string[]>(() =>
     vendor ? [vendor] : []
   );
+
   const [pageNumber, setPageNumber] = useState(
     state?.page ? Number(state.page) : 1
   );
   const [open, setOpen] = useState(false);
   const [textFilterInput, setTextFilterInput] = useState<string>();
-
-  const gettersRef = useRef<() => number | null>(null);
-  gettersRef.current = () => {
-    return pageNumber;
-  };
-  const callGetters = useCallback(() => gettersRef.current?.(), []);
-
-  useEffect(() => {
-    if (gameFilter.length && vendor) {
-      setGameFilter([vendor]);
-    }
-  }, [vendor]);
-
-  const loginBtnHandler = () => {
-    setIsModalOpen(false);
-    navigate(location.pathname + "/account-login-quick" + location.hash);
-  };
-
-  const signupBtnHandler = () => {
-    setIsModalOpen(false);
-    navigate(location.pathname + "/new-register-entry/account" + location.hash);
-  };
-
-  const gameProviders: string[] = [
-    ...new Set(games.map((game) => game.p_code)),
-  ];
 
   const filteredGames = gameFilter.length
     ? games.filter((game) => {
@@ -87,6 +72,74 @@ export default function GalleryForGames({
     Math.floor(gamesToShow.length / GAMES_PER_PAGE) +
     (gamesToShow.length % GAMES_PER_PAGE === 0 ? 0 : 1);
 
+  const gettersRef = useRef<() => number | null>(null);
+  gettersRef.current = () => {
+    return pageNumber;
+  };
+  const callGetters = useCallback(() => gettersRef.current?.(), []);
+
+  useEffect(() => {
+    if (gameFilter.length && vendor) {
+      setGameFilter([vendor]);
+    }
+  }, [vendor]);
+
+  // useEffect(() => {
+  //   setLoadingRef(document.getElementById("loadingRef")!);
+  // }, [gameFilter]);
+
+  useEffect(() => {
+    let observer: IntersectionObserver | null = null;
+    const loadingRef = document.getElementById("loadingRef");
+    if (loadingRef) {
+      const options = {
+        threshold: 0,
+      };
+      observer = new IntersectionObserver((entries) => {
+        // console.log("a", a);
+        if (
+          entries[0].isIntersecting &&
+          entries[0].intersectionRect.y < window.innerHeight &&
+          entries[0].intersectionRect.y >
+            window.innerHeight - loadingRef.offsetHeight
+        ) {
+          changePageNumber();
+        }
+      }, options);
+
+      observer.observe(loadingRef);
+    }
+
+    return () => {
+      if (observer) observer.disconnect();
+    };
+  }, [gameFilter]);
+
+  useEffect(() => {
+    setPageNumber(1);
+  }, [textFilterInput, gameFilter]);
+
+  const changePageNumber = () => {
+    if (pageNumber >= totalPages) {
+      return;
+    }
+    setPageNumber((pageNumber) => pageNumber + 1);
+  };
+
+  const loginBtnHandler = () => {
+    setIsModalOpen(false);
+    navigate(location.pathname + "/account-login-quick" + location.hash);
+  };
+
+  const signupBtnHandler = () => {
+    setIsModalOpen(false);
+    navigate(location.pathname + "/new-register-entry/account" + location.hash);
+  };
+
+  const gameProviders: string[] = [
+    ...new Set(games.map((game) => game.p_code)),
+  ];
+
   return (
     <div>
       <div className="relative overflow-hidden sm:rounded">
@@ -102,7 +155,8 @@ export default function GalleryForGames({
           >
             All
           </button>
-          {gameProviders.map((provider) => (
+
+          {gameFilter.map((provider) => (
             <button
               key={provider}
               className={classNames(
@@ -122,6 +176,31 @@ export default function GalleryForGames({
               {providersMap.get(provider)}
             </button>
           ))}
+
+          {gameProviders
+            .filter((provider) => {
+              return !gameFilter.includes(provider);
+            })
+            .map((provider) => (
+              <button
+                key={provider}
+                className={classNames(
+                  "bg-[#f5f5f5] px-4 py-2 text-[13px] rounded min-w-[93px] h-[30px] text-center cursor-pointer hover:opacity-[0.7] truncate!",
+                  { "bg-[#005dac]! text-white": gameFilter.includes(provider) }
+                )}
+                onClick={() => {
+                  if (gameFilter.includes(provider)) {
+                    setGameFilter(
+                      gameFilter.filter((filter) => filter !== provider)
+                    );
+                  } else {
+                    setGameFilter(gameFilter.concat(provider));
+                  }
+                }}
+              >
+                {providersMap.get(provider)}
+              </button>
+            ))}
           <IconButton
             className="absolute right-0 top-0 bottom-0 aspect-square rounded-none bg-white sm:bg-blue-1 border-l border-gray-1"
             icon={
@@ -144,14 +223,28 @@ export default function GalleryForGames({
 
       {gamesToShow.length ? (
         <div className="grid gap-x-2.5 gap-y-5 mx-2 grid-cols-2 sm:grid-cols-[repeat(auto-fill,minmax(180px,1fr))]">
-          {gamesToShow.slice(0, pageNumber * GAMES_PER_PAGE).map((game, i) => (
-            <GameDescription
-              key={game.gameName.gameName_enus}
-              game={game}
-              setIsModalOpen={setIsModalOpen}
-              callGetters={callGetters}
-            />
-          ))}
+          {gamesToShow
+            .sort((a, b) => {
+              const aFavorite = favoriteGamesSet.has(a.g_code);
+              const bFavorite = favoriteGamesSet.has(b.g_code);
+
+              if (aFavorite && !bFavorite) {
+                return -1;
+              } else if (!aFavorite && bFavorite) {
+                return 1;
+              } else {
+                return 0;
+              }
+            })
+            .slice(0, pageNumber * GAMES_PER_PAGE)
+            .map((game, i) => (
+              <GameDescription
+                key={game.g_code + i}
+                game={game}
+                setIsModalOpen={setIsModalOpen}
+                callGetters={callGetters}
+              />
+            ))}
         </div>
       ) : (
         <div className="p-12.5 bg-white flex flex-col items-center gap-8 drop-shadow-lg">
@@ -176,7 +269,7 @@ export default function GalleryForGames({
         </div>
       )}
 
-      <div className="text-[13px] mt-6 mb-6">
+      <div className="text-[13px] mt-6 mb-6" id="loadingRef">
         {pageNumber >= totalPages ? (
           <p className=" text-[#00000080] text-center">－end of page－</p>
         ) : (

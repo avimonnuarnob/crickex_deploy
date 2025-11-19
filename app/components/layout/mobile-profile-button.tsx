@@ -5,7 +5,7 @@ import refreshIcon from "@/assets/icon/refresh.svg";
 import { useCurrentUser } from "@/contexts/CurrentUserContext";
 import Cookies from "js-cookie";
 import { FaEye, FaEyeSlash } from "react-icons/fa6";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import depositIcon from "../../assets/images/icon-deposit.png";
 import withdrawalIcon from "../../assets/images/icon-withdrawal.png";
 import realTimeBonusIcon from "@/assets/images/icon-real-time-bonus.png";
@@ -19,6 +19,7 @@ import referralIcon from "../../assets/images/icon-referral.png";
 import messengerIcon from "@/assets/images/icon-facebook-messenger.png";
 import emailIcon from "@/assets/images/icon-email.png";
 import telegramIcon from "@/assets/images/icon-telegram.png";
+import customerIcon from "@/assets/images/icon-customer.png";
 import { IoExitOutline } from "react-icons/io5";
 import { IoMdClose } from "react-icons/io";
 import { useRouteLoaderData } from "react-router";
@@ -38,6 +39,51 @@ export default function MobileProfileButton({
   const { userInfo, setUserWalletData, userWalletData, logoutUser } =
     useCurrentUser();
   const [showBalance, setShowBalance] = useState(false);
+  const [vipPoint, setVipPoint] = useState<number>();
+  const [availableCashbackId, setAvailableCashbackId] = useState<number>();
+
+  const getAvailableCashbackId = async () => {
+    const availablecashback = await fetch(
+      import.meta.env.VITE_API_URL + "/wallet/cashback-available/",
+      {
+        headers: {
+          Authorization: `Token ${Cookies.get("userToken")}`,
+        },
+      }
+    );
+    const availableCashbackData = await availablecashback.json();
+    return availableCashbackData.data.id as number;
+  };
+
+  const getCashbackPoints = async (id: number) => {
+    const response = await fetch(
+      import.meta.env.VITE_API_URL + "/wallet/cashback/",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Token ${Cookies.get("userToken")}`,
+        },
+        body: JSON.stringify({
+          cashback_setting_id: id,
+        }),
+      }
+    );
+
+    const responseData = await response.json();
+
+    return responseData.data.cash_back_amount as number;
+  };
+
+  useEffect(() => {
+    getAvailableCashbackId().then((id) => {
+      setAvailableCashbackId(id);
+      getCashbackPoints(id).then((data) => {
+        setVipPoint(data);
+      });
+    });
+  }, []);
+
   return (
     <>
       {children}
@@ -46,11 +92,11 @@ export default function MobileProfileButton({
           <CloseButton className="absolute top-0 right-0 px-1 py-2">
             <IoMdClose className="size-7.5" />
           </CloseButton>
-          <div className="p-[4vw_2.6666666667vw] flex gap-[2.6666666667vw] items-center">
+          <div className="p-[4vw_2.6666666667vw] sm:py-4 sm:px-2.5 flex gap-[2.6666666667vw] sm:gap-2.5 items-center">
             <img
               src={memberIcon}
               alt="Member Icon"
-              className="w-[17.3333333333vw] aspect-square"
+              className="w-[17.3333333333vw] sm:w-16 aspect-square"
             />
             <div className="text-[3.2vw] space-y-[.5333333333vw]">
               <span className="text-[4.8vw]">
@@ -65,11 +111,15 @@ export default function MobileProfileButton({
               <div className="flex gap-[2.6666666667vw] items-center">
                 <span>VIP Points (VP)</span>
                 <div className="flex items-center gap-[2.6666666667vw]">
-                  <span className="text-blue-3">
-                    {userInfo?.user_type ?? "N/A"}
-                  </span>
+                  <span className="text-blue-3">{vipPoint}</span>
                   <div>
-                    <button className="p-[1.6vw_3.2vw] bg-blue-1 text-white text-[2.6666666667vw]! font-bold rounded">
+                    <button
+                      className="p-[1.6vw_3.2vw] bg-blue-1 text-white text-[2.6666666667vw]! font-bold rounded"
+                      onClick={() => {
+                        onClose();
+                        navigate("/member/vip-points-exchange");
+                      }}
+                    >
                       My Vip
                     </button>
                   </div>
@@ -79,81 +129,166 @@ export default function MobileProfileButton({
           </div>
           <div className="p-[2.6666666667vw] space-y-[2.6666666667vw] [&>*]:shadow-[0_2px_5px_.1px_#0003]">
             <div className="flex items-center justify-between p-[2.6666666667vw] text-[3.2vw] h-[18.4vw]">
-              <div className="flex items-center gap-0.5">
-                <span className="leading-[3.2vw] text-blue-1">Main Wallet</span>
-                <button
-                  type="button"
-                  data-fetching="false"
-                  onClick={async (e: React.SyntheticEvent<EventTarget>) => {
-                    if (!(e.target instanceof HTMLButtonElement)) {
-                      return;
-                    }
-                    try {
-                      e.target.dataset.fetching = "true";
-                      const response = await fetch(
-                        import.meta.env.VITE_API_URL + "/auth/user-balance/",
-                        {
-                          headers: {
-                            Authorization: `Token ${Cookies.get("userToken")}`,
-                          },
+              <div className="flex items-center gap-0.5 flex-1">
+                <div className="flex-1">
+                  <div className="flex items-center">
+                    <span className="leading-[3.2vw] text-blue-1">
+                      Main Wallet
+                    </span>
+                    <button
+                      type="button"
+                      data-fetching="false"
+                      onClick={async (e: React.SyntheticEvent<EventTarget>) => {
+                        if (!(e.target instanceof HTMLButtonElement)) {
+                          return;
                         }
-                      );
+                        try {
+                          e.target.dataset.fetching = "true";
+                          const response = await fetch(
+                            import.meta.env.VITE_API_URL +
+                              "/auth/user-balance/",
+                            {
+                              headers: {
+                                Authorization: `Token ${Cookies.get(
+                                  "userToken"
+                                )}`,
+                              },
+                            }
+                          );
 
-                      const responseData = await response.json();
+                          const responseData = await response.json();
 
-                      if (responseData.status === "ok") {
-                        setUserWalletData(responseData.data);
-                        e.target.dataset.fetching = "false";
-                      } else {
-                        e.target.dataset.fetching = "false";
-                      }
-                    } catch (error) {
-                      e.target.dataset.fetching = "false";
-                    }
-                  }}
-                  className="bg-blue-1 w-[5.8666666667vw] aspect-square data-[fetching='true']:animate-spin"
-                  style={{
-                    maskImage: `url("${refreshIcon}")`,
-                    maskRepeat: "no-repeat",
-                    maskPosition: "center",
-                    maskSize: "65%",
-                  }}
-                ></button>
-                <button
-                  type="button"
-                  className="min-w-[5.8666666667vw] aspect-square grid place-items-center text-blue-1"
-                  onClick={() => {
-                    setShowBalance((state) => !state);
-                  }}
-                >
-                  {showBalance ? (
-                    <FaEye className="w-full h-full aspect-square" />
-                  ) : (
-                    <FaEyeSlash className="w-full h-full aspect-square" />
-                  )}
-                </button>
-              </div>
-              <div className="max-h-[5.8666666667vw] text-[4.2666666667vw] leading-[5.8666666667vw] whitespace-nowrap text-[#ff8400] flex flex-col overflow-hidden">
-                <div
-                  className={`w-full h-full grid place-items-center transition-transform duration-300 ${
-                    showBalance ? "translate-y-0" : "-translate-y-full"
-                  }`}
-                >
-                  <span>
-                    {
-                      data?.currencyList.find(
-                        (currency) => currency.currency === userInfo?.currency
-                      )?.currency_icon
-                    }{" "}
-                    {userWalletData?.credit_balance}
-                  </span>
+                          if (responseData.status === "ok") {
+                            setUserWalletData(responseData.data);
+                            e.target.dataset.fetching = "false";
+                          } else {
+                            e.target.dataset.fetching = "false";
+                          }
+                        } catch (error) {
+                          e.target.dataset.fetching = "false";
+                        }
+                      }}
+                      className="bg-blue-1 w-[5.8666666667vw] aspect-square data-[fetching='true']:animate-spin"
+                      style={{
+                        maskImage: `url("${refreshIcon}")`,
+                        maskRepeat: "no-repeat",
+                        maskPosition: "center",
+                        maskSize: "65%",
+                      }}
+                    ></button>
+                    <button
+                      type="button"
+                      className="min-w-[5.8666666667vw] aspect-square grid place-items-center text-blue-1"
+                      onClick={() => {
+                        setShowBalance((state) => !state);
+                      }}
+                    >
+                      {showBalance ? (
+                        <FaEye className="w-full h-full aspect-square" />
+                      ) : (
+                        <FaEyeSlash className="w-full h-full aspect-square" />
+                      )}
+                    </button>
+                  </div>
+
+                  <div className="max-h-[5.8666666667vw] text-[4.2666666667vw] leading-[5.8666666667vw] whitespace-nowrap text-[#ff8400] flex flex-col overflow-hidden">
+                    <div
+                      className={`w-full h-full transition-transform duration-300 ${
+                        showBalance ? "translate-y-0" : "-translate-y-full"
+                      }`}
+                    >
+                      <span>
+                        {
+                          data?.currencyList.find(
+                            (currency) =>
+                              currency.currency === userInfo?.currency
+                          )?.currency_icon
+                        }{" "}
+                        {userWalletData?.credit_balance}
+                      </span>
+                    </div>
+                    <div
+                      className={`w-full h-full transition-transform duration-300 ${
+                        showBalance ? "translate-y-0" : "-translate-y-full"
+                      }`}
+                    >
+                      ＊＊＊＊＊
+                    </div>
+                  </div>
                 </div>
-                <div
-                  className={`w-full h-full grid place-items-center transition-transform duration-300 ${
-                    showBalance ? "translate-y-0" : "-translate-y-full"
-                  }`}
-                >
-                  ＊＊＊＊＊
+
+                <div className="flex-1">
+                  <div className="flex items-center">
+                    <span className="leading-[3.2vw] text-blue-1">
+                      Bonus Wallet
+                    </span>
+                    <button
+                      type="button"
+                      data-fetching="false"
+                      onClick={async (e: React.SyntheticEvent<EventTarget>) => {
+                        if (!(e.target instanceof HTMLButtonElement)) {
+                          return;
+                        }
+                        try {
+                          e.target.dataset.fetching = "true";
+                          const response = await fetch(
+                            import.meta.env.VITE_API_URL +
+                              "/auth/user-balance/",
+                            {
+                              headers: {
+                                Authorization: `Token ${Cookies.get(
+                                  "userToken"
+                                )}`,
+                              },
+                            }
+                          );
+
+                          const responseData = await response.json();
+
+                          if (responseData.status === "ok") {
+                            setUserWalletData(responseData.data);
+                            e.target.dataset.fetching = "false";
+                          } else {
+                            e.target.dataset.fetching = "false";
+                          }
+                        } catch (error) {
+                          e.target.dataset.fetching = "false";
+                        }
+                      }}
+                      className="bg-blue-1 w-[5.8666666667vw] aspect-square data-[fetching='true']:animate-spin"
+                      style={{
+                        maskImage: `url("${refreshIcon}")`,
+                        maskRepeat: "no-repeat",
+                        maskPosition: "center",
+                        maskSize: "65%",
+                      }}
+                    ></button>
+                  </div>
+
+                  <div className="max-h-[5.8666666667vw] text-[4.2666666667vw] leading-[5.8666666667vw] whitespace-nowrap text-[#ff8400] flex flex-col overflow-hidden">
+                    <div
+                      className={`w-full h-full transition-transform duration-300 ${
+                        showBalance ? "translate-y-0" : "-translate-y-full"
+                      }`}
+                    >
+                      <span>
+                        {
+                          data?.currencyList.find(
+                            (currency) =>
+                              currency.currency === userInfo?.currency
+                          )?.currency_icon
+                        }{" "}
+                        {userWalletData?.coin_balance}
+                      </span>
+                    </div>
+                    <div
+                      className={`w-full h-full transition-transform duration-300 ${
+                        showBalance ? "translate-y-0" : "-translate-y-full"
+                      }`}
+                    >
+                      ＊＊＊＊＊
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -327,12 +462,17 @@ export default function MobileProfileButton({
                     navigate("member/inbox/notifications");
                   }}
                 >
-                  <div>
+                  <div className="relative">
                     <img
                       src={inboxIcon}
                       alt="Inbox"
                       className="w-[9.3333333333vw] aspect-square mx-auto mb-[1.3333333333vw]"
                     />
+                    {Number(document.body.dataset.notification) > 0 && (
+                      <span className="block sm:hidden absolute top-0 right-1/2 translate-x-[150%] bg-[#d15454] text-white rounded-full text-[3.2vw] leading-[5.3333333333vw] font-bold w-[5.3333333333vw] h-[5.3333333333vw]">
+                        40
+                      </span>
+                    )}
                   </div>
                   <div className="h-9.25 bg-gray-2 flex items-center justify-center border border-gray-1 py-1.25">
                     <p className="text-[3.2vw]">Inbox</p>
@@ -365,6 +505,26 @@ export default function MobileProfileButton({
               </div>
               <div className="h-px w-full bg-gray-3"></div>
               <div className="pt-2 flex [&>*]:min-w-1/3 flex-wrap">
+                <button
+                  onClick={(e) => {
+                    e.preventDefault();
+                    if (window && window.anw2 !== undefined) {
+                      window.anw2.open();
+                    }
+                  }}
+                  className="flex-1"
+                >
+                  <div>
+                    <img
+                      src={customerIcon}
+                      alt="Live Chat"
+                      className="w-[9.3333333333vw] aspect-square mx-auto mb-[1.3333333333vw]"
+                    />
+                  </div>
+                  <div className="h-9.25 bg-gray-2 flex items-center justify-center border border-gray-1 py-1.25">
+                    <p className="text-[3.2vw]">Live Chat</p>
+                  </div>
+                </button>
                 {data?.socialList
                   .filter((socialLink) => {
                     return socialLink.status;

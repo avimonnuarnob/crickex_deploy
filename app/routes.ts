@@ -73,6 +73,9 @@ export default [
       route("new-register-entry/account", "./routes/signup.tsx", {
         id: "home-signup",
       }),
+      route("register", "./routes/signup.tsx", {
+        id: "home-signup-v2",
+      }),
       route("member/wallet/:transaction_type", "./routes/transaction.tsx", {
         id: "home-transaction",
       }),

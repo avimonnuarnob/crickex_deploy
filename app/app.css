@@ -406,10 +406,6 @@ body {
   navigation: auto;
 }
 
-.page-body {
-  view-transition-name: page;
-}
-
 ::view-transition-old(page) {
   animation: slide-out 0.5s cubic-bezier(0.86, 0, 0.07, 1) forwards;
 }

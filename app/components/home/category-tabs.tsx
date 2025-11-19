@@ -31,7 +31,9 @@ export default function CategoryTab({
     setSelectedIndex(index);
   };
 
-  const filteredProviders = providers.filter((gameType) => gameType.top_menu);
+  const filteredProviders = providers
+    .filter((gameType) => gameType.top_menu)
+    .sort((a, b) => a.display_order - b.display_order);
 
   useEffect(() => {
     const isMobile = window.screen.width < 768;

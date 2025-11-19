@@ -15,7 +15,7 @@ import crickexBlogIcon from "@/assets/images/icon-crickex-blog.png";
 import aboutUsIcon from "@/assets/images/icon-about-us.png";
 import faqIcon from "@/assets/images/icon-faq.png";
 
-export const navLinks = [
+export const topNavLinks = [
   {
     href: "/promotion",
     icon: promotionIcon,
@@ -44,56 +44,58 @@ export const navLinks = [
     text: "Download",
   },
   {
-    href: "responsible-gaming",
+    href: "/static-page/responsible%20gaming",
     icon: responsibleGamingIcon,
     text: "Responsible Gaming",
   },
   {
-    href: "#",
+    href: "/static-page/affiliate",
     icon: affiliateIcon,
     text: "Affiliate",
   },
 
-  {
-    icon: talkIcon,
-    text: "Contact Us",
-    children: [
-      {
-        icon: customerIcon,
-        href: ProtectedRoute.Cricket,
-        text: "CS Link",
-      },
-      {
-        icon: emailIcon,
-        href: ProtectedRoute.Cricket,
-        text: "Support Email",
-      },
-      {
-        icon: emailIcon,
-        href: ProtectedRoute.Cricket,
-        text: "Marketing Email",
-      },
+  // {
+  //   icon: talkIcon,
+  //   text: "Contact Us",
+  //   children: [
+  //     {
+  //       icon: customerIcon,
+  //       href: ProtectedRoute.Cricket,
+  //       text: "CS Link",
+  //     },
+  //     {
+  //       icon: emailIcon,
+  //       href: ProtectedRoute.Cricket,
+  //       text: "Support Email",
+  //     },
+  //     {
+  //       icon: emailIcon,
+  //       href: ProtectedRoute.Cricket,
+  //       text: "Marketing Email",
+  //     },
 
-      {
-        icon: telegramIcon,
-        href: ProtectedRoute.Cricket,
-        text: "Telegram Link",
-      },
-    ],
-  },
+  //     {
+  //       icon: telegramIcon,
+  //       href: ProtectedRoute.Cricket,
+  //       text: "Telegram Link",
+  //     },
+  //   ],
+  // },
+];
 
+export const bottomNavLinks = [
   {
     href: "#",
     icon: crickexBlogIcon,
-    text: "Crickex Blog",
+    text: "Lineguru Blog",
   },
   {
-    href: "#",
+    href: "/static-page/about",
     icon: aboutUsIcon,
     text: "About Us",
   },
   {
-    href: "#",
+    href: "/static-page/faq",
     icon: faqIcon,
     text: "FAQ",
   },

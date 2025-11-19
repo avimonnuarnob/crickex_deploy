@@ -460,7 +460,7 @@ export default function DepositForm({
                         body: JSON.stringify({
                           amount: depositAmount,
                           payment_gateway_id: selectedGateway?.id,
-                          promotion_id: selectedPromotion,
+                          promotion_id: promotion,
                           email: "",
                         }),
                       }

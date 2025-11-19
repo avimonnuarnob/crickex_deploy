@@ -26,10 +26,13 @@ export default function GameLauncher({ loaderData }: Route.ComponentProps) {
   const { gamebox } = loaderData;
 
   return (
-    <div className="mt-7.5">
+    <div className="mt-11">
       <React.Suspense
         fallback={
-          <div className="flex justify-center items-center flex-col h-full">
+          <div
+            className="flex justify-center items-center flex-col bg-black"
+            style={{ height: "calc(100vh - 44px)" }}
+          >
             <div className="list-loading w-10 h-10">
               <span className="sr-only">Loading...</span>
             </div>
@@ -45,9 +48,8 @@ export default function GameLauncher({ loaderData }: Route.ComponentProps) {
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ ease: "linear" }}
                   style={{
-                    height: "calc(100vh - 30px)",
+                    height: "calc(100vh - 44px)",
                     overflow: "hidden",
-                    background: "#d9d9d9",
                   }}
                 >
                   <iframe

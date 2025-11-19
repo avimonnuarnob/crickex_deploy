@@ -23,7 +23,13 @@ import {
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Controller, useForm } from "react-hook-form";
 import { FaCaretDown, FaLaptopHouse } from "react-icons/fa";
-import { Link, useNavigate, useParams, useSearchParams } from "react-router";
+import {
+  Link,
+  useLocation,
+  useNavigate,
+  useParams,
+  useSearchParams,
+} from "react-router";
 import type { Route } from "./+types/signup";
 import { useState } from "react";
 import { OTPInput, type SlotProps, REGEXP_ONLY_DIGITS } from "input-otp";
@@ -37,9 +43,10 @@ import { DotButton, useDotButton } from "@/components/home/home-slider-dots";
 
 export default function SignupModal({ matches }: Route.ComponentProps) {
   const navigate = useNavigate();
+  const location = useLocation();
   const [params] = useSearchParams();
   const { loginUser } = useCurrentUser();
-  const refcode = params.get("refcode");
+  const refcode = params.get("refcode") ?? params.get("ref");
 
   const [emblaRef, emblaApi] = useEmblaCarousel({ loop: true }, [
     Autoplay({ playOnInit: true, delay: 3000 }),
@@ -135,7 +142,6 @@ export default function SignupModal({ matches }: Route.ComponentProps) {
   };
 
   const onSubmit = async (data: SignupInput) => {
-    console.log(data);
     setIsLoading(true);
     if (responseData && secondSubmission) {
       const response = await fetch(
@@ -244,10 +250,7 @@ export default function SignupModal({ matches }: Route.ComponentProps) {
     <Modal
       onClose={async () => {
         setTimeout(() => {
-          const a = location.pathname.replace(
-            "/new-register-entry/account",
-            ""
-          );
+          const a = location.pathname.replace(location.pathname, "");
           navigate(a ? a + location.hash : "/" + location.hash, {
             replace: true,
           });

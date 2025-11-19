@@ -153,7 +153,7 @@ export default function RootLayout() {
       <Sidebar isFull={isFull} setIsFull={setIsFull} />
       <main
         id="main"
-        className="relative flex! flex-col w-full max-h-dvh overflow-auto overscroll-none"
+        className="relative flex! flex-col w-full max-h-dvh overflow-auto"
         ref={ref}
       >
         <Topbar isFull={isFull} />
@@ -288,24 +288,28 @@ const Footer = () => {
         <div className="mb-5.25">
           <h4 className="text-[13px] mb-3.5 font-bold">Social Networks</h4>
           <div className="flex gap-2.75">
-            {data?.socialList.map((socialLink) => (
-              <a
-                key={socialLink.id}
-                href={`${socialLink.social_prefix_id.prefix}${socialLink.resource}`}
-                target="_blank"
-              >
-                <img
-                  src={
-                    import.meta.env.VITE_API_URL +
-                    "" +
-                    socialLink.social_prefix_id.logo
-                  }
-                  alt={socialLink.social_prefix_id.name}
-                  width={24}
-                  height={24}
-                />
-              </a>
-            ))}
+            {data?.socialList
+              .filter((socialLink) => {
+                return socialLink.status;
+              })
+              .map((socialLink) => (
+                <a
+                  key={socialLink.id}
+                  href={`${socialLink.social_prefix_id.prefix}${socialLink.resource}`}
+                  target="_blank"
+                >
+                  <img
+                    src={
+                      import.meta.env.VITE_API_URL +
+                      "" +
+                      socialLink.social_prefix_id.logo
+                    }
+                    alt={socialLink.social_prefix_id.name}
+                    width={24}
+                    height={24}
+                  />
+                </a>
+              ))}
           </div>
         </div>
 
@@ -398,7 +402,7 @@ const Footer = () => {
                 Best Quality Platform
               </p>
               <p className="text-xs">
-                © 2025 CRICKEX Copyrights. All Rights Reserved
+                © 2025 LINEGURU Copyrights. All Rights Reserved
               </p>
             </div>
           </div>

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="43px" height="43px" viewBox="0 0 43 43" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>ll2</title>
+    <defs>
+        <linearGradient x1="50%" y1="0%" x2="50%" y2="100%" id="linearGradient-1">
+            <stop stop-color="#CFCFCF" offset="0%"></stop>
+            <stop stop-color="#6D6D6D" offset="100%"></stop>
+        </linearGradient>
+        <circle id="path-2" cx="17.5" cy="17.5" r="17.5"></circle>
+        <filter x="-20.0%" y="-14.3%" width="140.0%" height="140.0%" filterUnits="objectBoundingBox" id="filter-3">
+            <feOffset dx="0" dy="2" in="SourceAlpha" result="shadowOffsetOuter1"></feOffset>
+            <feGaussianBlur stdDeviation="2" in="shadowOffsetOuter1" result="shadowBlurOuter1"></feGaussianBlur>
+            <feColorMatrix values="0 0 0 0 0   0 0 0 0 0   0 0 0 0 0  0 0 0 0.207249781 0" type="matrix" in="shadowBlurOuter1"></feColorMatrix>
+        </filter>
+        <linearGradient x1="50%" y1="0%" x2="50%" y2="100%" id="linearGradient-4">
+            <stop stop-color="#FFFFFF" offset="0%"></stop>
+            <stop stop-color="#DFDFDF" offset="100%"></stop>
+        </linearGradient>
+    </defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="ll2" transform="translate(4.000000, 2.000000)">
+            <g id="Oval">
+                <use fill="black" fill-opacity="1" filter="url(#filter-3)" xlink:href="#path-2"></use>
+                <use fill="url(#linearGradient-1)" fill-rule="evenodd" xlink:href="#path-2"></use>
+            </g>
+            <g id="Group-7" transform="translate(8.076923, 5.384615)" fill="url(#linearGradient-4)">
+                <path d="M0.0779423077,12.4314615 L4.87698077,13.6281923 L8.17909615,25.3195385 L0.0779423077,12.4314615 Z M19.1606154,12.4314615 L11.0608077,25.3168462 L14.3615769,13.6281923 L19.1606154,12.4314615 Z M12.7379808,13.7590385 L9.61894231,24.8028846 L6.49990385,13.7590385 L12.7379808,13.7590385 Z M9.61948077,1.18892308 L12.7371731,12.2314231 L6.50044231,12.2314231 L9.61948077,1.18892308 Z M10.8707308,0.00134615385 L19.2370769,10.8392308 L14.2791923,12.075 L10.8707308,0.00134615385 Z M8.36769231,-1.0658141e-14 L4.95788462,12.075 L-4.36983782e-13,10.8392308 L8.36769231,-1.0658141e-14 Z" id="Combined-Shape"></path>
+            </g>
+        </g>
+    </g>
+</svg>

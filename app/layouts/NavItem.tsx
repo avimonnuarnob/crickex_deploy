@@ -39,16 +39,18 @@ const NavItem = ({
       viewTransition
       to={href}
       onClick={(e) => {
-        const userToken = Cookies.get("userToken");
-        if (!userToken) {
-          e.stopPropagation();
-          e.preventDefault();
+        if (setIsModalOpen) {
+          const userToken = Cookies.get("userToken");
+          if (!userToken) {
+            e.stopPropagation();
+            e.preventDefault();
 
-          setIsModalOpen?.(true);
+            setIsModalOpen(true);
+          }
         }
       }}
       className={classNames(
-        "flex items-center transition-colors cursor-pointer gap-4",
+        "flex items-center transition-colors cursor-pointer gap-4 whitespace-nowrap",
         {
           "hover:!bg-blue-9": !isChild,
         }
@@ -70,7 +72,7 @@ const NavItem = ({
     </Link>
   ) : (
     <button
-      className="hover:bg-blue-9 flex items-center w-full cursor-pointer gap-4 transition h-[50px]"
+      className="hover:bg-blue-9 flex items-center w-full cursor-pointer gap-4 transition h-[50px] whitespace-nowrap"
       style={{
         padding: isFull ? "10px 18px 10px 23px" : "10px 10px 10px 23px",
       }}

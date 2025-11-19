@@ -221,7 +221,7 @@ const TransactionRecords = ({ loaderData }: Route.ComponentProps) => {
   >([]);
   const [dateFilter, setDateFilter] = useState<
     "Today" | "Yesterday" | "Last 7 days"
-  >("Today");
+  >();
 
   const onStatusFilterUpdate = (
     status: "Processing" | "Completed" | "Failed"
@@ -249,6 +249,12 @@ const TransactionRecords = ({ loaderData }: Route.ComponentProps) => {
 
   const onDateFilterUpdate = (date: "Today" | "Yesterday" | "Last 7 days") => {
     setDateFilter(date);
+  };
+
+  const clearFilters = () => {
+    setStatusFilter([]);
+    setPaymentTypeFilter([]);
+    setDateFilter(undefined);
   };
 
   const handleTransactionRecordsModal = () => {
@@ -296,17 +302,26 @@ const TransactionRecords = ({ loaderData }: Route.ComponentProps) => {
                   <TransactionRecordsTable
                     transactions={tableData}
                     onFilterClick={() => {
-                      console.log(open);
                       setOpen(!open);
                     }}
                     onRowClick={() => {
                       console.log("row clicked");
                     }}
                     filterPeriod={[
-                      ...statusFilter,
-                      ...paymentTypeFilter,
-                      dateFilter,
+                      {
+                        type: "date",
+                        value: dateFilter,
+                      },
+                      {
+                        type: "status",
+                        value: statusFilter,
+                      },
+                      {
+                        type: "paymentType",
+                        value: paymentTypeFilter,
+                      },
                     ]}
+                    clearFilters={clearFilters}
                   />
                 );
               }}

@@ -25,18 +25,13 @@ import crickexBlogIcon from "@/assets/images/icon-crickex-blog.png";
 import downloadIcon from "@/assets/images/icon-download.png";
 import aboutUsIcon from "@/assets/images/icon-about-us.png";
 import faqIcon from "@/assets/images/icon-faq.png";
-
+import talkIcon from "@/assets/images/icon-talk.png";
+import messengerIcon from "@/assets/images/icon-facebook-messenger.png";
+import emailIcon from "@/assets/images/icon-email.png";
 import customerHeaderIcon from "@/assets/icon/icon-customer-header.svg";
-
 import siteLogo from "@/assets/images/logo.png";
 import { useEffect, useRef, useState, useTransition } from "react";
-import {
-  Description,
-  Dialog,
-  DialogBackdrop,
-  DialogPanel,
-  DialogTitle,
-} from "@headlessui/react";
+import { Dialog, DialogBackdrop, DialogPanel } from "@headlessui/react";
 import type { RootLoaderData } from "@/root";
 import type { GAMEPROVIDER } from "@/routes/index.tsx";
 import { RiMobileDownloadLine } from "react-icons/ri";
@@ -53,10 +48,14 @@ const Topbar = ({ isFull }: TopbarProps) => {
   const navigate = useNavigate();
   const location = useLocation();
   const data = useRouteLoaderData<RootLoaderData>("root");
+  const telegramChanel = data?.socialList.find(
+    (socialLink) => socialLink.social_prefix_id.name === "Telegram"
+  );
 
   const [shadow, setShadow] = useState(false);
   const [sideBarOpen, setSidebarOpen] = useState(false);
   const [reveal, setReveal] = useState(false);
+  const [contactReveal, setContactReveal] = useState(false);
   const [activeGameType, setActiveGameType] = useState<string | null>(null);
   const [activeGameTypeProviders, setActiveGameTypeProviders] = useState<
     GAMEPROVIDER[] | null
@@ -131,10 +130,13 @@ const Topbar = ({ isFull }: TopbarProps) => {
         }}
       >
         <div
-          className={classNames("mx-auto transition-[width] duration-100", {
-            "w-[calc(100%-(16px*3.75))]": isFull,
-            "w-full": !isFull,
-          })}
+          className={classNames(
+            "mx-auto transition-[width] duration-100 px-0 sm:px-4 xl:px-0",
+            {
+              "w-[calc(100%-(16px*3.75))]": isFull,
+              "w-full": !isFull,
+            }
+          )}
         >
           <div className="flex h-[13.3vw] sm:h-auto items-center justify-between max-w-[1200px] mx-auto relative">
             <button
@@ -187,6 +189,11 @@ const Topbar = ({ isFull }: TopbarProps) => {
                     />
                   }
                   className="p-0!"
+                  onClick={() => {
+                    if (window && window.anw2 !== undefined) {
+                      window.anw2.open();
+                    }
+                  }}
                 />
                 <span className="text-[3.2vw]">Live Chat</span>
               </div>
@@ -195,17 +202,17 @@ const Topbar = ({ isFull }: TopbarProps) => {
               {!isLoggedIn && (
                 <div className="hidden sm:flex items-center gap-1.25 justify-between">
                   <Button
-                    className="bg-blue-3 text-xs w-[105px] h-[34px]"
-                    onClick={loginBtnHandler}
-                  >
-                    Login
-                  </Button>
-                  <Button
-                    className="hidden sm:block text-xs w-[105px] h-[34px]"
+                    className="text-xs! w-[105px] h-[34px]"
                     color="green"
                     onClick={signupBtnHandler}
                   >
                     Sign up
+                  </Button>
+                  <Button
+                    className="bg-blue-3 text-xs! w-[105px] h-[34px]"
+                    onClick={loginBtnHandler}
+                  >
+                    Login
                   </Button>
                   <IconButton
                     color="link"
@@ -252,6 +259,7 @@ const Topbar = ({ isFull }: TopbarProps) => {
           setSidebarOpen(value);
           setActiveGameTypeProviders(null);
           setActiveGameType(null);
+          setContactReveal(false);
         }}
         className="relative z-10"
       >
@@ -334,6 +342,7 @@ const Topbar = ({ isFull }: TopbarProps) => {
                       data-checked={activeGameType === gameType.game_type_code}
                       onClick={() => {
                         if (reveal) setReveal(false);
+                        if (contactReveal) setContactReveal(false);
                         startTransition(async () => {
                           const wait = new Promise((resolve) =>
                             setTimeout(resolve, 150)
@@ -343,6 +352,7 @@ const Topbar = ({ isFull }: TopbarProps) => {
                             setActiveGameType(gameType.game_type_code);
                             setActiveGameTypeProviders(gameType.game_provider);
                             setReveal(true);
+                            setContactReveal(false);
                           });
                         });
                       }}
@@ -368,7 +378,37 @@ const Topbar = ({ isFull }: TopbarProps) => {
               <div className="w-9/10 h-px bg-gray-200 mx-auto mt-2.75"></div>
               <div>
                 <span className="block text-base font-bold p-2.75">Others</span>
-                <Link to="/">
+                <button
+                  onClick={() => {
+                    if (reveal) setReveal(false);
+                    if (contactReveal) setContactReveal(false);
+                    startTransition(async () => {
+                      const wait = new Promise((resolve) =>
+                        setTimeout(resolve, 150)
+                      );
+                      await wait;
+                      startTransition(() => {
+                        setActiveGameType(null);
+                        setActiveGameTypeProviders(null);
+                        setReveal(false);
+                        setContactReveal(true);
+                      });
+                    });
+                  }}
+                >
+                  <div className="flex items-center gap-3 p-2.75 text-foreground">
+                    <img
+                      src={talkIcon}
+                      alt="talk_logo"
+                      className="w-8.75 h-8.75"
+                    />
+                    <p className="text-sm">Contact Us</p>
+                  </div>
+                </button>
+                <a
+                  href={`${telegramChanel?.social_prefix_id.prefix}${telegramChanel?.resource}`}
+                  target="_blank"
+                >
                   <div className="flex items-center gap-3 p-2.75 text-foreground">
                     <img
                       src={telegramIcon}
@@ -377,8 +417,8 @@ const Topbar = ({ isFull }: TopbarProps) => {
                     />
                     <p className="text-sm">Telegram Support</p>
                   </div>
-                </Link>
-                <Link to="/">
+                </a>
+                <Link to="/static-page/responsible%20gaming">
                   <div className="flex items-center gap-3 p-2.75 text-foreground">
                     <img
                       src={responsibleGamingIcon}
@@ -388,7 +428,7 @@ const Topbar = ({ isFull }: TopbarProps) => {
                     <p className="text-sm">Responsible Gaming</p>
                   </div>
                 </Link>
-                <Link to="/">
+                <Link to="/static-page/affiliate">
                   <div className="flex items-center gap-3 p-2.75 text-foreground">
                     <img
                       src={affiliateIcon}
@@ -418,7 +458,7 @@ const Topbar = ({ isFull }: TopbarProps) => {
                     <p className="text-sm">App Download</p>
                   </div>
                 </Link>
-                <Link to="/">
+                <Link to="/static-page/about">
                   <div className="flex items-center gap-3 p-2.75 text-foreground">
                     <img
                       src={aboutUsIcon}
@@ -428,7 +468,7 @@ const Topbar = ({ isFull }: TopbarProps) => {
                     <p className="text-sm">About Us</p>
                   </div>
                 </Link>
-                <Link to="/">
+                <Link to="/static-page/faq">
                   <div className="flex items-center gap-3 p-2.75 text-foreground">
                     <img
                       src={faqIcon}
@@ -440,9 +480,10 @@ const Topbar = ({ isFull }: TopbarProps) => {
                 </Link>
               </div>
             </div>
+
             <div
               className={classNames(
-                "h-full bg-gray-1 transition-transform -translate-x-full duration-300 ease-in-out overscroll-none overflow-auto",
+                "h-full bg-gray-1 transition-transform duration-300 ease-in-out overscroll-none overflow-auto",
                 {
                   "translate-x-0": reveal,
                   "-translate-x-full": !reveal,
@@ -603,6 +644,64 @@ const Topbar = ({ isFull }: TopbarProps) => {
                   </div>
                 ))
               )}
+            </div>
+
+            <div
+              className={classNames(
+                "h-full bg-gray-1 transition-transform duration-300 ease-in-out overscroll-none overflow-auto",
+                {
+                  "translate-x-0": contactReveal,
+                  "-translate-x-[200%]": !contactReveal,
+                }
+              )}
+            >
+              {contactReveal &&
+                data?.socialList
+                  .filter((socialLink) => {
+                    return socialLink.status && socialLink.floating;
+                  })
+                  .map((socialLink) => {
+                    return (
+                      <a
+                        key={socialLink.id}
+                        href={`${socialLink.social_prefix_id.prefix}${socialLink.resource}`}
+                        target="_blank"
+                        className="py-5.5 flex flex-col justify-center items-center border-b border-gray-4 mx-1 min-w-[23.5vw]"
+                      >
+                        <div className="flex justify-center flex-col items-center mx-1">
+                          {socialLink.social_prefix_id.name === "Telegram" && (
+                            <img
+                              src={telegramIcon}
+                              alt="Telegram"
+                              className="w-11 h-11"
+                            />
+                          )}
+                          {socialLink.social_prefix_id.name === "Email" && (
+                            <img
+                              src={emailIcon}
+                              alt="Email"
+                              className="w-11 h-11"
+                            />
+                          )}
+                          {socialLink.social_prefix_id.name === "Messenger" && (
+                            <img
+                              src={messengerIcon}
+                              alt="Messenger"
+                              className="w-11 h-11"
+                            />
+                          )}
+                          {socialLink.social_prefix_id.name === "T-Channel" && (
+                            <img
+                              src={telegramIcon}
+                              alt="T-Channel"
+                              className="w-11 h-11"
+                            />
+                          )}
+                        </div>
+                        <p>{socialLink.social_prefix_id.name}</p>
+                      </a>
+                    );
+                  })}
             </div>
           </DialogPanel>
         </div>

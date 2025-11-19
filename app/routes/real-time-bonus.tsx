@@ -83,8 +83,8 @@ export default function RealTimeBonus() {
                     Authorization: `Token ${Cookies.get("userToken")}`,
                   },
                   body: JSON.stringify({
-                    from_wallet: "credit_balance",
-                    to_wallet: "coin_balance",
+                    from_wallet: "coin_balance",
+                    to_wallet: "credit_balance",
                     amount: userWalletData?.coin_balance,
                   }),
                 }

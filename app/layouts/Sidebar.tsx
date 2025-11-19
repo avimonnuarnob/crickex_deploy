@@ -1,4 +1,4 @@
-import { navLinks } from "@/constants/navLinks";
+import { bottomNavLinks, topNavLinks } from "@/constants/navLinks";
 import classNames from "classnames";
 import {
   useEffect,
@@ -20,6 +20,10 @@ import type { GAMES } from "@/routes/game-type";
 import Modal from "@/components/ui/modal/Modal";
 import { useNavigate } from "react-router";
 import Button from "@/components/ui/button/Button";
+import talkIcon from "@/assets/images/icon-talk.png";
+import messengerIcon from "@/assets/images/icon-facebook-messenger.png";
+import emailIcon from "@/assets/images/icon-email.png";
+import telegramIcon from "@/assets/images/icon-telegram.png";
 
 type SidebarProps = Readonly<{
   isFull: boolean;
@@ -206,19 +210,21 @@ const Sidebar = ({ isFull, setIsFull }: SidebarProps) => {
                       icon={`/game_type/${gameType.game_type_code}.png`}
                       text={gameType.title}
                       children={gameType.game_provider.map((provider) => {
-                        const game = sportsGames?.find(
+                        const game = sportsGames?.filter(
                           (game) => game.p_code === provider.provider_code
                         );
                         return {
-                          setIsModalOpen,
+                          setIsModalOpen:
+                            game?.length === 1 ? setIsModalOpen : undefined,
                           icon:
                             import.meta.env.VITE_API_URL +
                             "" +
                             provider.thumbnail,
                           text: provider.title,
-                          href: game
-                            ? `/open-game/${game.p_code}/${game.p_type}/${game.g_code}/${game.operator}`
-                            : `/games/${gameType.game_type_code}#vendor=${provider.provider_code}`,
+                          href:
+                            game?.length === 1
+                              ? `/open-game/${game[0].p_code}/${game[0].p_type}/${game[0].g_code}/${game[0].operator}`
+                              : `/games/${gameType.game_type_code}#vendor=${provider.provider_code}`,
                         };
                       })}
                       togglePanels={togglePanels}
@@ -239,7 +245,6 @@ const Sidebar = ({ isFull, setIsFull }: SidebarProps) => {
                     icon={`/game_type/${gameType.game_type_code}.png`}
                     text={gameType.title}
                     children={gameType.game_provider.map((provider) => ({
-                      setIsModalOpen,
                       icon:
                         import.meta.env.VITE_API_URL + "" + provider.thumbnail,
                       text: provider.title,
@@ -252,33 +257,61 @@ const Sidebar = ({ isFull, setIsFull }: SidebarProps) => {
               );
             })}
 
-          {navLinks.map((navLink, index) =>
-            navLink.children ? (
-              <li
-                className={classNames({
-                  "-ml-[9.5px]": !isFull,
-                })}
-                key={index}
-                onClick={() => setIsFull(true)}
-              >
-                <Submenu
-                  isFull={isFull}
-                  {...navLink}
-                  togglePanels={togglePanels}
-                  index={"navlink" + index}
-                />
-              </li>
-            ) : (
-              <li
-                key={index}
-                className={classNames({
-                  "-ml-[9.5px]": !isFull,
-                })}
-              >
-                <NavItem {...navLink}>{navLink.text}</NavItem>
-              </li>
-            )
+          {topNavLinks.map((navLink, index) => (
+            <li
+              key={index}
+              className={classNames({
+                "-ml-[9.5px]": !isFull,
+              })}
+            >
+              <NavItem {...navLink}>{navLink.text}</NavItem>
+            </li>
+          ))}
+
+          {data?.socialList && (
+            <li
+              className={classNames({
+                "-ml-[9.5px]": !isFull,
+              })}
+            >
+              <Submenu
+                isFull={isFull}
+                icon={talkIcon}
+                text="Contact Us"
+                children={data?.socialList
+                  .filter((socialLink) => {
+                    return socialLink.status && socialLink.floating;
+                  })
+                  .map((socialLink) => ({
+                    icon:
+                      socialLink.social_prefix_id.name === "Telegram"
+                        ? telegramIcon
+                        : socialLink.social_prefix_id.name === "Email"
+                        ? emailIcon
+                        : socialLink.social_prefix_id.name === "Messenger"
+                        ? messengerIcon
+                        : socialLink.social_prefix_id.name === "T-Channel"
+                        ? telegramIcon
+                        : "",
+                    text: socialLink.social_prefix_id.name,
+                    href: `${socialLink.social_prefix_id.prefix}${socialLink.resource}`,
+                  }))}
+                togglePanels={togglePanels}
+                index={"contact-us"}
+              />
+            </li>
           )}
+
+          {bottomNavLinks.map((navLink, index) => (
+            <li
+              key={index}
+              className={classNames({
+                "-ml-[9.5px]": !isFull,
+              })}
+            >
+              <NavItem {...navLink}>{navLink.text}</NavItem>
+            </li>
+          ))}
           {/* design purpose 🤷 */}
           <li
             className={classNames({

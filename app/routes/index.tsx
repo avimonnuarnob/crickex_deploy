@@ -5,6 +5,7 @@ import FeaturedGames from "@/components/home/featured-games";
 import HomeMarquee from "@/components/home/home-marquee";
 import {
   Outlet,
+  useLocation,
   useRouteLoaderData,
   type LinksFunction,
   type MetaFunction,
@@ -17,8 +18,19 @@ import UserDashboard from "@/components/home/user-dashboard";
 import { useCurrentUser } from "@/contexts/CurrentUserContext";
 import { useEffect, useRef, useState } from "react";
 import type { GAMES } from "@/routes/game-type";
+import { useViewTransitionState } from "react-router";
+import {
+  Description,
+  Dialog,
+  DialogBackdrop,
+  DialogPanel,
+} from "@headlessui/react";
+import ClaimBonusSlider from "@/components/home/claim-bonus-slider";
+
+let shouldUserSeeClaimBonusSlider = true;
 
 export type PROVIDERS = GAMETYPE[];
+export type BONUSES = BONUS[];
 
 export interface GAMETYPE {
   id: number;
@@ -54,16 +66,71 @@ export interface GAMEPROVIDER {
   supported_currency: number[];
 }
 
-export default function Home() {
+export interface BONUS {
+  id: number;
+  currency: Currency;
+  category: Category;
+  name: string;
+  description: string;
+  image: string;
+  alt_text: string;
+  amount: string;
+  wallet: string;
+  active: boolean;
+  started_at: string;
+  expired_at: string;
+  turnover_percentage: string;
+  created_at: string;
+  updated_at: string;
+  url_id: any;
+}
+
+export interface Currency {
+  id: number;
+  currency: string;
+  currency_title: string;
+  currency_icon: string;
+  user_currency: boolean;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface Category {
+  id: number;
+  sort_id: number;
+  name: string;
+}
+
+export async function clientLoader() {
+  const bonusesRsponse = await fetch(
+    import.meta.env.VITE_API_URL + "/wallet/claim-bonus/"
+  );
+  const bonuses = await bonusesRsponse.json();
+  return { bonuses: bonuses.data as BONUSES };
+}
+
+export default function Home({ loaderData }: Route.ComponentProps) {
   const data = useRouteLoaderData<RootLoaderData>("root");
+  const { bonuses } = loaderData;
+  const p = useLocation();
+
+  const [isDialogOpen, setIsDialogOpen] = useState(
+    bonuses?.length ? true : false
+  );
   const [hotGamesData, setHotGamesData] = useState<GAMES>();
-  const { isLoggedIn } = useCurrentUser();
+  const { isLoggedIn, userInfo } = useCurrentUser();
+
+  const filteredBonuses = isLoggedIn
+    ? bonuses?.filter(
+        (bonus) =>
+          bonus.currency.currency === userInfo?.currency && bonus.active
+      )
+    : bonuses?.filter((bonus) => bonus.active);
 
   useEffect(() => {
     const root = document.documentElement;
     root.style.setProperty("--direction", "1");
   }, []);
-
   useEffect(() => {
     fetch(import.meta.env.VITE_API_URL + `/game/getGameListByType/HT/`)
       .then((response) => response.json())
@@ -72,7 +139,12 @@ export default function Home() {
 
   return (
     <>
-      <div className="py-0 sm:py-4 page-body">
+      <div
+        className="py-0 sm:py-4"
+        style={{
+          viewTransitionName: p.hash !== "#chatbox" ? "page" : "none",
+        }}
+      >
         <HomeSlider />
         <HomeMarquee />
         {isLoggedIn && <UserDashboard />}
@@ -92,6 +164,23 @@ export default function Home() {
         </div>
       </div>
       <Outlet />
+      {/* <Dialog
+        open={
+          filteredBonuses &&
+          filteredBonuses.length > 0 &&
+          isDialogOpen &&
+          shouldUserSeeClaimBonusSlider
+        }
+        onClose={() => {}}
+        className="relative z-50"
+      >
+        <DialogBackdrop className="fixed inset-0 bg-black/30" />
+        <div className="fixed inset-0 flex w-screen items-center justify-center p-4">
+          <DialogPanel className="min-w-lg h-auto space-y-4 border bg-white">
+            <ClaimBonusSlider bonuses={filteredBonuses} />
+          </DialogPanel>
+        </div>
+      </Dialog> */}
     </>
   );
 }

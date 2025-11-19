@@ -6,6 +6,8 @@ import { useState, type Dispatch, type SetStateAction } from "react";
 import { useLocation, useNavigate } from "react-router";
 
 import heartIcon from "@/assets/icon/icon-heart.svg";
+import heartFillIcon from "@/assets/icon/icon-heart-fill.svg";
+import { useParams } from "react-router";
 
 export default function GameDescription({
   game,
@@ -23,8 +25,17 @@ export default function GameDescription({
   );
   const navigate = useNavigate();
   const location = useLocation();
+  const params = useParams();
 
   const [isLoading, setIsLoading] = useState(false);
+
+  const favoriteGames = localStorage.getItem(
+    "favoriteGames_" + params.gametype
+  );
+
+  const favoriteGamesSet: Set<string> = favoriteGames
+    ? new Set(JSON.parse(favoriteGames))
+    : new Set();
 
   const onClickHandler = async (game: GAME) => {
     const userToken = Cookies.get("userToken");
@@ -100,8 +111,41 @@ export default function GameDescription({
         <h3 className="text-left whitespace-nowrap truncate flex-1">
           {game.gameName.gameName_enus}
         </h3>
-        <button>
-          <img src={heartIcon} alt="heart" className="w-5 h-5" />
+        <button
+          className="cursor-pointer group"
+          data-favorite={favoriteGamesSet.has(game.g_code)}
+          onClick={(e) => {
+            e.stopPropagation();
+            e.currentTarget.dataset.favorite =
+              e.currentTarget.dataset.favorite === "true" ? "false" : "true";
+
+            const favoriteGames = localStorage.getItem(
+              "favoriteGames_" + params.gametype
+            );
+
+            const favoriteGamesSet: Set<string> = favoriteGames
+              ? new Set(JSON.parse(favoriteGames))
+              : new Set();
+
+            favoriteGamesSet.add(game.g_code);
+
+            localStorage.setItem(
+              "favoriteGames_" + params.gametype,
+              JSON.stringify([...favoriteGamesSet])
+            );
+          }}
+        >
+          <img
+            src={heartFillIcon}
+            alt="heart_fill"
+            className="w-5 h-5 hidden group-data-[favorite=true]:block"
+          />
+
+          <img
+            src={heartIcon}
+            alt="heart"
+            className="w-5 h-5 group-data-[favorite=true]:hidden block"
+          />
         </button>
       </div>
     </div>

@@ -552,7 +552,7 @@ export default function ReferralSection({
                 <div className="bg-blue-1 rounded-lg p-4 overflow-hidden">
                   <p className="text-white text-xs mb-6">
                     All referrer will receive a certain cash reward percentage
-                    for every referee when they play games on CRICKEX.
+                    for every referee when they play games on LINEGURU.
                   </p>
 
                   <h3 className="text-green-400 text-sm font-bold mb-4">
@@ -638,7 +638,7 @@ export default function ReferralSection({
                   </p>
 
                   <h3 className="text-green-400 text-base text-center font-bold">
-                    Earn Lifetime Commissions! With CRICKEX
+                    Earn Lifetime Commissions! With LINEGURU
                   </h3>
                 </div>
               </div>
