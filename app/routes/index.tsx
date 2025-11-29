@@ -101,11 +101,22 @@ export interface Category {
   name: string;
 }
 
+const cache = new Map();
+const cacheDataDuration = Date.now() + 6 * 60 * 60 * 1000;
+
 export async function clientLoader() {
+  const key = `Home-Loader-Data`;
+
+  if (cache.get(key) && Date.now() < cacheDataDuration) {
+    return { bonuses: cache.get(key) as BONUSES };
+  }
+
   const bonusesRsponse = await fetch(
     import.meta.env.VITE_API_URL + "/wallet/claim-bonus/"
   );
   const bonuses = await bonusesRsponse.json();
+  cache.set(key, bonuses.data);
+
   return { bonuses: bonuses.data as BONUSES };
 }
 
