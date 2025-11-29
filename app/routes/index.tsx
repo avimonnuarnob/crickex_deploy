@@ -117,7 +117,6 @@ export default function Home({ loaderData }: Route.ComponentProps) {
   const [isDialogOpen, setIsDialogOpen] = useState(
     bonuses?.length ? true : false
   );
-  const [hotGamesData, setHotGamesData] = useState<GAMES>();
   const { isLoggedIn, userInfo } = useCurrentUser();
 
   const filteredBonuses = isLoggedIn
@@ -130,11 +129,6 @@ export default function Home({ loaderData }: Route.ComponentProps) {
   useEffect(() => {
     const root = document.documentElement;
     root.style.setProperty("--direction", "1");
-  }, []);
-  useEffect(() => {
-    fetch(import.meta.env.VITE_API_URL + `/game/getGameListByType/HT/`)
-      .then((response) => response.json())
-      .then((d) => setHotGamesData(d.data));
   }, []);
 
   return (
@@ -149,10 +143,10 @@ export default function Home({ loaderData }: Route.ComponentProps) {
         <HomeMarquee />
         {isLoggedIn && <UserDashboard />}
         <div className="transition-all">
-          {data?.gameProviders && (
+          {data?.gameProviders && data?.hotGames && (
             <CategoryTab
               providers={data?.gameProviders}
-              hotGames={hotGamesData}
+              hotGames={data.hotGames}
             />
           )}
         </div>
@@ -160,7 +154,7 @@ export default function Home({ loaderData }: Route.ComponentProps) {
           <FavouriteGames />
         </div>
         <div className="py-2.5">
-          <FeaturedGames hotGames={hotGamesData} />
+          <FeaturedGames hotGames={data?.hotGames} />
         </div>
       </div>
       <Outlet />

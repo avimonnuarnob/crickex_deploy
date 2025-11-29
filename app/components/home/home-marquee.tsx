@@ -1,17 +1,9 @@
-import { useEffect, useState } from "react";
+import type { RootLoaderData } from "@/root";
+import { useRouteLoaderData } from "react-router";
 
 export default function HomeMarquee() {
-  const [data, setData] = useState([]);
-  useEffect(() => {
-    const getAnnouncementData = async () => {
-      const response = await fetch(
-        import.meta.env.VITE_API_URL + "/statics/announcements/"
-      );
-      const responseData = await response.json();
-      setData(responseData.data);
-    };
-    getAnnouncementData();
-  }, []);
+  const data = useRouteLoaderData<RootLoaderData>("root");
+
   return (
     <div className="flex items-center bg-blue-1 sm:bg-transparent">
       <span
@@ -22,7 +14,7 @@ export default function HomeMarquee() {
         }}
       />
       <p className="marquee overflow-hidden box-border w-full text-background sm:text-foreground">
-        {data?.map((el) => (
+        {data?.announcements?.map((el) => (
           <span className="text-sm">{el.announcement}</span>
         ))}
       </p>

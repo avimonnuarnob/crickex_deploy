@@ -3,13 +3,16 @@ import { Tab, TabGroup, TabList, TabPanel, TabPanels } from "@headlessui/react";
 import { motion, AnimatePresence } from "motion/react";
 
 import type { PROVIDERS } from "@/routes/index";
-import { useLocation, useNavigate } from "react-router";
+import { useLocation, useNavigate, useRouteLoaderData } from "react-router";
 import classNames from "classnames";
 import type { GAMES } from "@/routes/game-type";
 import Cookies from "js-cookie";
 import { LuLoader } from "react-icons/lu";
 import Modal from "@/components/ui/modal/Modal";
 import Button from "@/components/ui/button/Button";
+import type { RootLoaderData } from "@/root";
+
+const cache = new Map();
 
 export default function CategoryTab({
   providers,
@@ -18,13 +21,13 @@ export default function CategoryTab({
   providers: PROVIDERS;
   hotGames?: GAMES;
 }) {
+  const data = useRouteLoaderData<RootLoaderData>("root");
   const navigate = useNavigate();
   const location = useLocation();
 
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [isFixedTabList, setIsFixedTabList] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [sportsGames, setSportsGames] = useState<GAMES>();
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const handleTabChange = (index: number) => {
@@ -72,12 +75,6 @@ export default function CategoryTab({
     return () => {
       observer?.unobserve(tabPanels!);
     };
-  }, []);
-
-  useEffect(() => {
-    fetch(import.meta.env.VITE_API_URL + `/game/getGameListByType/SB/`)
-      .then((response) => response.json())
-      .then((d) => setSportsGames(d.data));
   }, []);
 
   const loginBtnHandler = () => {
@@ -322,7 +319,7 @@ export default function CategoryTab({
                                 className="bg-white p-2 text-center text-sm font-light flex flex-col items-center cursor-pointer"
                                 onClick={async () => {
                                   if (gameType.game_type_code === "SB") {
-                                    const games = sportsGames?.filter(
+                                    const games = data?.sportsGames?.filter(
                                       (game) =>
                                         game.p_code === item.provider_code
                                     );
@@ -348,7 +345,7 @@ export default function CategoryTab({
                                         return;
                                       }
 
-                                      const game = sportsGames?.find(
+                                      const game = data?.sportsGames?.find(
                                         (game) =>
                                           game.p_code === item.provider_code
                                       );

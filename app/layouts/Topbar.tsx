@@ -60,8 +60,6 @@ const Topbar = ({ isFull }: TopbarProps) => {
   const [activeGameTypeProviders, setActiveGameTypeProviders] = useState<
     GAMEPROVIDER[] | null
   >(null);
-  const [sportsGames, setSportsGames] = useState<GAMES>();
-  const [hotGames, setHotGames] = useState<GAMES>();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [_, startTransition] = useTransition();
   const dialogPanelRef = useRef(null);
@@ -84,18 +82,6 @@ const Topbar = ({ isFull }: TopbarProps) => {
       window.removeEventListener("add", addShadowEventHandler);
       window.removeEventListener("remove", removeShadowEventHandler);
     };
-  }, []);
-
-  useEffect(() => {
-    fetch(import.meta.env.VITE_API_URL + `/game/getGameListByType/SB/`)
-      .then((response) => response.json())
-      .then((d) => setSportsGames(d.data));
-  }, []);
-
-  useEffect(() => {
-    fetch(import.meta.env.VITE_API_URL + `/game/getGameListByType/HT/`)
-      .then((response) => response.json())
-      .then((d) => setHotGames(d.data));
   }, []);
 
   const loginBtnHandler = () => {
@@ -492,7 +478,7 @@ const Topbar = ({ isFull }: TopbarProps) => {
             >
               {activeGameType === "HT" ? (
                 <>
-                  {hotGames?.map((game) => (
+                  {data?.hotGames?.map((game) => (
                     <div
                       key={game.g_code}
                       className="py-5.5 flex flex-col justify-center items-center border-b border-gray-4 mx-1 max-w-[23.5vw]"
@@ -558,7 +544,7 @@ const Topbar = ({ isFull }: TopbarProps) => {
                     className="py-5.5 flex flex-col justify-center items-center border-b border-gray-4 mx-1 min-w-[23.5vw]"
                     onClick={async () => {
                       if (activeGameType === "SB") {
-                        const games = sportsGames?.filter(
+                        const games = data?.sportsGames?.filter(
                           (game) => game.p_code === provider.provider_code
                         );
 
@@ -581,7 +567,7 @@ const Topbar = ({ isFull }: TopbarProps) => {
                             return;
                           }
 
-                          const game = sportsGames?.find(
+                          const game = data?.sportsGames?.find(
                             (game) => game.p_code === provider.provider_code
                           );
 

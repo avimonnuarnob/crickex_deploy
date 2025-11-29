@@ -35,23 +35,9 @@ const Sidebar = ({ isFull, setIsFull }: SidebarProps) => {
   const navigate = useNavigate();
 
   const [activeDisclosurePanel, setActiveDisclosurePanel] = useState<any>(null);
-  const [sportsGames, setSportsGames] = useState<GAMES>();
-  const [hotGames, setHotGames] = useState<GAMES>();
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const [isPending, startTransition] = useTransition();
-
-  useEffect(() => {
-    fetch(import.meta.env.VITE_API_URL + `/game/getGameListByType/SB/`)
-      .then((response) => response.json())
-      .then((d) => setSportsGames(d.data));
-  }, []);
-
-  useEffect(() => {
-    fetch(import.meta.env.VITE_API_URL + `/game/getGameListByType/HT/`)
-      .then((response) => response.json())
-      .then((d) => setHotGames(d.data));
-  }, []);
 
   function togglePanels(newPanel: any) {
     if (activeDisclosurePanel) {
@@ -174,12 +160,12 @@ const Sidebar = ({ isFull, setIsFull }: SidebarProps) => {
                       "-ml-[9.5px]": !isFull,
                     })}
                   >
-                    {hotGames && (
+                    {data?.hotGames && (
                       <Submenu
                         isFull={isFull}
                         icon={`/game_type/${gameType.game_type_code}.png`}
                         text={"HOT"}
-                        children={hotGames?.map((game) => {
+                        children={data.hotGames.map((game) => {
                           return {
                             icon: game.imgFileName.startsWith("/")
                               ? import.meta.env.VITE_GAME_IMG_URL +
@@ -210,7 +196,7 @@ const Sidebar = ({ isFull, setIsFull }: SidebarProps) => {
                       icon={`/game_type/${gameType.game_type_code}.png`}
                       text={gameType.title}
                       children={gameType.game_provider.map((provider) => {
-                        const game = sportsGames?.filter(
+                        const game = data?.sportsGames?.filter(
                           (game) => game.p_code === provider.provider_code
                         );
                         return {
