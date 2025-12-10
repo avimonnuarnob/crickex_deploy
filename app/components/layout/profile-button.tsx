@@ -27,8 +27,6 @@ import { useCurrentUser } from "@/contexts/CurrentUserContext";
 import { useNavigate } from "react-router";
 import Cookies from "js-cookie";
 
-const cashbackCache = localStorage.getItem("cashbackCache");
-const cashbackAvailableCache = localStorage.getItem("cashbackAvailableCache");
 const cacheDataDuration = 6 * 60 * 60 * 1000;
 
 const PROFILE_ITEMS = [
@@ -85,6 +83,10 @@ export default function ProfileButton() {
   const [isVipPointFetching, setIsVipPointFetching] = useState(false);
 
   const getAvailableCashbackId = async () => {
+    const cashbackAvailableCache = localStorage.getItem(
+      "cashbackAvailableCache"
+    );
+
     if (
       cashbackAvailableCache &&
       Date.now() < Number(JSON.parse(cashbackAvailableCache)[1])
@@ -111,6 +113,8 @@ export default function ProfileButton() {
   };
 
   const getCashbackPoints = async (id: number) => {
+    const cashbackCache = localStorage.getItem("cashbackCache");
+
     if (cashbackCache && Date.now() < Number(JSON.parse(cashbackCache)[1])) {
       return Number(JSON.parse(cashbackCache)[0]);
     }
@@ -139,6 +143,7 @@ export default function ProfileButton() {
 
     return responseData.data.cash_back_amount as number;
   };
+
   useEffect(() => {
     getAvailableCashbackId().then((id) => {
       setAvailableCashbackId(id);

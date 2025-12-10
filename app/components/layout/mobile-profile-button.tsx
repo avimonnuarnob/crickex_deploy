@@ -26,8 +26,6 @@ import { useRouteLoaderData } from "react-router";
 import type { RootLoaderData } from "@/root";
 import { useNavigate } from "react-router";
 
-const cashbackCache = localStorage.getItem("cashbackCache");
-const cashbackAvailableCache = localStorage.getItem("cashbackAvailableCache");
 const cacheDataDuration = 6 * 60 * 60 * 1000;
 
 export default function MobileProfileButton({
@@ -48,6 +46,10 @@ export default function MobileProfileButton({
   const [availableCashbackId, setAvailableCashbackId] = useState<number>();
 
   const getAvailableCashbackId = async () => {
+    const cashbackAvailableCache = localStorage.getItem(
+      "cashbackAvailableCache"
+    );
+
     if (
       cashbackAvailableCache &&
       Date.now() < Number(JSON.parse(cashbackAvailableCache)[1])
@@ -74,6 +76,8 @@ export default function MobileProfileButton({
   };
 
   const getCashbackPoints = async (id: number) => {
+    const cashbackCache = localStorage.getItem("cashbackCache");
+
     if (cashbackCache && Date.now() < Number(JSON.parse(cashbackCache)[1])) {
       return Number(JSON.parse(cashbackCache)[0]);
     }

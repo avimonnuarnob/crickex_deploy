@@ -193,9 +193,9 @@ export async function clientLoader() {
     ? new Map(JSON.parse(localStorage.getItem("rootLoaderData")!)[0])
     : new Map();
 
-  const cacheDataDuration = localStorage.getItem("rootLoaderData")
-    ? JSON.parse(localStorage.getItem("rootLoaderData")!)[1]
-    : Date.now() + 6 * 60 * 60 * 1000;
+  const cacheDataDuration = JSON.parse(
+    localStorage.getItem("rootLoaderData")!
+  )[1];
 
   const key = `Root-Loader-Data`;
 
@@ -204,8 +204,9 @@ export async function clientLoader() {
 
   if (
     app_version_data.version === localStorage.getItem("app_version") &&
+    cacheDataDuration &&
     Date.now() < cacheDataDuration &&
-    cache.get(key)
+    cache.has(key)
   ) {
     return cache.get(key);
   } else {
@@ -310,7 +311,10 @@ export async function clientLoader() {
   cache.set(key, dataToReturn);
   localStorage.setItem(
     "rootLoaderData",
-    JSON.stringify([Array.from(cache.entries()), cacheDataDuration])
+    JSON.stringify([
+      Array.from(cache.entries()),
+      Date.now() + 6 * 60 * 60 * 1000,
+    ])
   );
   return dataToReturn;
 }
