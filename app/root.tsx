@@ -9,7 +9,7 @@ import {
 } from "react-router";
 import type { Route } from "./+types/root";
 
-import loader from "./assets/loader.mp4";
+import loader from "./assets/loader.webm";
 
 import normalizeStyles from "./normalize.css?url";
 import appStylesHref from "./app.css?url";
@@ -194,8 +194,8 @@ export async function clientLoader() {
     : new Map();
 
   const cacheDataDuration = JSON.parse(
-    localStorage.getItem("rootLoaderData")!
-  )[1];
+    localStorage.getItem("rootLoaderData")!,
+  )?.[1];
 
   const key = `Root-Loader-Data`;
 
@@ -214,59 +214,59 @@ export async function clientLoader() {
   }
 
   const sportsGamesPromise = fetch(
-    import.meta.env.VITE_API_URL + `/game/getGameListByType/SB/`
+    import.meta.env.VITE_API_URL + `/game/getGameListByType/SB/`,
   )
     .then((response) => response.json())
     .then((d) => d.data as GAMES);
 
   const hotGamesPromise = fetch(
-    import.meta.env.VITE_API_URL + `/game/getGameListByType/HT/`
+    import.meta.env.VITE_API_URL + `/game/getGameListByType/HT/`,
   )
     .then((response) => response.json())
     .then((d) => d.data as GAMES);
 
   const countryListPromise = fetch(
-    import.meta.env.VITE_API_URL + "/country/list"
+    import.meta.env.VITE_API_URL + "/country/list",
   )
     .then((value) => value.json())
     .then((data) => data.data as COUNTRYLIST);
 
   const mirrorLinksPromise = fetch(
-    import.meta.env.VITE_API_URL + "/mirror-links/"
+    import.meta.env.VITE_API_URL + "/mirror-links/",
   )
     .then((value) => value.json())
     .then((data) => data.data as MIRRORLINKS);
 
   const defaultReferralPromise = fetch(
-    import.meta.env.VITE_API_URL + "/referral/default/"
+    import.meta.env.VITE_API_URL + "/referral/default/",
   )
     .then((value) => value.json())
     .then((data) => data.data as DEFAULTCONFIG);
 
   const gameProvidersPromise = fetch(
-    import.meta.env.VITE_API_URL + "/game/game-menu/"
+    import.meta.env.VITE_API_URL + "/game/game-menu/",
   )
     .then((value) => value.json())
     .then((data) => data.data as PROVIDERS);
   const socialListPromise = fetch(
-    import.meta.env.VITE_API_URL + "/domain-wise/admin-social-list/"
+    import.meta.env.VITE_API_URL + "/domain-wise/admin-social-list/",
   )
     .then((value) => value.json())
     .then((data) => data.data as SOCIALLIST);
   const promotionListPromise = fetch(
-    import.meta.env.VITE_API_URL + "/statics/banner-promition/"
+    import.meta.env.VITE_API_URL + "/statics/banner-promition/",
   )
     .then((value) => value.json())
     .then((data) => data.data as PROMOTIONLIST);
 
   const LinksPromise = fetch(
-    import.meta.env.VITE_API_URL + "/statics/page-content/"
+    import.meta.env.VITE_API_URL + "/statics/page-content/",
   )
     .then((value) => value.json())
     .then((data) => data.data as LINKS);
 
   const announcementPromise = fetch(
-    import.meta.env.VITE_API_URL + "/statics/announcements/"
+    import.meta.env.VITE_API_URL + "/statics/announcements/",
   )
     .then((value) => value.json())
     .then((data) => data.data as ANNOUNCEMENTS);
@@ -314,7 +314,7 @@ export async function clientLoader() {
     JSON.stringify([
       Array.from(cache.entries()),
       Date.now() + 6 * 60 * 60 * 1000,
-    ])
+    ]),
   );
   return dataToReturn;
 }
@@ -409,7 +409,7 @@ export function HydrateFallback() {
   return (
     <div className="flex h-full w-full min-h-screen justify-center items-center">
       <video width={150} autoPlay={true} muted={true} loop={true}>
-        <source src={loader} type="video/mp4" />
+        <source src={loader} type="video/webm" />
       </video>
     </div>
   );

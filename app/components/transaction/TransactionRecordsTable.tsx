@@ -97,7 +97,10 @@ const TransactionRecordsTable: React.FC<TransactionRecordsTableProps> = ({
   // Group transactions by date
   const groupedTransactions = filteredTransactions.reduce(
     (groups, transaction) => {
-      const date = transaction.date;
+      const date =
+        transaction.date.split("T")[0] +
+        "_" +
+        transaction.date.split("T")[1].split("+")[1];
       if (!groups[date]) {
         groups[date] = [];
       }
@@ -110,7 +113,7 @@ const TransactionRecordsTable: React.FC<TransactionRecordsTableProps> = ({
   const filters = filterPeriod?.flatMap((filter) => filter.value);
 
   return (
-    <div className="flex flex-col bg-white rounded-lg overflow-hidden">
+    <div className="flex flex-col bg-white rounded-lg overflow-hidden h-full">
       {/* Filter bar */}
       <div className="bg-white flex justify-between items-center h-12.5 border-b border-t border-[#eeeeee] overflow-hidden">
         <div className="flex gap-2.5 flex-1 px-2.5 py-2 overflow-x-scroll [&::-webkit-scrollbar]:h-1.25 [&::-webkit-scrollbar-thumb]:bg-gray-300 [&::-webkit-scrollbar-thumb]:rounded relative">
@@ -156,7 +159,7 @@ const TransactionRecordsTable: React.FC<TransactionRecordsTableProps> = ({
       </div>
 
       {/* Table body */}
-      <div className="overflow-y-auto max-h-[400px] text-xs">
+      <div className="overflow-y-auto text-xs flex-1">
         {Object.keys(groupedTransactions)
           .sort((a, b) => {
             return new Date(b).getTime() - new Date(a).getTime();
@@ -167,11 +170,12 @@ const TransactionRecordsTable: React.FC<TransactionRecordsTableProps> = ({
               <div className="grid grid-cols-4 bg-gray-100 px-2.5 py-1.75">
                 <div className="flex items-center col-span-2">
                   <FaCalendarAlt className="text-gray-500 mr-2 size-3.75" />
-                  <span className="text-gray-500">{date.split("T")[0]}</span>
+                  <span className="text-gray-500">{date.split("_")[0]}</span>
                 </div>
                 <div className="col-span-2 flex justify-end items-center">
                   <span className="border text-gray-700 px-0.75 mx-1.75 rounded text-[10px]">
-                    +{date.split("T")[1].split("+")[1]}
+                    {/* +{date.split("T")[1].split("+")[1]} */}+
+                    {date.split("_")[1]}
                   </span>
                 </div>
               </div>

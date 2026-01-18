@@ -1,26 +1,13 @@
 import React, { useState } from "react";
 import Modal from "@/components/ui/modal/Modal";
-import {
-  FaUser,
-  FaBirthdayCake,
-  FaPhone,
-  FaChevronRight,
-  FaPlus,
-  FaMailchimp,
-} from "react-icons/fa";
-import { IoMdClose } from "react-icons/io";
 import { Await, useNavigate } from "react-router";
-import { useCurrentUser } from "@/contexts/CurrentUserContext";
-import { IoMail } from "react-icons/io5";
-import customerIcon from "@/assets/images/icon-customer.png";
+
 import TransactionRecordsTable from "@/components/transaction/TransactionRecordsTable";
-import { Dialog, DialogBackdrop } from "@headlessui/react";
 import { FaAngleLeft } from "react-icons/fa6";
 import Button from "@/components/ui/button/Button";
 import classNames from "classnames";
 import Cookies from "js-cookie";
 import type { Route } from "./+types/transaction-records";
-import Deposit from "./transaction";
 
 export interface UserDeposit {
   id: number;
@@ -152,14 +139,6 @@ export async function clientLoader() {
       },
     }
   );
-  const transactions = fetch(
-    import.meta.env.VITE_API_URL + "/wallet/transaction-history/",
-    {
-      headers: {
-        Authorization: `Token ${Cookies.get("userToken")}`,
-      },
-    }
-  );
 
   const data = Promise.all([
     deposits
@@ -188,20 +167,6 @@ export async function clientLoader() {
             date: w.created_at,
           })) as Promise<TableTdata[]>
       ),
-
-    transactions
-      .then((response) => response.json())
-      .then((data) => data.data)
-      .then(
-        (data) =>
-          data.map((t: UserTransaction) => ({
-            type: t.transaction_purpose,
-            id: t.id,
-            amount: t.amount,
-            status: "success",
-            date: t.created_at,
-          })) as Promise<TableTdata[]>
-      ),
   ]);
 
   return { transactionsPromise: data };
@@ -217,7 +182,7 @@ const TransactionRecords = ({ loaderData }: Route.ComponentProps) => {
     ("Processing" | "Completed" | "Failed")[]
   >([]);
   const [paymentTypeFilter, setPaymentTypeFilter] = useState<
-    ("Deposit" | "Withdrawal" | "Adjustment")[]
+    ("Deposit" | "Withdrawal")[]
   >([]);
   const [dateFilter, setDateFilter] = useState<
     "Today" | "Yesterday" | "Last 7 days"
@@ -235,9 +200,7 @@ const TransactionRecords = ({ loaderData }: Route.ComponentProps) => {
     });
   };
 
-  const onPaymentTypeFilterUpdate = (
-    paymentType: "Deposit" | "Withdrawal" | "Adjustment"
-  ) => {
+  const onPaymentTypeFilterUpdate = (paymentType: "Deposit" | "Withdrawal") => {
     setPaymentTypeFilter((prev) => {
       if (prev.includes(paymentType)) {
         return prev.filter((s) => s !== paymentType);
@@ -296,7 +259,7 @@ const TransactionRecords = ({ loaderData }: Route.ComponentProps) => {
             }
           >
             <Await resolve={transactionsPromise}>
-              {(data: [TableTdata[], TableTdata[], TableTdata[]]) => {
+              {(data: [TableTdata[], TableTdata[]]) => {
                 const tableData = data.flat();
                 return (
                   <TransactionRecordsTable
@@ -417,16 +380,6 @@ const TransactionRecords = ({ loaderData }: Route.ComponentProps) => {
                       onClick={() => onPaymentTypeFilterUpdate("Withdrawal")}
                     >
                       Withdrwal
-                    </button>
-                    <button
-                      className={`bg-[#f5f5f5] px-4 py-2 text-[13px] rounded-xs  h-[35px] text-center cursor-pointer hover:opacity-[0.7] text-[#0009] ${
-                        paymentTypeFilter.includes("Adjustment")
-                          ? "bg-[#005dac]! text-white"
-                          : ""
-                      }`}
-                      onClick={() => onPaymentTypeFilterUpdate("Adjustment")}
-                    >
-                      Adjusment
                     </button>
                   </div>
                 </div>
